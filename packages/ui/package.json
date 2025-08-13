@@ -1,0 +1,8 @@
+{
+  "name": "@momozzang/ui",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.14"
+  }
+}
