@@ -1,5 +1,5 @@
-import type { Menu } from '../shared/types';
-import '../styles/Header.css';
+import type { Menu } from '../../shared/types';
+import styles from './header.module.css';
 
 type Props = {
   currentMenu: Menu;
@@ -8,28 +8,28 @@ type Props = {
 
 function Header({ currentMenu, onMenuClick }: Props) {
   return (
-    <header className="header">
+    <header className={styles.header}>
       <nav>
         <button
-          className={currentMenu === 'home' ? 'active' : ''}
+          className={currentMenu === 'home' ? styles.active : ''}
           onClick={() => onMenuClick?.('home')}
         >
           홈
         </button>
         <button
-          className={currentMenu === 'guestbook' ? 'active' : ''}
+          className={currentMenu === 'guestbook' ? styles.active : ''}
           onClick={() => onMenuClick?.('guestbook')}
         >
           방명록
         </button>
         <button
-          className={currentMenu === 'gallery' ? 'active' : ''}
+          className={currentMenu === 'gallery' ? styles.active : ''}
           onClick={() => onMenuClick?.('gallery')}
         >
           사진첩
         </button>
         <button
-          className={currentMenu === 'directions' ? 'active' : ''}
+          className={currentMenu === 'directions' ? styles.active : ''}
           onClick={() => onMenuClick?.('directions')}
         >
           오시는 길

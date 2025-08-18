@@ -1,13 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import Invitation from './Invitation';
+import AppWrapper from './page/AppWrapper';
 import '@momozzang/ui/index.css';
 import Layout from './Layout';
+import './styles/global.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Layout>
-      <Invitation />
+      <AppWrapper />
     </Layout>
   </StrictMode>,
 );

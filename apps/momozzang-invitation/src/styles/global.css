@@ -1,27 +1,56 @@
-/* 전역 스타일 및 스크롤 숨김 */
-
 html,
-body,
-#root {
+body {
   min-width: 375px;
   min-height: 100vh;
-  overflow-y: scroll;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Noto Sans KR', sans-serif;
-  background: #fff;
+  background: #111;
   overscroll-behavior: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-body {
-  color: #222;
+#root {
+  min-height: 100vh;
 }
 
-main {
-  margin-top: 67px;
+.app-frame {
+  width: 100vw;
+  min-height: 100vh;
+  background: #fff;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 430px;
+  min-width: 375px;
+  box-shadow:
+    0 0 0 1px #2221,
+    0 0 16px 0 #0003;
+  border-radius: 0;
+  position: relative;
+}
+
+.app-frame > main {
+  position: relative;
+}
+
+@media (max-width: 430px) {
+  .app-frame {
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+body {
+  color: #222;
 }
 
 body::-webkit-scrollbar {
