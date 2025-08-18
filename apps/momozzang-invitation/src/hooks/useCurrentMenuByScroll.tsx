@@ -7,12 +7,14 @@ function useCurrentMenuByScroll(sectionRefs: Record<Menu, RefObject<HTMLDivEleme
   useEffect(() => {
     function onScroll() {
       const scrollY = window.scrollY;
+      const centerY = scrollY + window.innerHeight / 2;
       let found: Menu = 'home';
       (Object.entries(sectionRefs) as [Menu, RefObject<HTMLDivElement>][]).forEach(
         ([menu, ref]) => {
           if (ref.current) {
             const top = ref.current.offsetTop;
-            if (scrollY >= top - 10) found = menu;
+            const height = ref.current.offsetHeight;
+            if (centerY >= top && centerY < top + height) found = menu;
           }
         },
       );
