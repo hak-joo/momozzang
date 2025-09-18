@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@momozzang/ui": "workspace:*"
+    "@momozzang/ui": "workspace:*",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

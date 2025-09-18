@@ -1,5 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@momozzang/ui/*": ["../../packages/ui/src/*"]
+    },
+    "plugins": [{ "name": "typescript-plugin-paths" }]
+  },
+  "include": ["src", "vite-env.d.ts"]
 }
