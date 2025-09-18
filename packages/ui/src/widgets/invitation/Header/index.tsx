@@ -1,4 +1,4 @@
-import type { Menu } from '../../shared/types';
+import type { Menu } from '@entities/WeddingInvitation/menu';
 import styles from './header.module.css';
 
 type Props = {

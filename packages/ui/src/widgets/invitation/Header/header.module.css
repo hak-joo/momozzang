@@ -1,0 +1,36 @@
+.header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+}
+.header nav {
+  display: flex;
+  gap: 0px;
+}
+
+.header nav > :not(:first-child) {
+  margin-left: -8px;
+}
+
+.header button {
+  font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  color: #f9f9f9;
+  background: #303030;
+  box-shadow: 3.6px 3.6px 4.5px 0px rgba(0, 0, 0, 0.4);
+
+  width: 72px;
+  height: 32px;
+}
+.header button.active,
+.header button:hover {
+  color: #303030;
+  background-color: #f9f9f9;
+  box-shadow: 3.6px 3.6px 4.5px 0px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
