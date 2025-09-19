@@ -16,13 +16,10 @@ function WeddingCalendar() {
   const groomName = data.couple.groom.name;
   const brideName = data.couple.bride.name;
 
-  // 🔸 12H → 24H 변환 (12 AM = 0시, 12 PM = 12시)
   const hour24 = ampm === 'AM' ? hour % 12 : (hour % 12) + 12;
 
-  // 🔸 date(YYYY-MM-DD)에 시간 합성
   const target = dayjs(date).hour(hour24).minute(minute).second(0).millisecond(0);
 
-  // 달력 그리기용 값
   const monthStart = target.startOf('month');
   const daysInMonth = target.daysInMonth();
   const startWeekday = monthStart.day(); // 0=일 ~ 6=토
@@ -35,12 +32,11 @@ function WeddingCalendar() {
   while (cells.length % 7 !== 0) cells.push(null);
   const rows = chunk(cells, 7);
 
-  // 상단 표기
   const headerDate = target.format('YYYY.MM.DD');
   const ampmLabel = ampm === 'AM' ? '오전' : '오후';
   const timeLabel =
     hour === 12 && minute === 0 && ampm === 'AM'
-      ? '' // 자정(오전 12:00)은 디자인상 생략하고 싶다면 유지
+      ? ''
       : `${ampmLabel} ${hour}시${minute ? ` ${String(minute).padStart(2, '0')}분` : ''}`;
 
   const diff = target.startOf('day').diff(dayjs().startOf('day'), 'day');

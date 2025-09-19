@@ -1,6 +1,3 @@
-// data.ts
-// 예시 데이터 (도메인 모델 기준)
-
 import type { WeddingInvitation } from './model';
 
 export const exampleWeddingInvitation: WeddingInvitation = {
@@ -13,7 +10,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
       phone: { number: '01012345678', isInternational: false, countryCode: '+82' },
       email: 'hakjoo@example.com',
     },
-    url: 'hakjoo-minjeong', // 혹은 전체 URL 정책에 맞게 저장
+    url: 'hakjoo-minjeong',
     title: '학주 & 민정의 모바일 청첩장',
     message: `소중한 분들을 초대합니다.\n\n앞으로 평생 함께하고 싶은 사람을 만나,\n연인에서 부부로\n새로운 시작을 하려고 합니다.
       `,
@@ -51,7 +48,6 @@ export const exampleWeddingInvitation: WeddingInvitation = {
       name: '최은주',
       phone: { number: '01000004444', isInternational: false, countryCode: '+82' },
     },
-    // others: [{ side: "groom", relationLabel: "외삼촌", person: {...} }]
   },
 
   weddingHallInfo: {
@@ -81,7 +77,6 @@ export const exampleWeddingInvitation: WeddingInvitation = {
     },
     separateForBrideGroom: false,
     popupOnAccess: false,
-    // perSide: { groom: {...}, bride: {...} }
   },
 
   etcInfo: {
@@ -184,7 +179,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
 
   customization: {
     enabled: true,
-    themeColor: '#F1FDF3', // 학주 톤
+    themeColor: '#F1FDF3',
     mainImageUrl: 'https://cdn.example.com/invitations/hakjoo-minjeong/main.jpg',
     showDDay: true,
     mood: '기쁨',

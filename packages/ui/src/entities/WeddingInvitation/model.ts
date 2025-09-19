@@ -157,7 +157,7 @@ export interface Parents {
 
 export interface WeddingInvitation {
   version: string;
-  theme: ThemeKind; // 🔹 추가된 테마 필드
+  theme: ThemeKind;
 
   invitationInfo: InvitationInfo;
 
