@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import styles from './styles.module.css';
 import GalleryItem from './GalleryItem';
 import Carousel from './Carousel';
+import SwipeStackGallery from './SwipeStack';
 
 export type GalleryImage = {
   src: string;
@@ -23,7 +24,9 @@ function Gallery({ images, cols = 3 }: GalleryProps) {
 
   return (
     <div>
-      <div
+      <SwipeStackGallery images={images} />
+
+      {/* <div
         className={clsx(styles.galleryGrid, expanded && styles.expanded)}
         style={{ '--gallery-cols': cols } as React.CSSProperties}
       >
@@ -42,7 +45,7 @@ function Gallery({ images, cols = 3 }: GalleryProps) {
           startIndex={carouselIndex}
           onClose={() => setCarouselIndex(null)}
         />
-      )}
+      )} */}
     </div>
   );
 }
