@@ -1,0 +1,135 @@
+:root {
+  --r0: clamp(72px, 13vmin, 160px);
+  --r1: clamp(220px, 38vmin, 520px);
+  --r2: clamp(320px, 58vmin, 820px);
+  --r3: clamp(560px, 100vmin, 1600px);
+  --reveal-duration: 2600ms;
+  --fade-duration: 600ms;
+  --shadow-offset: 0.8vmin;
+}
+
+@supports (width: 1cqi) {
+  .overlay {
+    container-type: size;
+  }
+  :root {
+    --r0: clamp(72px, 13cqi, 160px);
+    --r1: clamp(220px, 38cqi, 520px);
+    --r2: clamp(320px, 58cqi, 820px);
+    --r3: clamp(560px, 120cqi, 1600px);
+    --shadow-offset: 0.8cqi;
+  }
+}
+
+@media (min-width: 1280px) and (min-height: 800px) {
+  :root {
+    --r1: clamp(260px, 34vmin, 600px);
+    --r2: clamp(380px, 54vmin, 920px);
+    --r3: clamp(640px, 110vmin, 1800px);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: transparent;
+  animation: fadeOut var(--fade-duration) ease-in-out var(--reveal-duration) forwards;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.circle {
+  transform-origin: center;
+  will-change: r;
+  animation: reveal3Steps var(--reveal-duration) cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+.shadow {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.6);
+  stroke-width: 32px;
+  filter: url(#intro_shadow_blur);
+  animation: shadowFollow var(--reveal-duration) cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+@keyframes reveal3Steps {
+  0% {
+    r: var(--r0);
+  }
+  10% {
+    r: var(--r0);
+  }
+
+  32% {
+    r: var(--r1);
+  }
+  37% {
+    r: var(--r1);
+  }
+
+  66% {
+    r: var(--r2);
+  }
+  71% {
+    r: var(--r2);
+  }
+
+  98% {
+    r: var(--r3);
+  }
+  100% {
+    r: var(--r3);
+  }
+}
+
+@keyframes shadowFollow {
+  0% {
+    r: calc(var(--r0) + var(--shadow-offset));
+  }
+  10% {
+    r: calc(var(--r0) + var(--shadow-offset));
+  }
+
+  32% {
+    r: calc(var(--r1) + var(--shadow-offset));
+  }
+  37% {
+    r: calc(var(--r1) + var(--shadow-offset));
+  }
+
+  66% {
+    r: calc(var(--r2) + var(--shadow-offset));
+  }
+  71% {
+    r: calc(var(--r2) + var(--shadow-offset));
+  }
+
+  98% {
+    r: calc(var(--r3) + var(--shadow-offset));
+  }
+  100% {
+    r: calc(var(--r3) + var(--shadow-offset));
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle,
+  .shadow {
+    animation: none;
+  }
+  .overlay {
+    animation: none;
+    opacity: 0;
+  }
+}

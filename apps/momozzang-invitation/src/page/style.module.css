@@ -1,0 +1,16 @@
+.pageRoot {
+  position: relative;
+  min-height: 100dvh;
+  background: #f7f7fb;
+}
+
+.appHidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.appVisible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 260ms ease;
+}
