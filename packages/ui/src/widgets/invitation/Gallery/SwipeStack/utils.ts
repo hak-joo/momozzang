@@ -43,7 +43,6 @@ export const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
  */
 export function computeTransform(d: number, dir: -1 | 0 | 1, width: number): string {
   const delta = clamp(d, -3, 3);
-  const absDelta = Math.abs(delta);
 
   let translateX = 0;
   let translateY = 0;

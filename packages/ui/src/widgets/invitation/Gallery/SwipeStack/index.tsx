@@ -12,7 +12,7 @@ export type SwipeStackProps = {
   renderRange?: number;
 };
 
-export default function SwipeStack({
+function SwipeStack({
   images,
   initialIndex = 0,
   sensitivity = 1,
@@ -184,3 +184,4 @@ export default function SwipeStack({
     </div>
   );
 }
+export default SwipeStack;

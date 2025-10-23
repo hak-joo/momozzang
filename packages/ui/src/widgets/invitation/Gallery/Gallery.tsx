@@ -23,7 +23,7 @@ function Gallery({ images, cols = 3 }: GalleryProps) {
   const visibleCount = expanded ? images.length : cols * maxRows;
 
   return (
-    <div>
+    <>
       <SwipeStackGallery images={images} />
 
       {/* <div
@@ -46,7 +46,7 @@ function Gallery({ images, cols = 3 }: GalleryProps) {
           onClose={() => setCarouselIndex(null)}
         />
       )} */}
-    </div>
+    </>
   );
 }
 

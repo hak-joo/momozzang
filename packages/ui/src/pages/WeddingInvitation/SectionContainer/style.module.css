@@ -1,0 +1,12 @@
+.sectionContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.sectionContainer > .title {
+  margin-bottom: 20px;
+}

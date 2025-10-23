@@ -36,22 +36,11 @@ body {
   justify-content: flex-start;
   max-width: 430px;
   min-width: 375px;
-  box-shadow:
-    0 0 0 1px #2221,
-    0 0 16px 0 #0003;
-  border-radius: 0;
   position: relative;
 }
 
 .app-frame > main {
-  position: relative;
-  --grid: #2b2b2b0f;
-
-  background:
-    linear-gradient(0deg, transparent calc(100% - 1px), var(--grid) calc(100% - 1px)),
-    linear-gradient(90deg, transparent calc(100% - 1px), var(--grid) calc(100% - 1px));
-  background-size: 32px 32px;
-  background-color: var(--bg);
+  width: 100%;
 }
 
 @media (max-width: 430px) {

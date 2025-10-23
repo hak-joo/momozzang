@@ -5,7 +5,7 @@ type IntroProps = {
   next: () => void;
 };
 
-export default function Intro({ label = 'Wedding day', next }: IntroProps) {
+function Intro({ label = 'Wedding day', next }: IntroProps) {
   return (
     <div className={styles.intro}>
       {label && <div className={styles.label}>{label}</div>}
@@ -14,3 +14,4 @@ export default function Intro({ label = 'Wedding day', next }: IntroProps) {
     </div>
   );
 }
+export default Intro;

@@ -6,13 +6,7 @@ import useCurrentMenuByScroll from '@features/useCurrentMenuByScroll';
 import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import Home from '@widgets/invitation/Home';
 import { InvitationProvider } from '@entities/WeddingInvitation/Context';
-
-const SECTION_STYLE: Record<Menu, React.CSSProperties> = {
-  home: { minHeight: '100vh' },
-  guestbook: { minHeight: '100vh' },
-  gallery: { minHeight: '100vh' },
-  directions: { minHeight: '100vh' },
-};
+import SectionContainer from './SectionContainer';
 
 interface Props {
   metadata: WeddingInvitation;
@@ -40,14 +34,11 @@ function Invitation({ metadata }: Props) {
     <InvitationProvider data={metadata}>
       <main>
         <Header currentMenu={currentMenu} onMenuClick={scrollToMenu} />
-        <div ref={homeRef} style={SECTION_STYLE.home}>
+        <SectionContainer name="Home" ref={homeRef}>
           <Home data={metadata} />
-        </div>
-        <div ref={guestbookRef} style={SECTION_STYLE.guestbook}>
-          <h2>Guestbook</h2>
-        </div>
-        <div ref={galleryRef} style={SECTION_STYLE.gallery}>
-          <h2>Gallery</h2>
+        </SectionContainer>
+        <SectionContainer name="Guestbook" ref={guestbookRef}></SectionContainer>
+        <SectionContainer name="Gallery" ref={galleryRef}>
           <Gallery
             images={[
               {
@@ -125,10 +116,8 @@ function Invitation({ metadata }: Props) {
             ]}
             cols={3}
           />
-        </div>
-        <div ref={directionsRef} style={SECTION_STYLE.directions}>
-          <h2>Directions</h2>
-        </div>
+        </SectionContainer>
+        <SectionContainer name="Directions" ref={directionsRef}></SectionContainer>
       </main>
     </InvitationProvider>
   );
