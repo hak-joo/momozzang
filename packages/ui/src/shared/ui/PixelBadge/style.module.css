@@ -1,0 +1,82 @@
+.root {
+  --pixel-font-size: 30px;
+  --pixel-outline: 4px;
+  --pixel-text-gradient: linear-gradient(90deg, #aca4ff -1.18%, #6aa3ff 101.34%);
+  --pixel-border-color: #ffffff;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.root::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: var(--pixel-border-color);
+  font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
+  font-size: var(--pixel-font-size);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  text-shadow:
+    var(--pixel-outline) 0 var(--pixel-border-color),
+    calc(var(--pixel-outline) * -1) 0 var(--pixel-border-color),
+    0 var(--pixel-outline) var(--pixel-border-color),
+    0 calc(var(--pixel-outline) * -1) var(--pixel-border-color),
+    var(--pixel-outline) var(--pixel-outline) var(--pixel-border-color),
+    var(--pixel-outline) calc(var(--pixel-outline) * -1) var(--pixel-border-color),
+    calc(var(--pixel-outline) * -1) var(--pixel-outline) var(--pixel-border-color),
+    calc(var(--pixel-outline) * -1) calc(var(--pixel-outline) * -1) var(--pixel-border-color),
+    calc(var(--pixel-outline) * 2) 0 var(--pixel-border-color),
+    calc(var(--pixel-outline) * -2) 0 var(--pixel-border-color),
+    0 calc(var(--pixel-outline) * 2) var(--pixel-border-color),
+    0 calc(var(--pixel-outline) * -2) var(--pixel-border-color),
+    calc(var(--pixel-outline) * 2) var(--pixel-outline) var(--pixel-border-color),
+    calc(var(--pixel-outline) * 2) calc(var(--pixel-outline) * -1) var(--pixel-border-color),
+    calc(var(--pixel-outline) * -2) var(--pixel-outline) var(--pixel-border-color),
+    calc(var(--pixel-outline) * -2) calc(var(--pixel-outline) * -1) var(--pixel-border-color),
+    var(--pixel-outline) calc(var(--pixel-outline) * 2) var(--pixel-border-color),
+    calc(var(--pixel-outline) * -1) calc(var(--pixel-outline) * 2) var(--pixel-border-color),
+    var(--pixel-outline) calc(var(--pixel-outline) * -2) var(--pixel-border-color),
+    calc(var(--pixel-outline) * -1) calc(var(--pixel-outline) * -2) var(--pixel-border-color);
+  z-index: 0;
+}
+
+.text {
+  position: relative;
+  display: inline-block;
+  font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
+  font-size: var(--pixel-font-size);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  background: var(--pixel-text-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+  z-index: 1;
+}
+
+.text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  background: var(--pixel-text-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: brightness(1.05);
+}
+
+@media (max-width: 480px) {
+  .root {
+    --pixel-font-size: 30px;
+    --pixel-outline: 3px;
+  }
+}

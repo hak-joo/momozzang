@@ -1,0 +1,111 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: fit-content;
+  margin: 0 auto;
+  position: relative;
+}
+
+.board {
+  width: 270px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 8px;
+  border: 1px solid #ffffff80;
+  border-radius: 16px;
+  background: #c2e4ff;
+  box-shadow: 0px -2px 12px 2px #3330ff1a inset;
+
+  box-shadow: 0px 4px 4px 0px #b0c4ff4d inset;
+  backdrop-filter: blur(6px);
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.digit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid #d2dbff;
+  background: #95aeff;
+  box-shadow: 0px 0px 1.8px 0px #ffffff80 inset;
+  box-shadow: 0px -1.8px 1.8px 0px #ffffff99 inset;
+  box-shadow: 2.7px 3.6px 3.6px 0px #90baf140 inset;
+
+  color: #fff;
+  font-size: 24px;
+}
+
+.separator {
+  color: #76a3ff;
+  width: 5px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0 2px;
+}
+
+.timeText {
+  margin-top: 16px;
+  color: #6aa3ff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #78a9ff;
+}
+
+.dotTop {
+  top: 16px;
+}
+
+.dotBottom {
+  bottom: 16px;
+}
+
+.dotLeft {
+  left: 16px;
+}
+
+.dotRight {
+  right: 16px;
+}
+
+.balloon {
+  position: absolute;
+  width: 20px;
+  height: auto;
+  filter: drop-shadow(0 4px 6px rgba(93, 117, 244, 0.25));
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+}
+.balloonLeft {
+  top: -16px;
+  left: 10px;
+}
+
+.balloonRight {
+  top: -16px;
+  right: 10px;
+  transform: scaleX(-1);
+}

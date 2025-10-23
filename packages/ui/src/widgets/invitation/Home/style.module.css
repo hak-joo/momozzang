@@ -1,0 +1,17 @@
+.imgContainer {
+  position: relative;
+  margin: 24px 0;
+}
+
+.weddingDayImg {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  pointer-events: none;
+  user-select: none;
+}
+.photoInRingImg {
+  width: 300px;
+  pointer-events: none;
+  user-select: none;
+}

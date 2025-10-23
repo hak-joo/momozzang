@@ -6,18 +6,24 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'PyeongchangPeace';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChangPeace-Light.woff2')
+    format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
 html,
 body {
   font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
   min-width: 375px;
-  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: hidden;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background: #111;
-  overscroll-behavior: none;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 #root {
@@ -27,7 +33,7 @@ body {
 .app-frame {
   width: 100vw;
   min-height: 100vh;
-  background: #fff;
+  background-color: #fff;
   margin: 0 auto;
   box-sizing: border-box;
   display: flex;
@@ -37,10 +43,10 @@ body {
   max-width: 430px;
   min-width: 375px;
   position: relative;
-}
-
-.app-frame > main {
-  width: 100%;
+  overflow-y: scroll;
+  overscroll-behavior: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (max-width: 430px) {
@@ -55,8 +61,4 @@ body {
 
 body {
   color: #222;
-}
-
-body::-webkit-scrollbar {
-  display: none;
 }
