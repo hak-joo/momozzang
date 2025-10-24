@@ -1,0 +1,211 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: var(--button-radius);
+  font-weight: var(--button-font-weight);
+  line-height: 1;
+  color: var(--color-primary-contrast);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+  box-shadow: var(--button-shadow);
+  text-shadow: 0 1px 3px rgba(32, 24, 71, 0.35);
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.button:active {
+  transform: translateY(1px);
+  filter: brightness(0.97);
+  box-shadow: 0 4px 12px rgba(84, 64, 171, 0.2);
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.03);
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(149, 174, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.fullWidth {
+  width: 100%;
+  display: flex;
+}
+
+.sizeSm {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.sizeMd {
+  min-height: 44px;
+  padding: 0 20px;
+  font-size: 16px;
+}
+
+.sizeLg {
+  min-height: 52px;
+  padding: 0 24px;
+  font-size: 18px;
+}
+
+.variantPrimary {
+  background: linear-gradient(
+    180deg,
+    var(--color-primary-soft) 0%,
+    var(--color-primary-base) 60%,
+    var(--color-primary-strong) 100%
+  );
+  color: var(--color-primary-contrast);
+  box-shadow: var(--button-shadow);
+}
+
+.variantPrimary.button:disabled {
+  background: var(--color-disabled);
+  color: rgba(81, 41, 133, 0.5);
+}
+
+.variantSecondary {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    var(--color-primary-accent) 100%
+  );
+  color: var(--color-primary-text);
+  box-shadow: 0 6px 14px rgba(149, 174, 255, 0.35);
+}
+
+.variantSecondary.button:disabled {
+  background: var(--color-disabled);
+  color: rgba(81, 41, 133, 0.45);
+}
+
+.variantSecondary:hover:not(:disabled) {
+  filter: brightness(1.02);
+}
+
+.variantGhost {
+  background: transparent;
+  color: var(--color-primary-text);
+  box-shadow: none;
+  border: 1px solid rgba(149, 174, 255, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.variantGhost::before {
+  display: none;
+}
+
+.variantGhost:hover:not(:disabled) {
+  background: rgba(149, 174, 255, 0.15);
+}
+
+.variantGhost.button:disabled {
+  color: rgba(81, 41, 133, 0.4);
+  border-color: rgba(209, 203, 226, 0.9);
+  background: rgba(209, 203, 226, 0.25);
+}
+
+.variantPlain {
+  background: transparent;
+  color: var(--color-primary-text);
+  box-shadow: none;
+}
+
+.variantPlain::before {
+  display: none;
+}
+
+.variantPlain:hover:not(:disabled),
+.variantPlain:focus-visible {
+  background: rgba(149, 174, 255, 0.12);
+}
+
+.variantPlain:active:not(:disabled) {
+  filter: none;
+  background: rgba(149, 174, 255, 0.2);
+}
+
+.variantPlain:disabled {
+  color: rgba(81, 41, 133, 0.35);
+  background: transparent;
+}
+
+.button:disabled::before {
+  display: none;
+}
+
+.iconButton {
+  padding: 0;
+  border-radius: var(--icon-button-radius);
+  box-shadow: var(--icon-button-shadow);
+  aspect-ratio: 1;
+  min-height: auto;
+  gap: 0;
+}
+
+.iconButton:hover:not(:disabled) {
+  box-shadow: 0 10px 20px rgba(81, 41, 133, 0.3);
+}
+
+.iconButtonPlain {
+  box-shadow: none;
+}
+
+.iconButtonPlain:hover:not(:disabled),
+.iconButtonPlain:focus-visible {
+  background: rgba(149, 174, 255, 0.12);
+  box-shadow: none;
+}
+
+.iconButtonPlain:active:not(:disabled) {
+  background: rgba(149, 174, 255, 0.2);
+  box-shadow: none;
+}
+
+.iconButtonPlain:disabled {
+  opacity: 0.5;
+}
+
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.iconSizeSm {
+  width: 36px;
+  height: 36px;
+}
+
+.iconSizeMd {
+  width: 44px;
+  height: 44px;
+}
+
+.iconSizeLg {
+  width: 52px;
+  height: 52px;
+}

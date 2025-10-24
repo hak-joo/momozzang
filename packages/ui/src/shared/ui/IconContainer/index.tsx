@@ -1,0 +1,17 @@
+import type { HTMLAttributes } from 'react';
+import { clsx } from 'clsx';
+import styles from './style.module.css';
+
+export type IconSize = 'sm' | 'md' | 'lg';
+
+export interface IconContainerProps extends HTMLAttributes<HTMLSpanElement> {
+  size?: IconSize;
+}
+
+const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
+const IconContainer = ({ size = 'md', className, ...rest }: IconContainerProps) => (
+  <span className={clsx(styles.root, styles[`size${capitalize(size)}`], className)} {...rest} />
+);
+
+export default IconContainer;
