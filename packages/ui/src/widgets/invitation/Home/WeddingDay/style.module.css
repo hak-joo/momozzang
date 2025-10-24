@@ -38,12 +38,12 @@
   justify-content: center;
   width: 24px;
   height: 30px;
-  border-radius: 5px;
-  border: 2px solid #d2dbff;
+  border-radius: 5.4px;
   background: #95aeff;
-  box-shadow: 0px 0px 1.8px 0px #ffffff80 inset;
-  box-shadow: 0px -1.8px 1.8px 0px #ffffff99 inset;
-  box-shadow: 2.7px 3.6px 3.6px 0px #90baf140 inset;
+  box-shadow:
+    2.7px 3.6px 3.6px 0 rgba(144, 186, 241, 0.25) inset,
+    0 -1.8px 1.8px 0 rgba(255, 255, 255, 0.6) inset,
+    0 0 1.8px 0 rgba(255, 255, 255, 0.5) inset;
 
   color: #fff;
   font-size: 24px;
@@ -51,11 +51,13 @@
 
 .separator {
   color: #76a3ff;
-  width: 5px;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
-  margin: 0 2px;
+  text-align: center;
+  font-family: 'DungGeunMo';
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: -1.44px;
 }
 
 .timeText {
