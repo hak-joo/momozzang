@@ -1,0 +1,87 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: fit-content;
+  margin: 0 auto;
+  position: relative;
+  min-height: 100px;
+}
+
+.board {
+  width: 270px;
+  min-height: 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 8px;
+  border-radius: 12px;
+
+  &.primary {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: #c2e4ff;
+    box-shadow:
+      0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
+      0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;
+    .dot {
+      background: #95aeff;
+    }
+  }
+
+  &.reversed {
+    background: #fff;
+    border: 0.9px solid rgba(255, 255, 255, 0.5);
+    background: #fff;
+    box-shadow:
+      0 3.6px 3.6px 0 rgba(176, 196, 255, 0.3) inset,
+      0 -1.8px 10.8px 1.8px rgba(51, 48, 255, 0.1) inset;
+    .dot {
+      background: #bfbce0;
+    }
+  }
+}
+
+.dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+}
+
+.dotTop {
+  top: 16px;
+}
+
+.dotBottom {
+  bottom: 16px;
+}
+
+.dotLeft {
+  left: 16px;
+}
+
+.dotRight {
+  right: 16px;
+}
+
+.balloon {
+  position: absolute;
+  width: 20px;
+  height: auto;
+  filter: drop-shadow(0 4px 6px rgba(93, 117, 244, 0.25));
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+}
+.balloonLeft {
+  top: -16px;
+  left: 10px;
+}
+
+.balloonRight {
+  top: -16px;
+  right: 10px;
+  transform: scaleX(-1);
+}
