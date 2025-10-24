@@ -1,10 +1,10 @@
-import { Fragment } from 'react';
 import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import photoInRingImg from './PhotoInRing.png';
 import weddingDayImg from './WeddingDay.png';
 import PixelBadge from '@shared/ui/PixelBadge';
 import styles from './style.module.css';
 import WeddingDay from './WeddingDay';
+import ContactInfo from './ContactInfo';
 
 interface Props {
   data: WeddingInvitation;
@@ -16,15 +16,6 @@ function Home({ data }: Props) {
 
   return (
     <>
-      {/* <p style={{ textAlign: 'center' }}>모시는 글</p>
-      <p style={{ textAlign: 'center' }}>
-        {data.invitationInfo.message.split('\n').map((line, i) => (
-          <Fragment key={i}>
-            {line}
-            <br />
-          </Fragment>
-        ))}
-      </p> */}
       <div className={styles.imgContainer}>
         <img className={styles.photoInRingImg} src={photoInRingImg} alt="반지 속 사진" />
         <img className={styles.weddingDayImg} src={weddingDayImg} alt="웨딩데이" />
@@ -35,8 +26,7 @@ function Home({ data }: Props) {
       </div>
       <WeddingDay date={date} ampm={ampm} hour={hour} minute={minute} />
 
-      {/* <p>{weddingDate}</p> */}
-      {/* <WeddingCalendar /> */}
+      <ContactInfo />
     </>
   );
 }
