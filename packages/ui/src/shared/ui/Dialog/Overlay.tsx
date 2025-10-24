@@ -10,7 +10,7 @@ export type OverlayProps = {
 
 function Overlay({ className, children, ...rest }: OverlayProps) {
   return (
-    <DialogPrimitives.Overlay className={clsx(styles.Overlay, className)} {...rest}>
+    <DialogPrimitives.Overlay className={clsx(styles.overlay, className)} {...rest}>
       {children}
     </DialogPrimitives.Overlay>
   );

@@ -27,9 +27,9 @@ export function Content({
 
   return (
     <Container>
-      {useOverlay && <DialogOverlay className={styles.OverlayOpen} />}
+      {useOverlay && <DialogOverlay className={styles.overlayOpen} />}
       <DialogPrimitives.Content
-        className={clsx(styles.Dialog, className)}
+        className={clsx(styles.dialog, className)}
         onInteractOutside={(e) => {
           if (!useAutoClose) e.preventDefault();
         }}
