@@ -6,12 +6,10 @@
   width: fit-content;
   margin: 0 auto;
   position: relative;
-  min-height: 100px;
 }
 
 .board {
   width: 270px;
-  min-height: 100px;
   position: relative;
   display: flex;
   flex-direction: column;

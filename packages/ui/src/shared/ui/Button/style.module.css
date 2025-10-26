@@ -129,8 +129,9 @@
 
 .variantPlain {
   background: transparent;
-  color: var(--color-primary-text);
+  color: var(--button-plain-color, var(--color-primary-text));
   box-shadow: none;
+  text-shadow: none;
 }
 
 .variantPlain::before {

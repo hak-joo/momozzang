@@ -1,4 +1,118 @@
-.dialog {
+.content {
   width: 320px;
   height: 90vh;
+  background: #f4faff !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.title {
+  color: var(--Purple-Purple_text, #512985);
+  text-align: center;
+  font-family: PyeongChang;
+  font-size: 18.9px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 33.3px; /* 176.19% */
+  letter-spacing: -0.189px;
+}
+
+.desc {
+  color: var(--Purple-Purple_text, #512985);
+  text-align: center;
+  font-family: PyeongChang;
+  font-size: 14.4px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 33.3px; /* 231.25% */
+  letter-spacing: -0.144px;
+}
+
+.tabList {
+  display: flex;
+  justify-content: space-around;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 5.4px;
+  --button-plain-color: var(--Basic-Gray02, #d1cbe2);
+  color: var(--button-plain-color);
+
+  .icon {
+    color: var(--Purple-Purple02, #a696ea);
+  }
+
+  .name {
+    text-align: center;
+    font-family: PyeongChang;
+    font-size: 14.4px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 14.4px; /* 100% */
+    letter-spacing: -0.432px;
+    color: inherit;
+  }
+}
+
+.active {
+  --button-plain-color: var(--Basic-Gray_text, #484848);
+}
+
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 8px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.contactCard {
+  width: 100%;
+}
+
+.contactLabel {
+  color: var(--Basic-Gray02, #d1cbe2);
+  font-family: PyeongChang;
+  font-size: 14.4px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 14.4px;
+  letter-spacing: -0.144px;
+  text-align: center;
+}
+
+.contactName {
+  margin-top: 8px;
+  color: var(--Basic-Gray_text, #484848);
+  text-align: center;
+  font-family: PyeongChang;
+  font-size: 21.6px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 21.6px;
+  letter-spacing: -0.216px;
+}
+
+.actionRow {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.actionButton {
+  flex: 1;
+  box-shadow: 0 6px 12px rgba(94, 76, 201, 0.2);
 }
