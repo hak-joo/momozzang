@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import './wedding-calendar.css';
+import clsx from 'clsx';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
+import styles from './style.module.css';
 
 const koDays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -43,27 +44,30 @@ function WeddingCalendar() {
   const dLabel = diff === 0 ? 'D-DAY' : diff > 0 ? `D-${diff}` : `D+${Math.abs(diff)}`;
 
   return (
-    <section className={`wc-card`}>
-      <header className="wc-top">
-        <span className="wc-emoji" aria-hidden>
+    <section className={styles.wcCard}>
+      <header className={styles.wcTop}>
+        <span className={styles.wcEmoji} aria-hidden>
           🎂
         </span>
-        <span className="wc-date">{headerDate}</span>
-        {timeLabel && <span className="wc-time">{timeLabel}</span>}
+        <span className={styles.wcDate}>{headerDate}</span>
+        {timeLabel && <span className={styles.wcTime}>{timeLabel}</span>}
       </header>
 
-      <div className="wc-grid">
-        <div className="wc-weekhead">
+      <div className={styles.wcGrid}>
+        <div className={styles.wcWeekHead}>
           {koDays.map((d, i) => (
-            <div key={d} className={`wc-wd ${i === 0 ? 'sun' : i === 6 ? 'sat' : ''}`}>
+            <div
+              key={d}
+              className={clsx(styles.wcWd, i === 0 && styles.wcWdSun, i === 6 && styles.wcWdSat)}
+            >
               {d}
             </div>
           ))}
         </div>
 
-        <div className="wc-weeks">
+        <div className={styles.wcWeeks}>
           {rows.map((week, rIdx) => (
-            <div key={rIdx} className="wc-week">
+            <div key={rIdx} className={styles.wcWeek}>
               {week.map((d, cIdx) => {
                 const isSun = cIdx === 0;
                 const isSat = cIdx === 6;
@@ -71,19 +75,19 @@ function WeddingCalendar() {
                 return (
                   <div
                     key={cIdx}
-                    className={[
-                      'wc-cell',
-                      isSun ? 'sun' : '',
-                      isSat ? 'sat' : '',
-                      d ? 'in' : 'out',
-                      isSelected ? 'selected' : '',
-                    ].join(' ')}
+                    className={clsx(
+                      styles.wcCell,
+                      isSun && styles.wcCellSun,
+                      isSat && styles.wcCellSat,
+                      !d && styles.wcCellOut,
+                      isSelected && styles.wcCellSelected,
+                    )}
                     aria-current={isSelected ? 'date' : undefined}
                   >
                     {d && (
                       <>
-                        <span className="wc-num">{d}</span>
-                        {isSelected && <span className="wc-marker" aria-hidden />}
+                        <span className={styles.wcNum}>{d}</span>
+                        {isSelected && <span className={styles.wcMarker} aria-hidden />}
                       </>
                     )}
                   </div>
@@ -94,15 +98,15 @@ function WeddingCalendar() {
         </div>
       </div>
 
-      <footer className="wc-footer" role="note" aria-live="polite">
-        <span className="wc-ring" aria-hidden>
+      <footer className={styles.wcFooter} role="note" aria-live="polite">
+        <span className={styles.wcRing} aria-hidden>
           💍
         </span>
         <strong>
           {groomName}, {brideName}
         </strong>
         <span>&nbsp;결혼식까지&nbsp;</span>
-        <strong className="wc-dday">{dLabel}</strong>
+        <strong className={styles.wcDday}>{dLabel}</strong>
       </footer>
     </section>
   );

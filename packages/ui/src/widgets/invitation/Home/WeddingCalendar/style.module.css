@@ -1,4 +1,4 @@
-.wc-card {
+.wcCard {
   --bg: #ffffff;
   --ink: #111111;
   --muted: #8a8a8a;
@@ -12,71 +12,71 @@
   user-select: none;
 }
 
-.wc-cy {
-  background:
-    linear-gradient(0deg, transparent 31px, var(--grid) 32px),
-    linear-gradient(90deg, transparent 31px, var(--grid) 32px);
-  background-size: 32px 32px;
-  background-color: var(--bg);
-}
-
-.wc-retro {
-  --bg: #fffaf2;
-  --grid: #f2e8d9;
-}
-
-.wc-top {
+.wcTop {
   display: flex;
   align-items: baseline;
   gap: 10px;
   padding: 16px 18px 8px 18px;
   font-weight: 700;
 }
-.wc-emoji {
+
+.wcEmoji {
   font-size: 20px;
 }
-.wc-date {
+
+.wcDate {
   font-size: 20px;
   letter-spacing: 0.5px;
 }
-.wc-time {
+
+.wcTime {
   font-size: 16px;
   color: var(--muted);
 }
 
-/* Grid */
-.wc-grid {
+.wcGrid {
   padding: 8px 12px 12px;
 }
-.wc-weekhead,
-.wc-week {
+
+.wcWeekHead,
+.wcWeek {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
-.wc-weekhead {
+
+.wcWeekHead {
   margin-bottom: 6px;
   padding: 0 6px;
 }
-.wc-wd {
+
+.wcWd {
   text-align: center;
   font-size: 12px;
   color: var(--muted);
   letter-spacing: 0.5px;
 }
-.wc-wd.sun {
+
+.wcWdSun {
   color: var(--sun);
 }
-.wc-wd.sat {
+
+.wcWdSat {
   color: var(--sat);
 }
 
-.wc-week {
+.wcWeeks {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.wcWeek {
   gap: 4px;
   margin: 4px 0;
   padding: 0 2px;
 }
 
-.wc-cell {
+.wcCell {
   position: relative;
   height: 40px;
   display: grid;
@@ -84,30 +84,36 @@
   border-radius: 10px;
   transition: transform 0.05s ease;
 }
-.wc-cell.out {
+
+.wcCellOut {
   opacity: 0;
   pointer-events: none;
 }
 
-.wc-cell.sun .wc-num {
+.wcCellSun .wcNum {
   color: var(--sun);
 }
-.wc-cell.sat .wc-num {
+
+.wcCellSat .wcNum {
   color: var(--sat);
 }
 
-.wc-cell:hover {
+.wcCell:hover {
   transform: translateY(-1px);
 }
 
-.wc-num {
+.wcNum {
   position: relative;
   z-index: 1;
   font-size: 14px;
   font-weight: 700;
 }
 
-.wc-cell.selected .wc-marker {
+.wcMarker {
+  display: block;
+}
+
+.wcCellSelected .wcMarker {
   position: absolute;
   inset: 4px;
   background: var(--accent, #111);
@@ -118,11 +124,11 @@
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.15));
 }
 
-.wc-cell.selected .wc-num {
+.wcCellSelected .wcNum {
   color: var(--accent-ink, #fff);
 }
 
-.wc-footer {
+.wcFooter {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -134,10 +140,12 @@
   font-size: 14px;
   font-weight: 600;
 }
-.wc-footer .wc-ring {
+
+.wcRing {
   font-size: 18px;
 }
-.wc-footer .wc-dday {
+
+.wcDday {
   margin-left: 2px;
   padding: 2px 8px;
   border-radius: 999px;

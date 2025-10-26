@@ -5,6 +5,7 @@ import PixelBadge from '@shared/ui/PixelBadge';
 import styles from './style.module.css';
 import WeddingDay from './WeddingDay';
 import ContactInfo from './ContactInfo';
+import WeddingCalendar from './WeddingCalendar';
 
 interface Props {
   data: WeddingInvitation;
@@ -27,6 +28,8 @@ function Home({ data }: Props) {
       <WeddingDay date={date} ampm={ampm} hour={hour} minute={minute} />
 
       <ContactInfo />
+
+      <WeddingCalendar />
     </>
   );
 }
