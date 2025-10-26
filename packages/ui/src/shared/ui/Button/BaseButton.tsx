@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
-import styles from './style.module.css';
+import styles from './Button.module.css';
 
 export type ButtonSize = 'sm' | 'md' | 'lg';
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'plain';

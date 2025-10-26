@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import { clsx } from 'clsx';
-import styles from './style.module.css';
+import styles from './IconContainer.module.css';
 
 export type IconSize = 'sm' | 'md' | 'lg';
 

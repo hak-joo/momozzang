@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import * as React from 'react';
 import DialogOverlay from './Overlay';
 
-import styles from './style.module.css';
+import styles from './Dialog.module.css';
 
 export type AnimationStyles = 'popup' | 'slide-up' | 'slide-down';
 

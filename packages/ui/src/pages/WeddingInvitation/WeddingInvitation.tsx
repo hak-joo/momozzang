@@ -2,12 +2,12 @@ import { useRef } from 'react';
 import Header from '@widgets/invitation/Header';
 import Gallery from '@widgets/invitation/Gallery';
 import { Menu } from '@entities/WeddingInvitation/menu';
-import useCurrentMenuByScroll from '@features/useCurrentMenuByScroll';
+import useCurrentMenuByScroll from '@features/lib/hooks/useCurrentMenuByScroll';
 import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import Home from '@widgets/invitation/Home';
 import { InvitationProvider } from '@entities/WeddingInvitation/Context';
 import SectionContainer from './SectionContainer';
-import styles from './style.module.css';
+import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
 
 interface Props {

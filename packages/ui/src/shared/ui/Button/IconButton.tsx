@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
 import Button, { type ButtonProps } from './BaseButton';
 import IconContainer, { type IconSize } from '@shared/ui/IconContainer';
-import styles from './style.module.css';
+import styles from './Button.module.css';
 
 type IconButtonSize = 'sm' | 'md' | 'lg';
 

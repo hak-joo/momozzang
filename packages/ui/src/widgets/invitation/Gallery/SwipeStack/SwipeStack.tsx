@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import styles from './style.module.css';
+import styles from './SwipeStack.module.css';
 import { computeTransform, opacityFor, clamp } from './utils';
 import { COMMIT_DEADZONE } from './constants';
 import type { GalleryImage } from '../Gallery';

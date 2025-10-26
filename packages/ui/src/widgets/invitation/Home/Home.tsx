@@ -2,7 +2,7 @@ import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import photoInRingImg from './PhotoInRing.png';
 import weddingDayImg from './WeddingDay.png';
 import PixelBadge from '@shared/ui/PixelBadge';
-import styles from './style.module.css';
+import styles from './Home.module.css';
 import WeddingDay from './WeddingDay';
 import ContactInfo from './ContactInfo';
 import WeddingCalendar from './WeddingCalendar';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './styles.module.css';
+import styles from './Gallery.module.css';
 
 import * as Dialog from '@shared/ui/Dialog';
 import type { GalleryImage } from './Gallery';

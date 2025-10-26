@@ -1,4 +1,4 @@
-import styles from './style.module.css';
+import styles from './Intro.module.css';
 
 type IntroProps = {
   label?: string;

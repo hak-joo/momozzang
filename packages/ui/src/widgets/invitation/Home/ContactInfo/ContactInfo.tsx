@@ -1,6 +1,6 @@
 import * as Dialog from '@shared/ui/Dialog';
 import Button from '@shared/ui/Button';
-import styles from './style.module.css';
+import styles from './ContactInfo.module.css';
 import { useMemo, useState } from 'react';
 import PixelHeart from '@shared/ui/Icon/PixelHeart';
 import clsx from 'clsx';
@@ -100,7 +100,6 @@ function ContactInfo() {
 
   return (
     <Dialog.Root>
-      <Dialog.Title hidden>Contact Info</Dialog.Title>
       <Dialog.Trigger asChild>
         <Button variant="primary">{`축하의 말 전하기 ${'>'}`}</Button>
       </Dialog.Trigger>

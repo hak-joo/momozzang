@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import { clsx } from 'clsx';
-import styles from './style.module.css';
+import styles from './PixelBadge.module.css';
 
-interface PixelBadgeProps {
+export interface PixelBadgeProps {
   text: string;
   className?: string;
   gradient?: string;

@@ -1,10 +1,10 @@
-import styles from './style.module.css';
+import styles from './Box.module.css';
 import { clsx } from 'clsx';
 import heartBalloon from '@shared/assets/images/heart-balloon.png';
 import type { PropsWithChildren } from 'react';
 
 type Variant = 'primary' | 'reversed';
-interface Props {
+export interface Props {
   className?: string;
   variant: Variant;
   hasBalloon?: boolean;

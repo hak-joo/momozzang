@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import type { AmPm } from '@entities/WeddingInvitation/model';
 
-import styles from './style.module.css';
+import styles from './WeddingDay.module.css';
 import Box from '@shared/ui/Box';
 
 interface WeddingDayProps {

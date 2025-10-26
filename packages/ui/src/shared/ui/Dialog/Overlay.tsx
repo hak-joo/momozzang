@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import * as DialogPrimitives from '@radix-ui/react-dialog';
-import styles from './style.module.css';
+import styles from './Dialog.module.css';
 import type { ReactNode } from 'react';
 
 export type OverlayProps = {

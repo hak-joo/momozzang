@@ -1,4 +1,4 @@
-import styles from './styles.module.css';
+import styles from './Gallery.module.css';
 import type { GalleryImage } from './Gallery';
 
 type GalleryItemProps = {

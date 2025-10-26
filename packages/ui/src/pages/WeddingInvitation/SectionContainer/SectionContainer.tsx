@@ -1,4 +1,4 @@
-import styles from './style.module.css';
+import styles from './SectionContainer.module.css';
 import type { PropsWithChildren, RefObject } from 'react';
 
 interface Props {

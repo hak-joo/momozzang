@@ -1,5 +1,5 @@
 import type { Menu } from '@entities/WeddingInvitation/menu';
-import styles from './header.module.css';
+import styles from './Header.module.css';
 
 type Props = {
   currentMenu: Menu;

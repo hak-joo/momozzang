@@ -1,5 +1,5 @@
-import { useEffect, useId, useRef, useState } from 'react';
-import styles from './style.module.css';
+import { useEffect, useId, useState } from 'react';
+import styles from './IntroOverlay.module.css';
 
 function IntroOverlay() {
   const [animationEnded, setAnimationEnded] = useState<boolean>(false);

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import clsx from 'clsx';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
-import styles from './style.module.css';
+import styles from './WeddingCalendar.module.css';
 
 const koDays = ['일', '월', '화', '수', '목', '금', '토'];
 
