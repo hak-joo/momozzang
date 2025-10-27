@@ -6,6 +6,7 @@ import styles from './Home.module.css';
 import WeddingDay from './WeddingDay';
 import ContactInfo from './ContactInfo';
 import WeddingCalendar from './WeddingCalendar';
+import Introduction from './Introduction';
 
 interface Props {
   data: WeddingInvitation;
@@ -27,7 +28,7 @@ function Home({ data }: Props) {
       </div>
       <WeddingDay date={date} ampm={ampm} hour={hour} minute={minute} />
 
-      <ContactInfo />
+      <Introduction />
 
       <WeddingCalendar />
     </>

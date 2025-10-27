@@ -107,9 +107,7 @@ function ContactInfo() {
         <Dialog.Close />
         <div className={styles.header}>
           <h1 className={styles.title}>축하의 말 전하기</h1>
-          <p
-            className={styles.desc}
-          >{`${activeContactInfo.main.person.name}에게 직접 축하의 마음을 전해보세요.`}</p>
+          <p className={styles.desc}>직접 축하의 마음을 전해보세요.</p>
         </div>
 
         <div className={styles.tabList}>

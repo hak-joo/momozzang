@@ -18,7 +18,6 @@
 .title {
   color: var(--Purple-Purple_text, #512985);
   text-align: center;
-  font-family: PyeongChang;
   font-size: 18.9px;
   font-style: normal;
   font-weight: 700;
@@ -29,7 +28,6 @@
 .desc {
   color: var(--Purple-Purple_text, #512985);
   text-align: center;
-  font-family: PyeongChang;
   font-size: 14.4px;
   font-style: normal;
   font-weight: 400;
@@ -55,7 +53,7 @@
 
   .name {
     text-align: center;
-    font-family: PyeongChang;
+    font-family: var(--font-body);
     font-size: 14.4px;
     font-style: normal;
     font-weight: 700;
@@ -84,7 +82,7 @@
 
 .contactLabel {
   color: var(--Basic-Gray02, #d1cbe2);
-  font-family: PyeongChang;
+  font-family: var(--font-body);
   font-size: 14.4px;
   font-style: normal;
   font-weight: 700;
@@ -97,7 +95,7 @@
   margin-top: 8px;
   color: var(--Basic-Gray_text, #484848);
   text-align: center;
-  font-family: PyeongChang;
+
   font-size: 21.6px;
   font-style: normal;
   font-weight: 700;

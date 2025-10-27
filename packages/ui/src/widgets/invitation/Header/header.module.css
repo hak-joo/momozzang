@@ -17,7 +17,7 @@
 }
 
 .header button {
-  font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-PyeongChang);
   border: none;
   border-radius: 12px 12px 0 0;
   color: #f9f9f9;

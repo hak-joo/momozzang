@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import heartBalloon from '@shared/assets/images/heart-balloon.png';
 import type { PropsWithChildren } from 'react';
 
-type Variant = 'primary' | 'reversed';
+type Variant = 'primary' | 'secondary' | 'reversed';
 export interface Props {
   className?: string;
   variant: Variant;
@@ -37,7 +37,7 @@ function Box({
   );
 
   return (
-    <div className={clsx(styles.wrapper, className)}>
+    <div className={clsx(styles.wrapper)}>
       {hasBalloon && (
         <>
           <img
@@ -54,7 +54,7 @@ function Box({
           />
         </>
       )}
-      <div className={clsx(styles.board, styles[`${variant}` as keyof typeof styles])}>
+      <div className={clsx(styles.board, className, styles[`${variant}` as keyof typeof styles])}>
         {dots}
         {children}
       </div>

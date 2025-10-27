@@ -14,7 +14,7 @@
   position: absolute;
   inset: 0;
   color: var(--pixel-border-color);
-  font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-DungGeunMo);
   font-size: var(--pixel-font-size);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -48,7 +48,7 @@
 .text {
   position: relative;
   display: inline-block;
-  font-family: 'NeoDonggeunmo', 'Noto Sans KR', sans-serif;
+  font-family: var(--font-DungGeunMo);
   font-size: var(--pixel-font-size);
   font-weight: 700;
   letter-spacing: 0.04em;

@@ -2,13 +2,15 @@ import IconContainer, { type IconContainerProps } from '../IconContainer';
 
 interface Props {
   className?: string;
+  width?: number;
+  height?: number;
 }
-export function PixelHeart({ className }: Props) {
+export function PixelHeart({ className, width, height }: Props) {
   return (
     <IconContainer>
       <svg
-        width="11"
-        height="10"
+        width={width || 11}
+        height={height || 10}
         viewBox="0 0 11 10"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
