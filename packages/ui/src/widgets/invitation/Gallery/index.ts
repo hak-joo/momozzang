@@ -1,1 +1,2 @@
-export { default } from './Gallery.tsx';
+export { Gallery } from './Gallery';
+export type { GalleryImage } from './Gallery';

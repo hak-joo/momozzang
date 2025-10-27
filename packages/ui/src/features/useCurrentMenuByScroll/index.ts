@@ -1,1 +1,1 @@
-export { default } from '../lib/hooks/useCurrentMenuByScroll';
+export { useCurrentMenuByScroll } from '../lib/hooks/useCurrentMenuByScroll';

@@ -1,1 +1,1 @@
-export { default } from './IntroOverlay';
+export { IntroOverlay } from './IntroOverlay';

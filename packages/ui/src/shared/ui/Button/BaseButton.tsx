@@ -14,7 +14,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { size = 'md', variant = 'primary', fullWidth = false, className, disabled, type = 'button', ...rest },
   ref,
 ) {
@@ -31,5 +31,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     />
   );
 });
-
-export default Button;

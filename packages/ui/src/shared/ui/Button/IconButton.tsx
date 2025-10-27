@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
-import Button, { type ButtonProps } from './BaseButton';
-import IconContainer, { type IconSize } from '@shared/ui/IconContainer';
+import { Button, type ButtonProps } from './BaseButton';
+import { IconContainer, type IconSize } from '@shared/ui/IconContainer';
 import styles from './Button.module.css';
 
 type IconButtonSize = 'sm' | 'md' | 'lg';
@@ -15,7 +15,7 @@ export interface IconButtonProps extends Omit<ButtonProps, 'children' | 'fullWid
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
-const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
   { icon, size = 'md', iconSize = size, className, variant = 'ghost', type = 'button', ...rest },
   ref,
 ) {
@@ -37,5 +37,3 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconB
     </Button>
   );
 });
-
-export default IconButton;

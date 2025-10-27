@@ -10,8 +10,6 @@ export interface IconContainerProps extends HTMLAttributes<HTMLSpanElement> {
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
-const IconContainer = ({ size = 'md', className, ...rest }: IconContainerProps) => (
+export const IconContainer = ({ size = 'md', className, ...rest }: IconContainerProps) => (
   <span className={clsx(styles.root, styles[`size${capitalize(size)}`], className)} {...rest} />
 );
-
-export default IconContainer;

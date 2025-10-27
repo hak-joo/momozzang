@@ -4,12 +4,10 @@ import type { PropsWithChildren, RefObject } from 'react';
 interface Props {
   ref: RefObject<HTMLDivElement | null>;
 }
-function SectionContainer({ ref, children }: PropsWithChildren<Props>) {
+export function SectionContainer({ ref, children }: PropsWithChildren<Props>) {
   return (
     <div className={styles.sectionContainer} ref={ref}>
       {children}
     </div>
   );
 }
-
-export default SectionContainer;

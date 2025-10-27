@@ -1,10 +1,11 @@
-import Box from '@shared/ui/Box';
+import { Box } from '@shared/ui/Box';
 import styles from './Introduction.module.css';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
-import ContactInfo from '../ContactInfo';
-import PixelHeart from '@shared/ui/Icon/PixelHeart';
+import { ContactInfo } from '../ContactInfo';
+import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
 import pixelWeddingImg from '@shared/assets/images/pixel-wedding.png';
-function Introduction() {
+
+export function Introduction() {
   const metadata = useInvitation();
   const {
     invitationInfo: { message },
@@ -42,5 +43,3 @@ function Introduction() {
     </div>
   );
 }
-
-export default Introduction;

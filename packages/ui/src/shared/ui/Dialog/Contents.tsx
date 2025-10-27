@@ -1,7 +1,7 @@
 import * as DialogPrimitives from '@radix-ui/react-dialog';
 import { clsx } from 'clsx';
 import * as React from 'react';
-import DialogOverlay from './Overlay';
+import { Overlay } from './Overlay';
 
 import styles from './Dialog.module.css';
 
@@ -27,7 +27,7 @@ export function Content({
 
   return (
     <Container>
-      {useOverlay && <DialogOverlay className={styles.overlayOpen} />}
+      {useOverlay && <Overlay className={styles.overlayOpen} />}
       <DialogPrimitives.Content
         className={clsx(styles.dialog, className)}
         onInteractOutside={(e) => {

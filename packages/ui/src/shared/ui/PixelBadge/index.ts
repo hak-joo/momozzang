@@ -1,2 +1,2 @@
-export { default } from './PixelBadge';
+export { PixelBadge } from './PixelBadge';
 export type { PixelBadgeProps } from './PixelBadge';

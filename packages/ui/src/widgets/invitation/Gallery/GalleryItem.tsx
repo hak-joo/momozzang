@@ -6,12 +6,10 @@ type GalleryItemProps = {
   onClick?: () => void;
 };
 
-function GalleryItem({ image, onClick }: GalleryItemProps) {
+export function GalleryItem({ image, onClick }: GalleryItemProps) {
   return (
     <div className={styles.galleryItem} onClick={onClick} tabIndex={0} role="button">
       <img src={image.src} alt={image.alt ?? ''} />
     </div>
   );
 }
-
-export default GalleryItem;

@@ -8,12 +8,10 @@ export type OverlayProps = {
   children?: ReactNode;
 };
 
-function Overlay({ className, children, ...rest }: OverlayProps) {
+export function Overlay({ className, children, ...rest }: OverlayProps) {
   return (
     <DialogPrimitives.Overlay className={clsx(styles.overlay, className)} {...rest}>
       {children}
     </DialogPrimitives.Overlay>
   );
 }
-
-export default Overlay;

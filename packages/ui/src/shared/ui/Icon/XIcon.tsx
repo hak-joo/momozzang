@@ -8,5 +8,3 @@ export function IconX() {
     </svg>
   );
 }
-
-export default IconX;

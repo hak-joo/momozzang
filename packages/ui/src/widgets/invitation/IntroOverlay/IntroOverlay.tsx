@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import styles from './IntroOverlay.module.css';
 
-function IntroOverlay() {
+export function IntroOverlay() {
   const [animationEnded, setAnimationEnded] = useState<boolean>(false);
   const maskId = useId().replace(/:/g, '_');
   const filterId = `${maskId}_blur`;
@@ -42,4 +42,3 @@ function IntroOverlay() {
     </div>
   );
 }
-export default IntroOverlay;

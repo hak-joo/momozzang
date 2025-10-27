@@ -1,19 +1,19 @@
 import { useRef } from 'react';
-import Header from '@widgets/invitation/Header';
-import Gallery from '@widgets/invitation/Gallery';
+import { Header } from '@widgets/invitation/Header';
+import { Gallery } from '@widgets/invitation/Gallery';
 import { Menu } from '@entities/WeddingInvitation/menu';
-import useCurrentMenuByScroll from '@features/lib/hooks/useCurrentMenuByScroll';
+import { useCurrentMenuByScroll } from '@features/lib/hooks/useCurrentMenuByScroll';
 import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
-import Home from '@widgets/invitation/Home';
+import { Home } from '@widgets/invitation/Home';
 import { InvitationProvider } from '@entities/WeddingInvitation/Context';
-import SectionContainer from './SectionContainer';
+import { SectionContainer } from './SectionContainer';
 import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
 
 interface Props {
   metadata: WeddingInvitation;
 }
-function Invitation({ metadata }: Props) {
+export function WeddingInvitation({ metadata }: Props) {
   const homeRef = useRef<HTMLDivElement>(null);
   const guestbookRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -138,5 +138,3 @@ function Invitation({ metadata }: Props) {
     </InvitationProvider>
   );
 }
-
-export default Invitation;

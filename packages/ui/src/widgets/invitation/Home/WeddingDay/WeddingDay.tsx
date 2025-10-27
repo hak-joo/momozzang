@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import type { AmPm } from '@entities/WeddingInvitation/model';
 
 import styles from './WeddingDay.module.css';
-import Box from '@shared/ui/Box';
+import { Box } from '@shared/ui/Box';
 
 interface WeddingDayProps {
   date: string;
@@ -22,7 +22,7 @@ function createTimeLabel(ampm: AmPm, hour: number, minute: number) {
   return `${AM_PM_LABEL[ampm]} ${hour}시${minuteLabel}`;
 }
 
-function WeddingDay({ date, ampm, hour, minute }: WeddingDayProps) {
+export function WeddingDay({ date, ampm, hour, minute }: WeddingDayProps) {
   const formattedDate = dayjs(date).format('YYYY/MM/DD');
   const dateTokens = formattedDate.split('');
   const dayOfWeek = dayjs(date).format('dddd');
@@ -49,5 +49,3 @@ function WeddingDay({ date, ampm, hour, minute }: WeddingDayProps) {
     </Box>
   );
 }
-
-export default WeddingDay;

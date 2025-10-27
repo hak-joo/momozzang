@@ -1,14 +1,17 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import styles from './style.module.css';
-import IntroOverlay from '@momozzang/ui/widgets/invitation/IntroOverlay';
-import Intro from '@momozzang/ui/widgets/invitation/Intro';
+import { IntroOverlay } from '@momozzang/ui/widgets/invitation/IntroOverlay';
+import { Intro } from '@momozzang/ui/widgets/invitation/Intro';
 import { exampleWeddingInvitation } from '@momozzang/ui/entities/WeddingInvitation/data';
 import clsx from 'clsx';
 
-const WeddingInvitation = lazy(() => import('@momozzang/ui/pages/WeddingInvitation'));
+const WeddingInvitation = lazy(async () => {
+  const module = await import('@momozzang/ui/pages/WeddingInvitation');
+  return { default: module.WeddingInvitation };
+});
 function usePreloadWeddingChunk() {
   useEffect(() => {
-    import('@momozzang/ui/pages/WeddingInvitation');
+    void import('@momozzang/ui/pages/WeddingInvitation');
   }, []);
 }
 

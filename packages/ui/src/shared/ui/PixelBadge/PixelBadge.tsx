@@ -12,7 +12,7 @@ export interface PixelBadgeProps {
   style?: CSSProperties;
 }
 
-function PixelBadge({
+export function PixelBadge({
   text,
   className,
   gradient,
@@ -38,5 +38,3 @@ function PixelBadge({
     </span>
   );
 }
-
-export default PixelBadge;

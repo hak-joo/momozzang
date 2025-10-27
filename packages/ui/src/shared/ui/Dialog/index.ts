@@ -1,3 +1,4 @@
 export { Root, Trigger, Title } from '@radix-ui/react-dialog';
 export { Content } from './Contents';
-export { default as Close } from './Close';
+export { Close } from './Close';
+export { Overlay } from './Overlay';

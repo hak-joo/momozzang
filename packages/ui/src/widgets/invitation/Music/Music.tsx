@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const MusicPlayer = () => {
+export const MusicPlayer = () => {
   const [open, setOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
 
@@ -31,5 +31,3 @@ const MusicPlayer = () => {
     </>
   );
 };
-
-export default MusicPlayer;

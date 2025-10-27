@@ -1,7 +1,7 @@
 import { useEffect, useState, type RefObject } from 'react';
 import { Menu } from '@entities/WeddingInvitation/menu';
 
-function useCurrentMenuByScroll(
+export function useCurrentMenuByScroll(
   sectionRefs: Record<Menu, RefObject<HTMLDivElement | null>>,
   scrollContainerRef?: RefObject<HTMLElement | null>,
 ) {
@@ -43,5 +43,3 @@ function useCurrentMenuByScroll(
 
   return currentMenu;
 }
-
-export default useCurrentMenuByScroll;

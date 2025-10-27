@@ -1,12 +1,12 @@
 import * as Dialog from '@shared/ui/Dialog';
-import Button from '@shared/ui/Button';
+import { Button } from '@shared/ui/Button';
 import styles from './ContactInfo.module.css';
 import { useMemo, useState } from 'react';
-import PixelHeart from '@shared/ui/Icon/PixelHeart';
+import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
 import clsx from 'clsx';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import type { GiftAccount, Person } from '@entities/WeddingInvitation/model';
-import Box from '@shared/ui/Box';
+import { Box } from '@shared/ui/Box';
 
 type Tab = 'bride' | 'groom';
 type ContactRelation = {
@@ -23,7 +23,7 @@ type ContactSideData = {
 
 type ContactInfoBySide = Record<Tab, ContactSideData>;
 
-function ContactInfo() {
+export function ContactInfo() {
   const [activeTab, setActiveTab] = useState<Tab>('bride');
 
   const metadata = useInvitation();
@@ -166,5 +166,3 @@ function ContactInfo() {
     </Dialog.Root>
   );
 }
-
-export default ContactInfo;

@@ -16,7 +16,7 @@ function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function Box({
+export function Box({
   className,
   hasBalloon = false,
   hasDecoration = false,
@@ -76,5 +76,3 @@ function Box({
     </div>
   );
 }
-
-export default Box;

@@ -12,5 +12,3 @@ export function RabbitEar() {
     </svg>
   );
 }
-
-export default RabbitEar;

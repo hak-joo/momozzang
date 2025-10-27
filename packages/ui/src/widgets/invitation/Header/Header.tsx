@@ -6,7 +6,7 @@ type Props = {
   onMenuClick?: (menu: Menu) => void;
 };
 
-function Header({ currentMenu, onMenuClick }: Props) {
+export function Header({ currentMenu, onMenuClick }: Props) {
   return (
     <header className={styles.header}>
       <nav>
@@ -38,4 +38,3 @@ function Header({ currentMenu, onMenuClick }: Props) {
     </header>
   );
 }
-export default Header;

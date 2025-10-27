@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
-import RabbitEar from '@shared/ui/Icon/RabbitEar';
+import clsx from 'clsx';
+import { RabbitEar } from '@shared/ui/Icon/RabbitEar';
 import styles from './Summary.module.css';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import { dayNames } from './constants';
-import clsx from 'clsx';
 
 function formatTimeLabel(target: dayjs.Dayjs) {
   const minutes = target.minute();
@@ -16,7 +16,7 @@ function formatTimeLabel(target: dayjs.Dayjs) {
   return `${hour12}${minutePart} ${suffix}`;
 }
 
-function WeddingCalendarSummary() {
+export function WeddingCalendarSummary() {
   const {
     weddingHallInfo: { date, ampm, hour, minute },
   } = useInvitation();
@@ -57,5 +57,3 @@ function WeddingCalendarSummary() {
     </div>
   );
 }
-
-export default WeddingCalendarSummary;

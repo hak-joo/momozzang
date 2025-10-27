@@ -1,6 +1,7 @@
 import { useInvitation } from '../Context';
 import dayjs from 'dayjs';
-function useInvitationContents() {
+
+export function useInvitationContents() {
   const metadata = useInvitation();
   const {
     weddingHallInfo: { date, ampm, hour, minute },
@@ -14,5 +15,3 @@ function useInvitationContents() {
 
   return { weddingDate };
 }
-
-export default useInvitationContents;

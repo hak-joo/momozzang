@@ -1,1 +1,1 @@
-export { default } from './WeddingDay';
+export { WeddingDay } from './WeddingDay';

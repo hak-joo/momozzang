@@ -1,2 +1,2 @@
-export { default } from './IconContainer';
+export { IconContainer } from './IconContainer';
 export type { IconContainerProps, IconSize } from './IconContainer';

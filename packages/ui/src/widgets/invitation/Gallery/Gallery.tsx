@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import styles from './Gallery.module.css';
-import GalleryItem from './GalleryItem';
-import Carousel from './Carousel';
-import SwipeStackGallery from './SwipeStack';
+import { GalleryItem } from './GalleryItem';
+import { Carousel } from './Carousel';
+import { SwipeStack } from './SwipeStack';
 
 export type GalleryImage = {
   src: string;
@@ -15,7 +15,7 @@ type GalleryProps = {
   cols?: 2 | 3;
 };
 
-function Gallery({ images, cols = 3 }: GalleryProps) {
+export function Gallery({ images, cols = 3 }: GalleryProps) {
   const [expanded, setExpanded] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState<number | null>(null);
 
@@ -24,7 +24,7 @@ function Gallery({ images, cols = 3 }: GalleryProps) {
 
   return (
     <>
-      <SwipeStackGallery images={images} />
+      <SwipeStack images={images} />
 
       {/* <div
         className={clsx(styles.galleryGrid, expanded && styles.expanded)}
@@ -49,5 +49,3 @@ function Gallery({ images, cols = 3 }: GalleryProps) {
     </>
   );
 }
-
-export default Gallery;

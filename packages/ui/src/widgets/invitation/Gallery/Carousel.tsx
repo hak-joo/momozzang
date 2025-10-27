@@ -10,7 +10,7 @@ type CarouselProps = {
   onClose: () => void;
 };
 
-function Carousel({ images, startIndex, onClose }: CarouselProps) {
+export function Carousel({ images, startIndex, onClose }: CarouselProps) {
   const [index, setIndex] = useState(startIndex);
 
   const prev = () => setIndex((i) => (i > 0 ? i - 1 : i));
@@ -40,5 +40,3 @@ function Carousel({ images, startIndex, onClose }: CarouselProps) {
     </Dialog.Root>
   );
 }
-
-export default Carousel;

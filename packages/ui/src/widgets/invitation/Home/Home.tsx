@@ -1,17 +1,16 @@
 import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import photoInRingImg from '@shared/assets/images/photo-in-ring.png';
 import weddingDayImg from '@shared/assets/images/wedding-day.png';
-import PixelBadge from '@shared/ui/PixelBadge';
+import { PixelBadge } from '@shared/ui/PixelBadge';
 import styles from './Home.module.css';
-import WeddingDay from './WeddingDay';
-
-import WeddingCalendar from './WeddingCalendar';
-import Introduction from './Introduction';
+import { WeddingDay } from './WeddingDay';
+import { WeddingCalendar } from './WeddingCalendar';
+import { Introduction } from './Introduction';
 
 interface Props {
   data: WeddingInvitation;
 }
-function Home({ data }: Props) {
+export function Home({ data }: Props) {
   const {
     weddingHallInfo: { date, ampm, hour, minute },
   } = data;
@@ -34,5 +33,3 @@ function Home({ data }: Props) {
     </div>
   );
 }
-
-export default Home;

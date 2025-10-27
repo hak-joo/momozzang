@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import clsx from 'clsx';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
-import Box from '@shared/ui/Box';
+import { Box } from '@shared/ui/Box';
 import styles from './WeddingCalendar.module.css';
 import { dayNames } from './constants';
-import WeddingCalendarSummary from './Summary';
+import { WeddingCalendarSummary } from './Summary';
 
 function chunk<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
@@ -12,7 +12,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return out;
 }
 
-function WeddingCalendar() {
+export function WeddingCalendar() {
   const {
     weddingHallInfo: { date, ampm, hour, minute },
   } = useInvitation();
@@ -88,5 +88,3 @@ function WeddingCalendar() {
     </div>
   );
 }
-
-export default WeddingCalendar;

@@ -1,1 +1,1 @@
-export { default } from './WeddingInvitation';
+export { WeddingInvitation } from './WeddingInvitation';

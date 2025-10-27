@@ -1,4 +1,4 @@
-import IconContainer, { type IconContainerProps } from '../IconContainer';
+import { IconContainer } from '../IconContainer';
 
 interface Props {
   className?: string;
@@ -24,4 +24,3 @@ export function PixelHeart({ className, width, height }: Props) {
     </IconContainer>
   );
 }
-export default PixelHeart;
