@@ -1,0 +1,73 @@
+.summary {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summaryTable {
+  width: 100%;
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: 14px;
+  border: 1px solid var(--calendar-border, rgba(255, 255, 255, 0.45));
+  background: var(--calendar-table-bg, rgba(255, 255, 255, 0.1));
+  box-shadow: 0 16px 24px rgba(149, 174, 255, 0.15);
+  overflow: hidden;
+}
+
+.summaryCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 118px;
+  color: var(--Blue-Blue03, #a1ceff);
+  opacity: 0.89;
+}
+
+.summaryCellHighlight {
+  color: var(--Purple-Purple02, #a696ea);
+  opacity: 1;
+}
+
+.summaryDayName {
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-PyeongChang);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.404px; /* 161.7% */
+  letter-spacing: -0.36px;
+  background-color: #fff;
+  border-bottom: 1px solid #c2e4ff;
+}
+
+.summaryDayDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
+  justify-content: center;
+  background-color: #fff;
+}
+
+.summaryDayNumber {
+  text-align: center;
+  font-family: var(--font-DungGeunMo);
+  font-size: 43.12px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.summaryDayNote {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+
+  word-break: keep-all;
+  min-height: 1.4em;
+}

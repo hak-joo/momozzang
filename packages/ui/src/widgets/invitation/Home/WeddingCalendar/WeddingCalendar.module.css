@@ -1,82 +1,91 @@
-.wcCard {
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.calendarBox {
+  max-width: calc(100% - 20px);
+  border-radius: 12px;
+  border: 1px solid var(--basic-white-05, rgba(255, 255, 255, 0.5));
+  background: var(--Blue-Blue03, #a1ceff) !important;
+  box-shadow:
+    0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
+    0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;
+}
+
+.calendar {
   --bg: #ffffff;
-  --ink: #111111;
+  --ink: #ffffff;
   --muted: #8a8a8a;
   --grid: #e9ecef;
   --accent: #111111;
   --accent-ink: #ffffff;
-  --sun: #e03a3a;
-  width: 360px;
+  --sun: #fff;
+
   color: var(--ink);
   overflow: hidden;
   user-select: none;
 }
 
-.wcTop {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 16px 18px 8px 18px;
+.header {
+  text-align: center;
+  font-family: PyeongChang;
+  font-size: 22px;
+  font-style: normal;
   font-weight: 700;
+  line-height: 143%; /* 31.46px */
+  letter-spacing: -0.66px;
+  margin-bottom: 12px;
 }
 
-.wcEmoji {
-  font-size: 20px;
-}
-
-.wcDate {
-  font-size: 20px;
-  letter-spacing: 0.5px;
-}
-
-.wcTime {
-  font-size: 16px;
-  color: var(--muted);
-}
-
-.wcGrid {
+.grid {
   padding: 8px 12px 12px;
 }
 
-.wcWeekHead,
-.wcWeek {
+.weekHead,
+.week {
+  gap: 20px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
 
-.wcWeekHead {
+.weekHead {
   margin-bottom: 6px;
   padding: 0 6px;
 }
 
-.wcWd {
+.weekday {
   text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.5px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 143%; /* 22.88px */
+  letter-spacing: -0.48px;
 }
 
-.wcWdSun {
+.weekdaySunday {
   color: var(--sun);
 }
 
-.wcWdSat {
+.weekdaySaturday {
   color: var(--sat);
 }
 
-.wcWeeks {
+.weeks {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.wcWeek {
+.week {
   gap: 4px;
   margin: 4px 0;
   padding: 0 2px;
 }
 
-.wcCell {
+.cell {
   position: relative;
   height: 40px;
   display: grid;
@@ -85,72 +94,50 @@
   transition: transform 0.05s ease;
 }
 
-.wcCellOut {
+.cellOut {
   opacity: 0;
   pointer-events: none;
 }
 
-.wcCellSun .wcNum {
+.cellSunday .day {
   color: var(--sun);
 }
 
-.wcCellSat .wcNum {
+.cellSaturday .day {
   color: var(--sat);
 }
 
-.wcCell:hover {
+.cell:hover {
   transform: translateY(-1px);
 }
 
-.wcNum {
-  position: relative;
+.day {
+  color: var(--Basic-white, #fff);
   z-index: 1;
-  font-size: 14px;
-  font-weight: 700;
+  text-align: center;
+  font-family: PyeongChang;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 143%; /* 22.88px */
+  letter-spacing: -0.48px;
 }
 
-.wcMarker {
+.dayMarker {
   display: block;
 }
 
-.wcCellSelected .wcMarker {
+.cellSelected .dayMarker {
   position: absolute;
-  inset: 4px;
-  background: var(--accent, #111);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 6' shape-rendering='crispEdges'%3E%3Crect x='1' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='7' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='5' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='5' width='1' height='1' fill='%23fff'/%3E%3C/svg%3E")
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' fill='none'%3E%3Ccircle cx='15' cy='15' r='14.5' fill='var(--Blue-Blue04%2C%2395AEFF)' stroke='var(--Basic-white%2C%23FFF)' stroke-width='1' stroke-dasharray='2 2'/%3E%3C/svg%3E")
     center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 6' shape-rendering='crispEdges'%3E%3Crect x='1' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='0' width='1' height='1' fill='%23fff'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='7' y='1' width='1' height='1' fill='%23fff'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='4' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='5' width='1' height='1' fill='%23fff'/%3E%3Crect x='4' y='5' width='1' height='1' fill='%23fff'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.15));
 }
 
-.wcCellSelected .wcNum {
+.cellSelected .day {
   color: var(--accent-ink, #fff);
-}
-
-.wcFooter {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 10px 12px 12px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: #111;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.wcRing {
-  font-size: 18px;
-}
-
-.wcDday {
-  margin-left: 2px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: #fff;
-  color: #111;
-  font-weight: 800;
-  letter-spacing: 0.5px;
 }

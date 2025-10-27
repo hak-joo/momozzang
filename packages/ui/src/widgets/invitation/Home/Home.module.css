@@ -1,14 +1,31 @@
+.homeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
 .imgContainer {
   position: relative;
   margin: 24px 0;
 }
 
+.weddingDayContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
 .weddingDayImg {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
+  bottom: 0px;
+  right: 0px;
   pointer-events: none;
   user-select: none;
+
+  width: 133.598px;
+  height: 91.812px;
+  transform: rotate(5.844deg);
 }
 .photoInRingImg {
   width: 300px;

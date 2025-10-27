@@ -31,10 +31,11 @@
 
 .overlay {
   @apply inset-0;
-  background-color: black;
+  background: var(--Basic-dim02, rgba(0, 0, 0, 0.5));
+
   position: fixed;
   inset: 0;
-  opacity: 0.5;
+
   z-index: 999;
   backdrop-filter: blur(16px);
 

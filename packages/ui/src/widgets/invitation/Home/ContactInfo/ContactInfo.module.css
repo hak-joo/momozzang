@@ -70,9 +70,15 @@
 .contactList {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
   padding: 0 8px 24px;
   overflow-y: auto;
+
+  overflow-y: scroll;
+  overscroll-behavior: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   flex: 1;
 }
 

@@ -13,7 +13,7 @@ function Introduction() {
   } = metadata;
   return (
     <div className={styles.wrapper}>
-      <Box hasBalloon variant="secondary" className={styles.box}>
+      <Box hasBalloon hasDecoration variant="secondary" className={styles.box}>
         <p className={styles.title}>모시는 글</p>
         <p className={styles.message}>{message}</p>
 
@@ -31,7 +31,7 @@ function Introduction() {
           <div className={styles.person}>
             <p>{`${brideFather?.name} · ${brideMother?.name}의 딸`}</p>
             <p className={styles.name}>
-              <span>신랑</span>
+              <span>신부</span>
               <span>{bride?.name}</span>
             </p>
           </div>

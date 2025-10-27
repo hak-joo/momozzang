@@ -54,10 +54,10 @@
   .name {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 6px;
 
     span:last-child {
-      font-size: 20px !important;
+      font-size: 20px;
       font-style: normal;
       font-weight: 700;
       line-height: 153%; /* 30.6px */
