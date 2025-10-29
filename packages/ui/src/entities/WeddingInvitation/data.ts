@@ -60,8 +60,8 @@ export const exampleWeddingInvitation: WeddingInvitation = {
     lineBreakBetweenNameAndHall: true,
     tel: '031-256-0700',
     address: '경기도 수원시 팔달구 매산로1가 89-13',
-    latitude: 37.2669,
-    longitude: 127.0004,
+    latitude: 37.2767981,
+    longitude: 127.0075225,
   },
 
   rsvpRequest: {

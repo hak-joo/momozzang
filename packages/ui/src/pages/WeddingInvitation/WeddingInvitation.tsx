@@ -7,6 +7,7 @@ import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import { Home } from '@widgets/invitation/Home';
 import { InvitationProvider } from '@entities/WeddingInvitation/Context';
 import { SectionContainer } from './SectionContainer';
+import { Direction } from '@widgets/invitation/Direction';
 import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
 
@@ -132,7 +133,9 @@ export function WeddingInvitation({ metadata }: Props) {
             />
           </SectionContainer>
 
-          <SectionContainer ref={directionsRef}></SectionContainer>
+          <SectionContainer ref={directionsRef}>
+            <Direction />
+          </SectionContainer>
         </div>
       </main>
     </InvitationProvider>
