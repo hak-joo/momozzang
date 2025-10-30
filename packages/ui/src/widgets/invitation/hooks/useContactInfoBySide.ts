@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { GiftAccount, Person, Side } from '@entities/WeddingInvitation/model';
+import type { Account, Person, Side } from '@entities/WeddingInvitation/model';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 
 export type ContactRelation = {
@@ -10,7 +10,7 @@ export type ContactRelation = {
 export type ContactAccount = {
   relationLabel: string;
   person: Person;
-  account: GiftAccount;
+  account: Account;
 };
 
 export type ContactSideData = {

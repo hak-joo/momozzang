@@ -22,11 +22,33 @@ export const exampleWeddingInvitation: WeddingInvitation = {
       name: '이학주',
       phone: { number: '01012345678', isInternational: false, countryCode: '+82' },
       email: 'hakjoo@example.com',
+      accounts: [
+        {
+          id: 'acct-groom',
+          target: 'self',
+          bank: '국민',
+          accountNumber: '123401-04-567890',
+          accountHolder: '이학주',
+          kakaoPayEnabled: true,
+          kakaoPayCode: 'KAKAOPAY-GROOM-20260418',
+        },
+      ],
     },
     bride: {
       name: '강민정',
       phone: { number: '01087654321', isInternational: false, countryCode: '+82' },
       email: 'minjeong@example.com',
+      accounts: [
+        {
+          id: 'acct-bride',
+          target: 'self',
+          bank: '신한',
+          accountNumber: '110-234-567890',
+          accountHolder: '강민정',
+          kakaoPayEnabled: true,
+          kakaoPayCode: 'KAKAOPAY-BRIDE-20260418',
+        },
+      ],
     },
   },
 
@@ -35,6 +57,16 @@ export const exampleWeddingInvitation: WeddingInvitation = {
     groomFather: {
       name: '김성훈',
       phone: { number: '01000001111', isInternational: false, countryCode: '+82' },
+      accounts: [
+        {
+          id: 'acct-groom-parent',
+          target: 'parent',
+          bank: '우리',
+          accountNumber: '1002-334-556677',
+          accountHolder: '김성훈',
+          kakaoPayEnabled: false,
+        },
+      ],
     },
     groomMother: {
       name: '박지영',
@@ -90,37 +122,6 @@ export const exampleWeddingInvitation: WeddingInvitation = {
   congratulatoryMoneyInfo: {
     enabled: true,
     cardPayment: true,
-    accounts: [
-      {
-        id: 'acct-groom',
-        side: 'groom',
-        target: 'self',
-        bank: '국민',
-        accountNumber: '123401-04-567890',
-        accountHolder: '이학주',
-        kakaoPayEnabled: true,
-        kakaoPayCode: 'KAKAOPAY-GROOM-20260418',
-      },
-      {
-        id: 'acct-bride',
-        side: 'bride',
-        target: 'self',
-        bank: '신한',
-        accountNumber: '110-234-567890',
-        accountHolder: '강민정',
-        kakaoPayEnabled: true,
-        kakaoPayCode: 'KAKAOPAY-BRIDE-20260418',
-      },
-      {
-        id: 'acct-groom-parent',
-        side: 'groom',
-        target: 'parent',
-        bank: '우리',
-        accountNumber: '1002-334-556677',
-        accountHolder: '김성훈',
-        kakaoPayEnabled: false,
-      },
-    ],
   },
 
   images: [

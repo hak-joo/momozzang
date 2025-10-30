@@ -10,7 +10,10 @@
   line-height: 1;
   color: var(--color-primary-contrast);
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
   box-shadow: var(--button-shadow);
   text-shadow: 0 1px 3px rgba(32, 24, 71, 0.35);
 }
@@ -197,13 +200,13 @@
 }
 
 .iconSizeSm {
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
 }
 
 .iconSizeMd {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
 }
 
 .iconSizeLg {

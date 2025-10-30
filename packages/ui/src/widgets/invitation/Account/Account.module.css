@@ -1,0 +1,130 @@
+.wrapper {
+  width: 100%;
+  max-width: 285px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.content {
+  width: 100%;
+}
+.box {
+  align-items: flex-start;
+  width: 100%;
+}
+.title {
+  color: #512985;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.18px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #512985;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 23px; /* 164.286% */
+  letter-spacing: -0.14px;
+}
+
+.trigger {
+  width: 100%;
+  margin: 16px 0 8px;
+  padding: 12px 16px;
+}
+
+.triggerInner {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #512985;
+}
+
+.triggerLabel {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+}
+
+.triggerName {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.14px;
+}
+
+.accountList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.accountRelation {
+  padding: 2px 6px;
+  color: #512985;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.11px;
+  border-radius: 4px;
+  background: #ebe9ff;
+  align-self: flex-start;
+  margin-bottom: 12px;
+}
+
+.accountOwner {
+  color: #512985;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px; /* 100% */
+  letter-spacing: -0.16px;
+  margin-bottom: 4px;
+}
+
+.accountDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  color: #512985;
+
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.12px;
+}
+
+.accountDetailValue {
+  color: #512985;
+  font-weight: 500;
+  letter-spacing: -0.12px;
+  display: flex;
+  align-items: center;
+}
+
+.emptyNotice {
+  margin-top: 12px;
+  color: #512985;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.12px;
+  text-align: center;
+}

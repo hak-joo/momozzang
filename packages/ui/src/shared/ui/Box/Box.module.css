@@ -1,7 +1,6 @@
 .wrapper {
   display: flex;
   position: relative;
-  width: fit-content;
 }
 
 .board {

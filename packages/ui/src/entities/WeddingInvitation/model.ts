@@ -19,6 +19,7 @@ export interface Person {
   email?: string;
   isDeceased?: boolean;
   deceasedType?: DeceaseType;
+  accounts?: Account[];
 }
 
 export interface InvitationInfo {
@@ -92,9 +93,8 @@ export interface EtcInfo {
   additionalItems: EtcItem[];
 }
 
-export interface GiftAccount {
+export interface Account {
   id: string;
-  side: Side; // 신랑/신부 측
   target: DepositTarget; // self | parent | custom
   customLabel?: string; // custom 라벨
   bank: string;
@@ -107,7 +107,6 @@ export interface GiftAccount {
 export interface GiftMoneySettings {
   enabled: boolean;
   cardPayment: boolean;
-  accounts: GiftAccount[]; // 복수 계좌
 }
 
 export interface AlbumPhoto {

@@ -34,6 +34,13 @@ export function Header({ currentMenu, onMenuClick }: Props) {
         >
           오시는 길
         </button>
+
+        <button
+          className={currentMenu === 'info' ? styles.active : ''}
+          onClick={() => onMenuClick?.('info')}
+        >
+          Info
+        </button>
       </nav>
     </header>
   );

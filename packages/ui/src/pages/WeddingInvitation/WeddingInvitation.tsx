@@ -10,6 +10,7 @@ import { SectionContainer } from './SectionContainer';
 import { Direction } from '@widgets/invitation/Direction';
 import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
+import { Account } from '@widgets/invitation/Account';
 
 interface Props {
   metadata: WeddingInvitation;
@@ -19,6 +20,7 @@ export function WeddingInvitation({ metadata }: Props) {
   const guestbookRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
 
   const sectionRefs = {
@@ -26,6 +28,7 @@ export function WeddingInvitation({ metadata }: Props) {
     guestbook: guestbookRef,
     gallery: galleryRef,
     directions: directionsRef,
+    info: infoRef,
   };
 
   const currentMenu = useCurrentMenuByScroll(sectionRefs, mainWrapperRef);
@@ -135,6 +138,10 @@ export function WeddingInvitation({ metadata }: Props) {
 
           <SectionContainer ref={directionsRef}>
             <Direction />
+          </SectionContainer>
+
+          <SectionContainer ref={infoRef}>
+            <Account />
           </SectionContainer>
         </div>
       </main>
