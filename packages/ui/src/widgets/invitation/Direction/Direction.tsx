@@ -101,7 +101,7 @@ export function Direction() {
       <div className={styles.transportationList}>
         <div className={styles.transportation}>
           <div className={styles.title}>
-            <img width={80} src={carImg} alt="Car" />
+            <img width={24} src={carImg} alt="Car" />
             <span>자차</span>
           </div>
           <div className={styles.description}>
@@ -111,7 +111,7 @@ export function Direction() {
         </div>
         <div className={styles.transportation}>
           <div className={styles.title}>
-            <img width={80} src={carImg} alt="Car" />
+            <img width={24} src={carImg} alt="Car" />
             <span>자차</span>
           </div>
           <div className={styles.description}>
@@ -121,7 +121,7 @@ export function Direction() {
         </div>{' '}
         <div className={styles.transportation}>
           <div className={styles.title}>
-            <img width={80} src={carImg} alt="Car" />
+            <img width={24} src={carImg} alt="Car" />
             <span>자차</span>
           </div>
           <div className={styles.description}>
