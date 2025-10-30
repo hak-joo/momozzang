@@ -19,11 +19,11 @@ export function Account() {
       <div className={styles.header}>
         <p className={styles.title}>마음을 전하실 곳</p>
         <div className={styles.description}>
-          <p>참석이 어려우신 분들을 위해 기재했습니다</p>
-          <p>너그러운 마음으로 양해 부탁드립니다</p>
+          <p>참석이 어려우신 분들을 위해 안내드립니다.</p>
+          <p>너그러운 마음으로 이해해주시면 감사하겠습니다.</p>
         </div>
       </div>
-      <Accordion.Root type="single" collapsible>
+      <Accordion.Root type="multiple">
         {SECTIONS.map(({ side, triggerLabel }) => {
           const sideData = contactInfoBySide[side];
           const hasAccounts = sideData.accounts.length > 0;

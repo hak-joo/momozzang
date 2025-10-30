@@ -29,7 +29,6 @@
 .description {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   color: #512985;
   text-align: center;
   font-size: 14px;
