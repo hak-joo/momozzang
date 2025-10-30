@@ -1,0 +1,12 @@
+.chevron {
+  transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+.trigger[data-state='open'] > .chevron {
+  transform: rotate(180deg);
+}
+
+.trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
