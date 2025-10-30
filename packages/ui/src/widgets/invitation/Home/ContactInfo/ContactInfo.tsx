@@ -1,81 +1,19 @@
 import * as Dialog from '@shared/ui/Dialog';
 import { Button } from '@shared/ui/Button';
 import styles from './ContactInfo.module.css';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
 import clsx from 'clsx';
-import { useInvitation } from '@entities/WeddingInvitation/Context';
-import type { GiftAccount, Person } from '@entities/WeddingInvitation/model';
+import type { Person, Side } from '@entities/WeddingInvitation/model';
 import { Box } from '@shared/ui/Box';
+import { useContactInfoBySide } from '../../hooks/useContactInfoBySide';
 
-type Tab = 'bride' | 'groom';
-type ContactRelation = {
-  label: string;
-  person: Person;
-};
-
-type ContactSideData = {
-  main: ContactRelation;
-  parents: ContactRelation[];
-  relatives: ContactRelation[];
-  accounts: GiftAccount[];
-};
-
-type ContactInfoBySide = Record<Tab, ContactSideData>;
+type Tab = Side;
 
 export function ContactInfo() {
   const [activeTab, setActiveTab] = useState<Tab>('bride');
 
-  const metadata = useInvitation();
-
-  const contactInfoBySide = useMemo<ContactInfoBySide>(() => {
-    const {
-      couple: { bride, groom },
-      parents,
-      congratulatoryMoneyInfo,
-    } = metadata;
-
-    const getParents = (side: Tab): ContactRelation[] => {
-      if (!parents?.enabled) return [];
-
-      const entries: ContactRelation[] = [];
-      const father = side === 'groom' ? parents.groomFather : parents.brideFather;
-      const mother = side === 'groom' ? parents.groomMother : parents.brideMother;
-
-      if (father) entries.push({ label: '아버지', person: father });
-      if (mother) entries.push({ label: '어머니', person: mother });
-
-      return entries;
-    };
-
-    const getRelatives = (side: Tab): ContactRelation[] =>
-      parents?.others
-        ?.filter(({ side: relationSide }) => relationSide === side)
-        .map(({ relationLabel, person }) => ({
-          label: relationLabel,
-          person,
-        })) ?? [];
-
-    const getAccounts = (side: Tab): GiftAccount[] => {
-      if (!congratulatoryMoneyInfo?.enabled) return [];
-      return congratulatoryMoneyInfo.accounts.filter((account) => account.side === side);
-    };
-
-    return {
-      groom: {
-        main: { label: '신랑', person: groom },
-        parents: getParents('groom'),
-        relatives: getRelatives('groom'),
-        accounts: getAccounts('groom'),
-      },
-      bride: {
-        main: { label: '신부', person: bride },
-        parents: getParents('bride'),
-        relatives: getRelatives('bride'),
-        accounts: getAccounts('bride'),
-      },
-    };
-  }, [metadata]);
+  const contactInfoBySide = useContactInfoBySide();
 
   const activeContactInfo = contactInfoBySide[activeTab];
   const contactRelations = [
