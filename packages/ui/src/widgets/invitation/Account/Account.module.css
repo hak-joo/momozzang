@@ -1,43 +1,51 @@
 .wrapper {
   width: 100%;
   max-width: 285px;
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .title {
+      color: #512985;
+      text-align: center;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      letter-spacing: -0.18px;
+    }
+
+    .description {
+      display: flex;
+      flex-direction: column;
+      color: #512985;
+      text-align: center;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 23px; /* 164.286% */
+      letter-spacing: -0.14px;
+    }
+  }
 }
 
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
-}
 .content {
-  width: 100%;
+  padding-bottom: 24px;
 }
 .box {
   align-items: flex-start;
   width: 100%;
 }
-.title {
-  color: #512985;
-  text-align: center;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -0.18px;
-}
 
-.description {
-  display: flex;
-  flex-direction: column;
-  color: #512985;
-  text-align: center;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 23px; /* 164.286% */
-  letter-spacing: -0.14px;
-}
+.accordion {
+  border-top: 1px dashed #8fc5fffc;
 
+  .accordionItem {
+    border-bottom: 1px dashed #8fc5fffc;
+  }
+}
 .trigger {
   width: 100%;
   margin: 16px 0 8px;
@@ -103,9 +111,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-
   color: #512985;
-
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -123,7 +129,6 @@
 
 .footer {
   margin-top: 48px;
-
   color: #512985;
   text-align: center;
   font-size: 12px;

@@ -1,5 +1,6 @@
 .chevron {
   transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+  color: #512985;
 }
 .trigger[data-state='open'] > .chevron {
   transform: rotate(180deg);
@@ -9,4 +10,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.content {
+  overflow: hidden;
+  will-change: height;
+}
+
+.content[data-state='open'] {
+  animation: accordion-open 500000ms cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+.content[data-state='closed'] {
+  animation: accordion-close 500000ms cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+@keyframes accordion-open {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-close {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }

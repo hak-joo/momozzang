@@ -2,7 +2,7 @@ import { Content as ContentPrimitive, type AccordionContentProps } from '@radix-
 import styles from './Accordion.module.css';
 export function Content({ children, className, ...props }: AccordionContentProps) {
   return (
-    <ContentPrimitive className={`${styles.Content} ${className}`} {...props}>
+    <ContentPrimitive className={`${styles.content} ${className}`} {...props}>
       {children}
     </ContentPrimitive>
   );

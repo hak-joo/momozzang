@@ -44,7 +44,7 @@ export function ContactInfo() {
       <Dialog.Content className={styles.content} useOverlay useAutoClose usePortal>
         <Dialog.Close />
         <div className={styles.header}>
-          <h1 className={styles.title}>축하의 말 전하기</h1>
+          <p className={styles.title}>축하의 말 전하기</p>
           <p className={styles.desc}>직접 축하의 마음을 전해보세요.</p>
         </div>
 

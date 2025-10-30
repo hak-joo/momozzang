@@ -23,13 +23,13 @@ export function Account() {
           <p>너그러운 마음으로 이해해주시면 감사하겠습니다.</p>
         </div>
       </div>
-      <Accordion.Root type="multiple">
+      <Accordion.Root type="multiple" className={styles.accordion}>
         {SECTIONS.map(({ side, triggerLabel }) => {
           const sideData = contactInfoBySide[side];
           const hasAccounts = sideData.accounts.length > 0;
 
           return (
-            <Accordion.Item key={side} value={side}>
+            <Accordion.Item key={side} value={side} className={styles.accordionItem}>
               <Accordion.Trigger className={styles.trigger}>
                 <div className={styles.triggerInner}>
                   <span className={styles.triggerLabel}>{triggerLabel}</span>

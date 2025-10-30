@@ -16,6 +16,7 @@
     filter 150ms ease;
   box-shadow: var(--button-shadow);
   text-shadow: 0 1px 3px rgba(32, 24, 71, 0.35);
+  font-family: var(--font-PyeongChang);
 }
 
 .button::before {
