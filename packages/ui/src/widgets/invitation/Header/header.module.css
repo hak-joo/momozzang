@@ -1,7 +1,7 @@
 .header {
   width: 100%;
   position: fixed;
-  top: calc(50px - 39px);
+  top: calc(50px - 37px);
   left: 0;
   z-index: 100;
   display: flex;
@@ -18,22 +18,19 @@
 
 .header button {
   font-family: var(--font-PyeongChang);
-  border: none;
-  border-radius: 12px 12px 0 0;
   color: #f9f9f9;
-  background: #a696eacc;
+  border-radius: 12px 12px 0 0;
+  background: #a696ea;
+  box-shadow: 0 0 18px 0 rgba(0, 0, 0, 0.25);
 
   width: 72px;
   height: 37px;
   box-sizing: content-box;
 }
 .header button.active {
-  border-top: 1.5px solid #fff;
-  border-left: 1.5px solid #fff;
-  border-right: 1.5px solid #fff;
-  color: #303030;
-  background: transparent;
-  /* backdrop-filter: blur(1px); */
+  color: #623f99;
+  background: #ffffff80;
+  box-shadow: none;
 }
 
 .header button.active,

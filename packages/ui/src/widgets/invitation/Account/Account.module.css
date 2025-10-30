@@ -54,8 +54,12 @@
 }
 
 .triggerLabel {
+  color: #512985;
+  text-align: center;
   font-size: 14px;
-  font-weight: 500;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
   letter-spacing: -0.14px;
 }
 
@@ -118,13 +122,14 @@
   align-items: center;
 }
 
-.emptyNotice {
-  margin-top: 12px;
+.footer {
+  margin-top: 48px;
+
   color: #512985;
+  text-align: center;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 18px; /* 150% */
   letter-spacing: -0.12px;
-  text-align: center;
 }

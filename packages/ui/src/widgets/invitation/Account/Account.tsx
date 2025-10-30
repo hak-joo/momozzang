@@ -36,7 +36,7 @@ export function Account() {
                 </div>
               </Accordion.Trigger>
               <Accordion.Content className={styles.content}>
-                {hasAccounts ? (
+                {hasAccounts && (
                   <ul className={styles.accountList}>
                     {sideData.accounts.map(({ relationLabel, account }) => (
                       <li key={account.id}>
@@ -58,14 +58,17 @@ export function Account() {
                       </li>
                     ))}
                   </ul>
-                ) : (
-                  <p className={styles.emptyNotice}>계좌 정보가 준비 중입니다.</p>
                 )}
               </Accordion.Content>
             </Accordion.Item>
           );
         })}
       </Accordion.Root>
+
+      <div className={styles.footer}>
+        <p> 화한은 감사히 마음으로 받겠습니다.</p>
+        <p> 저희를 생각해 주시는 마음만으로도 감사드립니다.</p>
+      </div>
     </div>
   );
 }
