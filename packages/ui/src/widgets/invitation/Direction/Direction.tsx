@@ -111,14 +111,14 @@ export function Direction() {
         </div>
         <div className={styles.transportation}>
           <div className={styles.title}>
-            <img width={24} src={carImg} alt="Car" />
-            <span>자차</span>
+            <img width={24} src={metroImg} alt="Metro" />
+            <span>지하철</span>
           </div>
           <div className={styles.description}>
-            <p>한국도심공항터미널 주차장 이용</p>
-            <p>네비게이션 검색어: ㅁㅁㅁ</p>
+            <p>삼성역 2호선 4번 출구 도보 5분</p>
+            <p>봉은사역 7호선 1번 출구 도보 7분</p>
           </div>
-        </div>{' '}
+        </div>
         <div className={styles.transportation}>
           <div className={styles.title}>
             <img width={24} src={carImg} alt="Car" />

@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useRef, type RefObject } from 'react';
 import { Header } from '@widgets/invitation/Header';
 import { Gallery } from '@widgets/invitation/Gallery';
-import { Menu } from '@entities/WeddingInvitation/menu';
+import type { Menu } from '@entities/WeddingInvitation/menu';
 import { useCurrentMenuByScroll } from '@features/lib/hooks/useCurrentMenuByScroll';
 import type { WeddingInvitation } from '@entities/WeddingInvitation/model';
 import { Home } from '@widgets/invitation/Home';
@@ -29,7 +29,7 @@ export function WeddingInvitation({ metadata }: Props) {
     gallery: galleryRef,
     directions: directionsRef,
     info: infoRef,
-  };
+  } satisfies Record<Menu, RefObject<HTMLDivElement | null>>;
 
   const currentMenu = useCurrentMenuByScroll(sectionRefs, mainWrapperRef);
 
@@ -132,7 +132,6 @@ export function WeddingInvitation({ metadata }: Props) {
                   alt: '샘플19',
                 },
               ]}
-              cols={3}
             />
           </SectionContainer>
 

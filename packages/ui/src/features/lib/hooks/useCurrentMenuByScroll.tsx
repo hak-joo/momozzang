@@ -1,5 +1,5 @@
 import { useEffect, useState, type RefObject } from 'react';
-import { Menu } from '@entities/WeddingInvitation/menu';
+import type { Menu } from '@entities/WeddingInvitation/menu';
 
 export function useCurrentMenuByScroll(
   sectionRefs: Record<Menu, RefObject<HTMLDivElement | null>>,

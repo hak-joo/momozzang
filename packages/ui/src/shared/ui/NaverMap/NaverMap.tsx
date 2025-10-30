@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './NaverMap.module.css';
 
 const NAVER_MAP_SCRIPT_BASE = 'https://oapi.map.naver.com/openapi/v3/maps.js';

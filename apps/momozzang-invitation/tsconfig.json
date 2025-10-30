@@ -3,7 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@momozzang/ui/*": ["../../packages/ui/src/*"]
+      "@momozzang/ui/*": ["../../packages/ui/src/*"],
+      "@widgets/*": ["../../packages/ui/src/widgets/*"],
+      "@features/*": ["../../packages/ui/src/features/*"],
+      "@entities/*": ["../../packages/ui/src/entities/*"],
+      "@shared/*": ["../../packages/ui/src/shared/*"]
     },
     "plugins": [{ "name": "typescript-plugin-paths" }]
   },
