@@ -5,6 +5,7 @@ import type { Side } from '@entities/WeddingInvitation/model';
 import { useContactInfoBySide } from '../hooks/useContactInfoBySide';
 import { IconButton } from '@shared/ui/Button';
 import { ClipboardIcon } from '@shared/ui/Icon/ClipboardIcon';
+import { useToast } from '@shared/ui/Toast';
 
 const SECTIONS: Array<{ side: Side; triggerLabel: string }> = [
   { side: 'groom', triggerLabel: '신랑측에게' },
@@ -13,6 +14,27 @@ const SECTIONS: Array<{ side: Side; triggerLabel: string }> = [
 
 export function Account() {
   const contactInfoBySide = useContactInfoBySide();
+  const { info, error } = useToast();
+
+  const handleCopyAccount = async (accountNumber: string) => {
+    try {
+      if (!navigator?.clipboard?.writeText) {
+        throw new Error('Clipboard API not available');
+      }
+      const cleanedAccountNumber = accountNumber.replace('-', '');
+      await navigator.clipboard.writeText(cleanedAccountNumber);
+      info({
+        title: '계좌번호를 복사했어요',
+        description: cleanedAccountNumber,
+        duration: 3200,
+      });
+    } catch {
+      error({
+        title: '복사할 수 없어요',
+        description: '잠시 후 다시 시도해주세요.',
+      });
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -51,6 +73,7 @@ export function Account() {
                                 size="sm"
                                 variant="plain"
                                 aria-label="계좌번호 복사"
+                                onClick={() => handleCopyAccount(account.accountNumber)}
                               />
                             </span>
                           </div>
