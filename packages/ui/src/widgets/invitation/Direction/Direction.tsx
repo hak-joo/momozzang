@@ -37,31 +37,47 @@ export function Direction() {
     (providerKey: MapProviderKey) =>
     (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (!mapProviders) return;
+      if (!mapProviders || typeof window === 'undefined') return;
 
       const provider = mapProviders[providerKey];
       const mobile = isIOS() || isAndroid();
       const scheme = isIOS() ? provider.iosScheme : provider.androidScheme;
       const storeLink = isIOS() ? provider.iosStore : provider.androidStore;
       const webLink = provider.webFallback;
+      const fallbackUrl = webLink ?? mapProviders.naver?.webFallback ?? 'https://map.naver.com/v5/';
+      const openStore = (forceSelf = false) => {
+        if (!storeLink) return;
+        if (mobile || forceSelf) {
+          window.location.href = storeLink;
+        } else {
+          window.open(storeLink, '_blank', 'noopener,noreferrer');
+        }
+      };
+      const openFallback = (forceSelf = false) => {
+        if (fallbackUrl) {
+          if (mobile || forceSelf) {
+            window.location.href = fallbackUrl;
+          } else {
+            window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+          }
+        } else {
+          openStore(forceSelf);
+        }
+      };
 
       if (mobile && scheme) {
         const start = Date.now();
         const timer = window.setTimeout(() => {
           if (Date.now() - start < 1600) {
-            if (storeLink) {
-              window.location.href = storeLink;
-            } else if (webLink) {
-              window.location.href = webLink;
-            }
+            openFallback(true);
           }
         }, 1200);
 
         window.location.href = scheme;
         window.setTimeout(() => window.clearTimeout(timer), 2000);
+        return;
       } else {
-        const fallback = webLink ?? mapProviders.naver?.webFallback ?? 'https://map.naver.com/v5/';
-        window.open(fallback, '_blank', 'noopener,noreferrer');
+        openFallback();
       }
     };
 
