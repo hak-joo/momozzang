@@ -29,6 +29,21 @@
   border-radius: 16px 0 0 0;
   backdrop-filter: blur(5px);
   padding-bottom: 50px;
+  position: relative;
+}
+
+.blur {
+  height: 30px;
+  position: sticky;
+  top: -2px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+
+.mainWrapper[data-at-top='false'] .blur {
+  opacity: 1;
 }
 
 .mainWrapper::-webkit-scrollbar {

@@ -6,40 +6,55 @@ export function useCurrentMenuByScroll(
   scrollContainerRef?: RefObject<HTMLElement | null>,
 ) {
   const [currentMenu, setCurrentMenu] = useState<Menu>('home');
+  const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
     const scrollTarget: Window | HTMLElement = scrollContainerRef?.current ?? window;
 
+    let rafId = 0;
+    let prevTopFlag = true;
     function onScroll() {
-      const container = scrollContainerRef?.current ?? null;
-      const scrollTop = container ? container.scrollTop : window.scrollY;
-      const viewportHeight = container ? container.clientHeight : window.innerHeight;
-      const centerY = scrollTop + viewportHeight / 2;
-      const containerRect = container?.getBoundingClientRect();
+      if (rafId) window.cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(() => {
+        const container = scrollContainerRef?.current ?? null;
+        const scrollTop = container ? container.scrollTop : window.scrollY;
+        const viewportHeight = container ? container.clientHeight : window.innerHeight;
+        const centerY = scrollTop + viewportHeight / 2;
+        const containerRect = container?.getBoundingClientRect();
 
-      let found: Menu = 'home';
-      (Object.entries(sectionRefs) as [Menu, RefObject<HTMLDivElement>][]).forEach(
-        ([menu, ref]) => {
-          const element = ref.current;
-          if (!element) return;
+        let found: Menu = 'home';
+        (Object.entries(sectionRefs) as [Menu, RefObject<HTMLDivElement>][]).forEach(
+          ([menu, ref]) => {
+            const element = ref.current;
+            if (!element) return;
 
-          const elementRect = element.getBoundingClientRect();
-          const top =
-            container && containerRect
-              ? elementRect.top - containerRect.top + container.scrollTop
-              : elementRect.top + window.scrollY;
-          const height = elementRect.height;
+            const elementRect = element.getBoundingClientRect();
+            const top =
+              container && containerRect
+                ? elementRect.top - containerRect.top + container.scrollTop
+                : elementRect.top + window.scrollY;
+            const height = elementRect.height;
 
-          if (centerY >= top && centerY < top + height) found = menu;
-        },
-      );
-      setCurrentMenu(found);
+            if (centerY >= top && centerY < top + height) found = menu;
+          },
+        );
+        setCurrentMenu(found);
+
+        const atTop = scrollTop <= 100;
+        if (atTop !== prevTopFlag) {
+          prevTopFlag = atTop;
+          setIsAtTop(atTop);
+        }
+      });
     }
 
     scrollTarget.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    return () => scrollTarget.removeEventListener('scroll', onScroll);
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      scrollTarget.removeEventListener('scroll', onScroll);
+    };
   }, [sectionRefs, scrollContainerRef]);
 
-  return currentMenu;
+  return { currentMenu, isAtTop };
 }

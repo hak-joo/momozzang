@@ -11,6 +11,7 @@ import { Direction } from '@widgets/invitation/Direction';
 import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
 import { Account } from '@widgets/invitation/Account';
+import { Blur } from '@shared/ui/Blur';
 
 interface Props {
   metadata: WeddingInvitation;
@@ -31,7 +32,7 @@ export function WeddingInvitation({ metadata }: Props) {
     info: infoRef,
   } satisfies Record<Menu, RefObject<HTMLDivElement | null>>;
 
-  const currentMenu = useCurrentMenuByScroll(sectionRefs, mainWrapperRef);
+  const { currentMenu, isAtTop } = useCurrentMenuByScroll(sectionRefs, mainWrapperRef);
 
   const scrollToMenu = (menu: Menu) => {
     const container = mainWrapperRef.current;
@@ -52,6 +53,8 @@ export function WeddingInvitation({ metadata }: Props) {
         <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
         <Header currentMenu={currentMenu} onMenuClick={scrollToMenu} />
         <div className={styles.mainWrapper} ref={mainWrapperRef}>
+          <Blur className={styles.blur} />
+
           <SectionContainer ref={homeRef}>
             <Home data={metadata} />
           </SectionContainer>
