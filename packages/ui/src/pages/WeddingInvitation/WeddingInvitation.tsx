@@ -53,6 +53,7 @@ export function WeddingInvitation({ metadata }: Props) {
         <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
         <Header currentMenu={currentMenu} onMenuClick={scrollToMenu} />
         <div
+          id="main-wrapper"
           className={styles.mainWrapper}
           ref={mainWrapperRef}
           data-at-top={isAtTop ? 'true' : 'false'}

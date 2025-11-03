@@ -48,7 +48,7 @@ body {
   max-width: 430px;
   min-width: 375px;
   position: relative;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overscroll-behavior: none;
   -ms-overflow-style: none;
   scrollbar-width: none;

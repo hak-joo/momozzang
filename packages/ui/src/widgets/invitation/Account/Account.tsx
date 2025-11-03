@@ -6,6 +6,8 @@ import { useContactInfoBySide } from '../hooks/useContactInfoBySide';
 import { IconButton } from '@shared/ui/Button';
 import { ClipboardIcon } from '@shared/ui/Icon/ClipboardIcon';
 import { useToast } from '@shared/ui/Toast';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { smoothScrollWithin } from './utils';
 
 const SECTIONS: Array<{ side: Side; triggerLabel: string }> = [
   { side: 'groom', triggerLabel: '신랑측에게' },
@@ -15,6 +17,59 @@ const SECTIONS: Array<{ side: Side; triggerLabel: string }> = [
 export function Account() {
   const contactInfoBySide = useContactInfoBySide();
   const { info, error } = useToast();
+  const itemRefs = useRef<Record<Side, HTMLDivElement | null>>({ bride: null, groom: null });
+  const [openSections, setOpenSections] = useState<Side[]>([]);
+  const pendingScrollSideRef = useRef<Side | null>(null);
+  const scrollTimeoutRef = useRef<number | null>(null);
+
+  const handleOpenValuesChange = useCallback((values: string[] | string) => {
+    const nextValues = Array.isArray(values) ? (values as Side[]) : ([values] as Side[]);
+    setOpenSections((prev) => {
+      const newlyOpened = nextValues.find((side) => !prev.includes(side));
+      if (newlyOpened) {
+        pendingScrollSideRef.current = newlyOpened;
+      }
+      return nextValues;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!pendingScrollSideRef.current) return;
+
+    if (scrollTimeoutRef.current) {
+      window.clearTimeout(scrollTimeoutRef.current);
+    }
+
+    const side = pendingScrollSideRef.current;
+    pendingScrollSideRef.current = null;
+
+    scrollTimeoutRef.current = window.setTimeout(() => {
+      const target = side ? itemRefs.current[side] : null;
+      if (!target) return;
+
+      const container = document.getElementById('main-wrapper');
+      if (container instanceof HTMLElement) {
+        smoothScrollWithin(container, target);
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      }
+    }, 300);
+
+    return () => {
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [openSections]);
+
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleCopyAccount = async (accountNumber: string) => {
     try {
@@ -45,13 +100,26 @@ export function Account() {
           <p>너그러운 마음으로 이해해주시면 감사하겠습니다.</p>
         </div>
       </div>
-      <Accordion.Root type="multiple" className={styles.accordion}>
+      <Accordion.Root
+        type="multiple"
+        className={styles.accordion}
+        value={openSections}
+        onValueChange={handleOpenValuesChange}
+        data-invitation-scroll-container="true"
+      >
         {SECTIONS.map(({ side, triggerLabel }) => {
           const sideData = contactInfoBySide[side];
           const hasAccounts = sideData.accounts.length > 0;
 
           return (
-            <Accordion.Item key={side} value={side} className={styles.accordionItem}>
+            <Accordion.Item
+              key={side}
+              value={side}
+              className={styles.accordionItem}
+              ref={(node) => {
+                itemRefs.current[side] = node;
+              }}
+            >
               <Accordion.Trigger className={styles.trigger}>
                 <div className={styles.triggerInner}>
                   <span className={styles.triggerLabel}>{triggerLabel}</span>
