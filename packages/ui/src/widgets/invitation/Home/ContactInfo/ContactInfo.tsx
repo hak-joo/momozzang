@@ -11,7 +11,7 @@ import { useContactInfoBySide } from '../../hooks/useContactInfoBySide';
 type Tab = Side;
 
 export function ContactInfo() {
-  const [activeTab, setActiveTab] = useState<Tab>('bride');
+  const [activeTab, setActiveTab] = useState<Tab>('groom');
 
   const contactInfoBySide = useContactInfoBySide();
 
@@ -36,8 +36,14 @@ export function ContactInfo() {
     window.location.href = href;
   };
 
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      setActiveTab('groom');
+    }
+  };
+
   return (
-    <Dialog.Root>
+    <Dialog.Root onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>
         <Button variant="primary">{`축하의 말 전하기 ${'>'}`}</Button>
       </Dialog.Trigger>
