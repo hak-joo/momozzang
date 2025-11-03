@@ -23,7 +23,7 @@ export function Home({ data }: Props) {
       </div>
 
       <div className={styles.weddingDayContainer}>
-        <PixelBadge text="Save the date" />
+        <PixelBadge text="Save the Date" />
         <WeddingDay date={date} ampm={ampm} hour={hour} minute={minute} />
       </div>
 
