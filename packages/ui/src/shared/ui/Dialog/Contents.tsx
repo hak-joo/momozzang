@@ -12,6 +12,7 @@ export interface Props extends DialogPrimitives.DialogContentProps {
   useOverlay?: boolean;
   useAutoClose?: boolean;
   position?: 'center' | 'top' | 'bottom';
+  useFadeInOut?: boolean;
 }
 
 export function Content({
@@ -20,6 +21,7 @@ export function Content({
   usePortal = true,
   useOverlay = false,
   useAutoClose = true,
+  useFadeInOut = false,
   className,
   ...contentProps
 }: React.PropsWithChildren<Props>) {
@@ -27,9 +29,15 @@ export function Content({
 
   return (
     <Container>
-      {useOverlay && <Overlay className={styles.overlayOpen} />}
+      {useOverlay && (
+        <Overlay
+          className={clsx(styles.overlayBase, {
+            [styles.overlayFade]: useFadeInOut,
+          })}
+        />
+      )}
       <DialogPrimitives.Content
-        className={clsx(styles.dialog, className)}
+        className={clsx(styles.dialog, className, useFadeInOut && styles.dialogFade)}
         onInteractOutside={(e) => {
           if (!useAutoClose) e.preventDefault();
         }}

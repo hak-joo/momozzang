@@ -41,7 +41,7 @@ export function ContactInfo() {
       <Dialog.Trigger asChild>
         <Button variant="primary">{`축하의 말 전하기 ${'>'}`}</Button>
       </Dialog.Trigger>
-      <Dialog.Content className={styles.content} useOverlay useAutoClose usePortal>
+      <Dialog.Content className={styles.content} useFadeInOut useOverlay useAutoClose usePortal>
         <Dialog.Close />
         <div className={styles.header}>
           <p className={styles.title}>축하의 말 전하기</p>
