@@ -24,6 +24,7 @@ export function Gallery({ images, cols = 3 }: GalleryProps) {
 
   return (
     <>
+      <p className={styles.title}>PHOTO</p>
       <SwipeStack images={images} />
 
       {/* <div

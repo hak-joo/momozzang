@@ -2,12 +2,12 @@
 export const COMMIT_DEADZONE = 0.06; // opacity 발동과 동일 임계(드래그 시작 소거 구간)
 
 // === 레이아웃/변형 관련 ===
-export const STACK_X = 18; // 미래 카드 대기 x 위치
+export const STACK_X = -10; // 미래 카드 대기 x 위치
 export const BASE_TILT_DEG = 3; // 미래 카드 기본 회전각(+3deg)
 export const ARRIVE_X_WINDOW = 0.55; // 미래 카드가 중앙으로 슬며시 들어오는 x 보간 구간
 export const EXIT_WINDOW = 0.9; // 과거 카드가 좌측 바깥으로 나가는 보간 구간
 export const DEPTH_STEP = 80; // 카드 간 z-깊이 간격
-export const SCALE_DROP = 0.06; // 카드 간 scale 감쇠
+export const SCALE_DROP = -0.06; // 카드 간 scale 감쇠
 export const LIFT_PX = 6; // 중앙 근처에서 약간 들어 올림
 
 // === 회전(현재 0°, 미래 연속 기울기) ===

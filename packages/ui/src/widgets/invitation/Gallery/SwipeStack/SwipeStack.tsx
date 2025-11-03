@@ -3,6 +3,7 @@ import styles from './SwipeStack.module.css';
 import { computeTransform, opacityFor, clamp } from './utils';
 import { COMMIT_DEADZONE } from './constants';
 import type { GalleryImage } from '../Gallery';
+import clsx from 'clsx';
 
 export type SwipeStackProps = {
   images: GalleryImage[];
@@ -171,12 +172,14 @@ export function SwipeStack({
         return (
           <figure
             key={realIndex}
-            className={styles.card}
+            className={clsx(styles.card, {
+              [styles.top]: Math.abs(deltaToActive) < 0.5,
+            })}
             style={{ transform, opacity, zIndex: Math.round(zIndex) }}
             aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
           >
             <img className={styles.media} src={image.src} alt={image.alt ?? ''} draggable={false} />
-            <div className={styles.shade} />
+            <p className={styles.count}>{`${realIndex + 1} / ${imageCount}`}</p>
             <div className={styles.gloss} />
           </figure>
         );

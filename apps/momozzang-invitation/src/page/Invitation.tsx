@@ -16,7 +16,7 @@ function usePreloadWeddingChunk() {
 }
 
 function InvitationPage() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
 
   usePreloadWeddingChunk();
 
