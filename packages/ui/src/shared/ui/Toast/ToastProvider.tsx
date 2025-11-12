@@ -9,7 +9,7 @@ interface ToastInternal extends ToastOptions {
   variant: ToastVariant;
 }
 
-const DEFAULT_DURATION = 4000;
+const DEFAULT_DURATION = 2000;
 
 function createToastId() {
   return typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -64,17 +64,10 @@ export function ToastProvider({
         {children}
         <RadixToast.Viewport className={styles.viewport} />
         {toasts.map((toast) => {
-          const variantClass =
-            toast.variant === 'success'
-              ? styles.variantSuccess
-              : toast.variant === 'error'
-                ? styles.variantError
-                : styles.variantInfo;
-
           return (
             <RadixToast.Root
               key={toast.id}
-              className={clsx(styles.root, variantClass)}
+              className={clsx(styles.root)}
               duration={toast.duration}
               onOpenChange={(open) => {
                 if (!open) {
@@ -90,11 +83,11 @@ export function ToastProvider({
                   </RadixToast.Description>
                 ) : null}
               </div>
-              <RadixToast.Close className={styles.closeButton} aria-label="닫기">
+              {/* <RadixToast.Close className={styles.closeButton} aria-label="닫기">
                 <span className={styles.closeIcon} aria-hidden>
                   x
                 </span>
-              </RadixToast.Close>
+              </RadixToast.Close> */}
             </RadixToast.Root>
           );
         })}

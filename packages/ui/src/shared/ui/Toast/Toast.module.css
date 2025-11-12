@@ -3,7 +3,7 @@
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(min(100vw, 430px) - 32px);
+  width: calc(min(100vw, 430px) - 96px);
   max-width: 430px;
   padding: 0 16px;
   display: flex;
@@ -22,20 +22,14 @@
 
 .root {
   pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(81, 41, 133, 0.2);
-  box-shadow: 0 10px 30px rgba(81, 41, 133, 0.18);
-  color: #31205d;
-  overflow: hidden;
-  position: relative;
-  backdrop-filter: blur(20px);
-  width: 100%;
-  box-sizing: border-box;
+  padding: 20px 16px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: var(--Grdient-Gradient01, linear-gradient(90deg, #aca4ff -1.18%, #6aa3ff 101.34%));
+  box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  color: #fff;
+
+  text-align: center;
 }
 
 .root[data-state='open'] {
@@ -103,21 +97,6 @@
 .closeIcon {
   width: 14px;
   height: 14px;
-}
-
-.variantInfo {
-  border-left: 4px solid #6c5ce7;
-  padding-left: 12px;
-}
-
-.variantSuccess {
-  border-left: 4px solid #2ecc71;
-  padding-left: 12px;
-}
-
-.variantError {
-  border-left: 4px solid #e74c3c;
-  padding-left: 12px;
 }
 
 @keyframes toast-slide-in {
