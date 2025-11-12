@@ -17,7 +17,7 @@ export interface MiniMeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * Index of the mini-me avatar (1 ~ 33).
    */
-  id: string;
+  miniMeId: number;
   size?: number | string;
   alt?: string;
 }
@@ -33,16 +33,16 @@ const toCssSize = (value?: number | string) => {
 
 const wrapForCalc = (value: string) => (value.startsWith('calc(') ? value : `(${value})`);
 
-export function MiniMe({ id, size, className, style, alt, ...rest }: MiniMeProps) {
-  if (Number(id) < 1 || Number(id) > MINI_ME_COUNT) {
-    throw new Error(`Mini-me index ${id} is out of range (1 ~ ${MINI_ME_COUNT}).`);
+export function MiniMe({ miniMeId, size, className, style, alt, ...rest }: MiniMeProps) {
+  if (miniMeId < 1 || miniMeId > MINI_ME_COUNT) {
+    throw new Error(`Mini-me index ${miniMeId} is out of range (1 ~ ${MINI_ME_COUNT}).`);
   }
 
   const widthValue = toCssSize(size);
   const widthExpr = wrapForCalc(widthValue);
   const heightValue = `calc(${widthExpr} * ${MINI_ME_BASE_HEIGHT / MINI_ME_BASE_WIDTH})`;
 
-  const { offsetX, offsetY } = getMiniMeSpriteOffset(Number(id));
+  const { offsetX, offsetY } = getMiniMeSpriteOffset(miniMeId);
   const spriteUrl = getMiniMeSpriteSheet();
 
   const backgroundSize = `calc(${widthExpr} * ${MINI_ME_SPRITE_WIDTH / ACTUAL_CELL_WIDTH}) calc(${widthExpr} * ${MINI_ME_SPRITE_HEIGHT / ACTUAL_CELL_WIDTH})`;
@@ -51,7 +51,7 @@ export function MiniMe({ id, size, className, style, alt, ...rest }: MiniMeProps
   const accessibilityProps =
     alt === ''
       ? { 'aria-hidden': true as const }
-      : { role: 'img' as const, 'aria-label': alt ?? `mini-me-${id}` };
+      : { role: 'img' as const, 'aria-label': alt ?? `mini-me-${miniMeId}` };
 
   return (
     <span
@@ -66,7 +66,7 @@ export function MiniMe({ id, size, className, style, alt, ...rest }: MiniMeProps
         backgroundPosition,
         ...style,
       }}
-      data-mini-me-id={id}
+      data-mini-me-id={miniMeId}
       draggable={false}
     />
   );

@@ -12,12 +12,14 @@ import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
 import { Account } from '@widgets/invitation/Account';
 import { Blur } from '@shared/ui/Blur';
+import MiniRoom from '@widgets/invitation/MiniRoom';
 
 interface Props {
   metadata: WeddingInvitation;
 }
 export function WeddingInvitation({ metadata }: Props) {
   const homeRef = useRef<HTMLDivElement>(null);
+  const miniRoomRef = useRef<HTMLDivElement>(null);
   const guestbookRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
@@ -28,6 +30,7 @@ export function WeddingInvitation({ metadata }: Props) {
     home: homeRef,
     guestbook: guestbookRef,
     gallery: galleryRef,
+    miniRoom: miniRoomRef,
     directions: directionsRef,
     info: infoRef,
   } satisfies Record<Menu, RefObject<HTMLDivElement | null>>;
@@ -62,6 +65,10 @@ export function WeddingInvitation({ metadata }: Props) {
 
           <SectionContainer ref={homeRef}>
             <Home data={metadata} />
+          </SectionContainer>
+
+          <SectionContainer ref={miniRoomRef}>
+            <MiniRoom />
           </SectionContainer>
           <SectionContainer ref={guestbookRef}></SectionContainer>
           <SectionContainer ref={galleryRef}>

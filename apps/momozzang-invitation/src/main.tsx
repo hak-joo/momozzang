@@ -6,12 +6,15 @@ import '@momozzang/ui/src/index.css';
 import './styles/global.css';
 import 'dayjs/locale/ko';
 import dayjs from 'dayjs';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 dayjs.locale('ko');
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Layout>
-      <AppWrapper />
-    </Layout>
+    <QueryClientProvider client={new QueryClient()}>
+      <Layout>
+        <AppWrapper />
+      </Layout>
+    </QueryClientProvider>
   </StrictMode>,
 );
