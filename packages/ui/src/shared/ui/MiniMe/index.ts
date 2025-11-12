@@ -1,0 +1,1 @@
+export { MiniMe } from './MiniMe';

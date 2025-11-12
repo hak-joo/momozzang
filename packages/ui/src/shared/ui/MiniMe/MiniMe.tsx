@@ -1,0 +1,73 @@
+import { clsx } from 'clsx';
+import * as React from 'react';
+import {
+  getMiniMeSpriteOffset,
+  getMiniMeSpriteSheet,
+  MINI_ME_BASE_HEIGHT,
+  MINI_ME_BASE_WIDTH,
+  MINI_ME_COUNT,
+  MINI_ME_SPRITE_HEIGHT,
+  MINI_ME_SPRITE_SCALE,
+  MINI_ME_SPRITE_WIDTH,
+} from '@shared/lib/miniMe';
+
+import styles from './MiniMe.module.css';
+
+export interface MiniMeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /**
+   * Index of the mini-me avatar (1 ~ 33).
+   */
+  id: string;
+  size?: number | string;
+  alt?: string;
+}
+
+const DEFAULT_SIZE = 72;
+const ACTUAL_CELL_WIDTH = MINI_ME_BASE_WIDTH * MINI_ME_SPRITE_SCALE;
+
+const toCssSize = (value?: number | string) => {
+  if (typeof value === 'number') return `${value}px`;
+  if (typeof value === 'string') return value;
+  return `${DEFAULT_SIZE}px`;
+};
+
+const wrapForCalc = (value: string) => (value.startsWith('calc(') ? value : `(${value})`);
+
+export function MiniMe({ id, size, className, style, alt, ...rest }: MiniMeProps) {
+  if (Number(id) < 1 || Number(id) > MINI_ME_COUNT) {
+    throw new Error(`Mini-me index ${id} is out of range (1 ~ ${MINI_ME_COUNT}).`);
+  }
+
+  const widthValue = toCssSize(size);
+  const widthExpr = wrapForCalc(widthValue);
+  const heightValue = `calc(${widthExpr} * ${MINI_ME_BASE_HEIGHT / MINI_ME_BASE_WIDTH})`;
+
+  const { offsetX, offsetY } = getMiniMeSpriteOffset(Number(id));
+  const spriteUrl = getMiniMeSpriteSheet();
+
+  const backgroundSize = `calc(${widthExpr} * ${MINI_ME_SPRITE_WIDTH / ACTUAL_CELL_WIDTH}) calc(${widthExpr} * ${MINI_ME_SPRITE_HEIGHT / ACTUAL_CELL_WIDTH})`;
+  const backgroundPosition = `calc(${widthExpr} * -${offsetX / ACTUAL_CELL_WIDTH}) calc(${widthExpr} * -${offsetY / ACTUAL_CELL_WIDTH})`;
+
+  const accessibilityProps =
+    alt === ''
+      ? { 'aria-hidden': true as const }
+      : { role: 'img' as const, 'aria-label': alt ?? `mini-me-${id}` };
+
+  return (
+    <span
+      {...rest}
+      {...accessibilityProps}
+      className={clsx(styles.sprite, className)}
+      style={{
+        width: widthValue,
+        height: heightValue,
+        backgroundImage: `url(${spriteUrl})`,
+        backgroundSize,
+        backgroundPosition,
+        ...style,
+      }}
+      data-mini-me-id={id}
+      draggable={false}
+    />
+  );
+}
