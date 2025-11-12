@@ -25,6 +25,17 @@
   -ms-overflow-style: none;
 }
 
+.buttonAllView {
+  color: var(--Purple-Purple04, #7871c2);
+  text-align: right;
+
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.96px;
+}
+
 .guestBookItem {
   display: flex;
   padding: 8px 12px;

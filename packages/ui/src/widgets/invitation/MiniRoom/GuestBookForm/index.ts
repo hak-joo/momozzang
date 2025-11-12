@@ -1,0 +1,1 @@
+export { GuestBookForm } from './GuestBookForm';

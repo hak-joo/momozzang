@@ -20,6 +20,7 @@ export interface MiniMeProps extends React.HTMLAttributes<HTMLSpanElement> {
   miniMeId: number;
   size?: number | string;
   alt?: string;
+  interactive?: boolean;
 }
 
 const DEFAULT_SIZE = 72;
@@ -33,7 +34,15 @@ const toCssSize = (value?: number | string) => {
 
 const wrapForCalc = (value: string) => (value.startsWith('calc(') ? value : `(${value})`);
 
-export function MiniMe({ miniMeId, size, className, style, alt, ...rest }: MiniMeProps) {
+export function MiniMe({
+  miniMeId,
+  size,
+  className,
+  style,
+  alt,
+  interactive = false,
+  ...rest
+}: MiniMeProps) {
   if (miniMeId < 1 || miniMeId > MINI_ME_COUNT) {
     throw new Error(`Mini-me index ${miniMeId} is out of range (1 ~ ${MINI_ME_COUNT}).`);
   }
@@ -67,6 +76,7 @@ export function MiniMe({ miniMeId, size, className, style, alt, ...rest }: MiniM
         ...style,
       }}
       data-mini-me-id={miniMeId}
+      data-interactive={interactive ? 'true' : undefined}
       draggable={false}
     />
   );

@@ -12,6 +12,7 @@
   width: 100%;
   max-width: 360px;
   margin: 12px auto 0;
+  isolation: isolate;
 }
 
 .stageImage {
@@ -26,15 +27,85 @@
 .miniMe {
   position: absolute;
   transform: translate(-50%, -90%);
-  transition: transform 200ms ease;
+  transition:
+    transform 200ms ease,
+    filter 200ms ease;
+  z-index: 3;
 }
 
 .miniMe:hover {
   transform: translate(-50%, -95%) scale(1.04);
 }
 
+.miniMeActive {
+  transform: translate(-50%, -100%) scale(1.08);
+  filter: drop-shadow(0 8px 18px rgba(15, 8, 39, 0.45));
+}
+
 .specialMini {
   position: absolute;
   transform: translate(-50%, -90%);
   filter: drop-shadow(0 12px 16px rgba(17, 17, 17, 0.25));
+  z-index: 1;
+}
+
+.stageDim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(15, 8, 37, 0.45);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.speechBubble {
+  position: absolute;
+  width: min(240px, 70%);
+  transform: translate(-40%, calc(-100% - 12px));
+  aspect-ratio: 412 / 96;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.speechBubbleLeft {
+  transform: translate(-20%, calc(-100% - 12px));
+}
+
+.speechBubbleRight {
+  transform: translate(-90%, calc(-100% - 12px));
+}
+
+.speechBody {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.speechContent {
+  color: #4d3186;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  font-family: var(--font-DungGeunMo);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.speechFrom {
+  color: #7c5bb8;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: right;
 }

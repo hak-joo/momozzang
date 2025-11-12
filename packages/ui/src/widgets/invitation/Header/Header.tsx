@@ -17,10 +17,10 @@ export function Header({ currentMenu, onMenuClick }: Props) {
           홈
         </button>
         <button
-          className={currentMenu === 'guestbook' ? styles.active : ''}
-          onClick={() => onMenuClick?.('guestbook')}
+          className={currentMenu === 'miniRoom' ? styles.active : ''}
+          onClick={() => onMenuClick?.('miniRoom')}
         >
-          방명록
+          미니룸
         </button>
         <button
           className={currentMenu === 'gallery' ? styles.active : ''}
