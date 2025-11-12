@@ -4,6 +4,7 @@ import styles from './Gallery.module.css';
 import { GalleryItem } from './GalleryItem';
 import { Carousel } from './Carousel';
 import { SwipeStack } from './SwipeStack';
+import { PixelBadge } from '@shared/ui/PixelBadge';
 
 export type GalleryImage = {
   src: string;
@@ -24,7 +25,10 @@ export function Gallery({ images, cols = 3 }: GalleryProps) {
 
   return (
     <>
-      <p className={styles.title}>PHOTO</p>
+      <div className={styles.title}>
+        <PixelBadge text="PHOTO" />
+      </div>
+
       <SwipeStack images={images} />
 
       {/* <div

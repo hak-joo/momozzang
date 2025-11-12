@@ -11,15 +11,18 @@ import { createMapProviders } from './constants';
 import carImg from '@shared/assets/images/car.png';
 import metroImg from '@shared/assets/images/metro.png';
 import type { MapProviderKey, MapProviderSpec } from './types';
+import { PixelBadge } from '@shared/ui/PixelBadge';
+import { useToast } from '@shared/ui/Toast';
 
 export function Direction() {
   const {
     weddingHallInfo: { latitude, longitude, hallName, hallDetail, address, tel },
   } = useInvitation();
-
+  const { info } = useToast();
   const handleCopyAddress = () => {
     if (navigator?.clipboard?.writeText) {
       void navigator.clipboard.writeText(address);
+      info({ title: '주소가 복사되었습니다.', description: address });
     }
   };
 
@@ -83,7 +86,9 @@ export function Direction() {
 
   return (
     <div className={styles.direction}>
-      <p className={styles.title}>LOCATION</p>
+      <div className={styles.title}>
+        <PixelBadge text="LOCATION" />
+      </div>
 
       <div className={styles.weddinghallInfo}>
         <div className={styles.hallName}>
