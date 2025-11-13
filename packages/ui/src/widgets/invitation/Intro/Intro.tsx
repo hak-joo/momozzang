@@ -1,18 +1,50 @@
+import { useEffect, useRef, useState } from 'react';
 import styles from './Intro.module.css';
 import introVideo from '@shared/assets/videos/intro.mp4';
 
 type IntroProps = {
-  label?: string;
   next: () => void;
 };
 
-export function Intro({ label = 'Wedding day', next }: IntroProps) {
-  return (
-    <video src={introVideo} autoPlay muted playsInline className={styles.intro} onEnded={next} />
-    // <div className={styles.intro}>
-    //   {label && <div className={styles.label}>{label}</div>}
+export function Intro({ next }: IntroProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [needsUserAction, setNeedsUserAction] = useState(false);
 
-    //   <button onClick={next}>보러가기</button>
-    // </div>
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+
+    const tryPlay = async () => {
+      try {
+        await video.play();
+        setNeedsUserAction(false);
+      } catch {
+        setNeedsUserAction(true);
+      }
+    };
+
+    if (video.readyState >= 3) {
+      void tryPlay();
+    } else {
+      video.addEventListener('canplay', tryPlay, { once: true });
+      return () => video.removeEventListener('canplay', tryPlay);
+    }
+  }, []);
+
+  return (
+    <div className={styles.intro}>
+      <video
+        ref={videoRef}
+        src={introVideo}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        className={styles.video}
+        onEnded={next}
+      />
+    </div>
   );
 }
