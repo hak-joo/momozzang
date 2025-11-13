@@ -18,6 +18,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
     video.muted = true;
 
     const tryPlay = async () => {
+      if (!video) return;
       try {
         await video.play();
         setNeedsUserAction(false);
@@ -26,12 +27,26 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
       }
     };
 
+    const handleFirstInteraction = () => {
+      void tryPlay();
+      window.removeEventListener('touchend', handleFirstInteraction);
+      window.removeEventListener('pointerup', handleFirstInteraction);
+    };
+
+    window.addEventListener('touchend', handleFirstInteraction, { passive: true });
+    window.addEventListener('pointerup', handleFirstInteraction, { passive: true });
+
     if (video.readyState >= 3) {
       void tryPlay();
     } else {
       video.addEventListener('canplay', tryPlay, { once: true });
-      return () => video.removeEventListener('canplay', tryPlay);
     }
+
+    return () => {
+      window.removeEventListener('touchend', handleFirstInteraction);
+      window.removeEventListener('pointerup', handleFirstInteraction);
+      video.removeEventListener('canplay', tryPlay);
+    };
   }, []);
 
   return (
@@ -42,6 +57,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
         autoPlay
         muted
         playsInline
+        controls={needsUserAction}
         preload="auto"
         className={styles.video}
         onEnded={next}
