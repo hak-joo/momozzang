@@ -4,9 +4,10 @@ import introVideo from '@shared/assets/videos/intro.mp4';
 
 type IntroProps = {
   next: () => void;
+  label?: string;
 };
 
-export function Intro({ next }: IntroProps) {
+export function Intro({ next, label = 'Wedding day' }: IntroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [needsUserAction, setNeedsUserAction] = useState(false);
 
