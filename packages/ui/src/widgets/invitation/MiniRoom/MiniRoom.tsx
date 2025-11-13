@@ -37,10 +37,7 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
 
   const metadata =
     MINI_ROOM_METADATA.find((meta) => meta.id === roomTemplateId) ?? MINI_ROOM_METADATA[0];
-  const sceneEntries = useMemo(
-    () => prepareMiniRoomEntries(guestBookEntries, metadata),
-    [guestBookEntries, metadata],
-  );
+  const sceneEntries = useMemo(() => prepareMiniRoomEntries(guestBookEntries), [guestBookEntries]);
 
   return (
     <div className={styles.wrapper}>
