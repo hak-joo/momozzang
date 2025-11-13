@@ -1,5 +1,37 @@
 import type { GuestBook } from './types';
 
+export const MAX_MINI_ROOM_MINIS = 10;
+
+export const DEFAULT_MINI_MESSAGES: GuestBook[] = [
+  {
+    id: 0,
+    content: '결혼 진심으로 축하해요💕',
+    from: '모모짱',
+    miniMeId: 3,
+  },
+  {
+    id: 1,
+    content: '사랑 가득한 결혼생활 되길! 🩵',
+    from: '모모짱',
+    miniMeId: 4,
+  },
+  {
+    id: 2,
+    content: '두 사람 행복하게 오래오래 살아! 💍',
+    from: '모모짱',
+    miniMeId: 5,
+  },
+] as const;
+
+export const DEFAULT_MINI_CHARACTERS = [
+  { id: 'default-1', miniMeId: 1 },
+  { id: 'default-2', miniMeId: 2 },
+  { id: 'default-3', miniMeId: 4 },
+  { id: 'default-4', miniMeId: 5 },
+  { id: 'default-5', miniMeId: 6 },
+  { id: 'default-6', miniMeId: 7 },
+] as const;
+
 export const MOCK_GUEST_BOOK_ENTRIES: GuestBook[] = [
   {
     id: 1,
@@ -38,5 +70,3 @@ export const MOCK_GUEST_BOOK_ENTRIES: GuestBook[] = [
     miniMeId: 11,
   },
 ];
-
-export const DEFAULT_MINI_ME_IDS = MOCK_GUEST_BOOK_ENTRIES.map((entry) => entry.miniMeId);

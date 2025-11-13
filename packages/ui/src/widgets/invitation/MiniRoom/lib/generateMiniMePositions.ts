@@ -10,7 +10,10 @@ export interface Position {
   y: number;
 }
 
-const BASE_RESTRICTED_ZONES: RestrictedZone[] = [{ x1: 0, x2: 100, y1: 0, y2: 35 }];
+const BASE_RESTRICTED_ZONES: RestrictedZone[] = [
+  { x1: 0, x2: 100, y1: 0, y2: 35 },
+  { x1: 30, x2: 70, y1: 20, y2: 40 },
+];
 
 const MIN_DISTANCE = 12; // percent points
 const MAX_ATTEMPTS_FACTOR = 25;

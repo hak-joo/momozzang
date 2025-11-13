@@ -30,7 +30,6 @@
   transition:
     transform 200ms ease,
     filter 200ms ease;
-  z-index: 3;
 }
 
 .miniMe:hover {
@@ -38,6 +37,7 @@
 }
 
 .miniMeActive {
+  z-index: 3;
   transform: translate(-50%, -100%) scale(1.08);
   filter: drop-shadow(0 8px 18px rgba(15, 8, 39, 0.45));
 }
@@ -55,14 +55,17 @@
   border: none;
   background: rgba(15, 8, 37, 0.45);
   z-index: 2;
+  border-radius: 24px;
   cursor: pointer;
 }
 
 .speechBubble {
   position: absolute;
-  width: min(240px, 70%);
+  width: fit-content;
+  max-width: min(240px, 70%);
+  min-width: 150px;
   transform: translate(-40%, calc(-100% - 12px));
-  aspect-ratio: 412 / 96;
+
   background-size: 100% 100%;
   background-repeat: no-repeat;
   display: flex;
@@ -82,7 +85,7 @@
 
 .speechBody {
   width: 100%;
-  padding: 16px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -90,22 +93,52 @@
 }
 
 .speechContent {
-  color: #4d3186;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-  font-family: var(--font-DungGeunMo);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
+  color: var(--Basic-Gray_text, #484848);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .speechFrom {
   color: #7c5bb8;
-  font-size: 12px;
+  font-size: 9px;
   font-weight: 500;
   line-height: 1.2;
   text-align: right;
+}
+
+.previewBubble {
+  position: absolute;
+  max-width: min(240px, 70%);
+  min-width: 100px;
+  transform: translate(-40%, calc(-100% - 8px));
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.previewBubbleRight {
+  transform: translate(-80%, calc(-100% - 8px));
+}
+
+.previewContent {
+  color: var(--Basic-Gray_text, #484848);
+
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
