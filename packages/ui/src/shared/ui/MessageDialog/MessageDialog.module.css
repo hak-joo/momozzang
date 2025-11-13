@@ -1,0 +1,36 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px 24px;
+  align-items: stretch;
+  text-align: center;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4d3186;
+  margin: 0;
+}
+
+.message {
+  font-size: 14px;
+  color: #5f588a;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.overlay {
+  z-index: 2000;
+}
+
+.dialog {
+  z-index: 2001;
+}

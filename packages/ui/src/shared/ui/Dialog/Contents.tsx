@@ -13,6 +13,7 @@ export interface Props extends DialogPrimitives.DialogContentProps {
   useAutoClose?: boolean;
   position?: 'center' | 'top' | 'bottom';
   useFadeInOut?: boolean;
+  overlayClassName?: string;
 }
 
 export function Content({
@@ -23,6 +24,7 @@ export function Content({
   useAutoClose = true,
   useFadeInOut = false,
   className,
+  overlayClassName,
   ...contentProps
 }: React.PropsWithChildren<Props>) {
   const Container = usePortal ? DialogPrimitives.Portal : React.Fragment;
@@ -31,9 +33,13 @@ export function Content({
     <Container>
       {useOverlay && (
         <Overlay
-          className={clsx(styles.overlayBase, {
-            [styles.overlayFade]: useFadeInOut,
-          })}
+          className={clsx(
+            styles.overlayBase,
+            {
+              [styles.overlayFade]: useFadeInOut,
+            },
+            overlayClassName,
+          )}
         />
       )}
       <DialogPrimitives.Content
