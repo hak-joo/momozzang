@@ -186,7 +186,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
     mood: '기쁨',
     miniRoom: {
       coupleAvatarTemplateId: 'mini-couple-01',
-      roomTemplateId: 'room-spring-01',
+      roomTemplateId: 'classic-garden',
     },
   },
 };

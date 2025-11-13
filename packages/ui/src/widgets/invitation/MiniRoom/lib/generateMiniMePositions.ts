@@ -10,11 +10,6 @@ export interface Position {
   y: number;
 }
 
-const BASE_RESTRICTED_ZONES: RestrictedZone[] = [
-  { x1: 0, x2: 100, y1: 0, y2: 35 },
-  { x1: 30, x2: 70, y1: 20, y2: 40 },
-];
-
 const MIN_DISTANCE = 12; // percent points
 const MAX_ATTEMPTS_FACTOR = 25;
 
@@ -54,7 +49,7 @@ export interface GeneratePositionsOptions {
 export function generateMiniMePositions({
   count,
   seed = Date.now(),
-  restrictedZones = BASE_RESTRICTED_ZONES,
+  restrictedZones = [],
   frame = {
     minX: 10,
     maxX: 90,
@@ -96,5 +91,3 @@ export function generateMiniMePositions({
 
   return positions.slice(0, count);
 }
-
-export const DEFAULT_RESTRICTED_ZONES = BASE_RESTRICTED_ZONES;

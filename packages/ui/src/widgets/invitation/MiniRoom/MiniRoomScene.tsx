@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import miniRoomBackground from '@shared/assets/images/mini-room.png';
 import speechBubbleImg from '@shared/assets/images/speech-bubble.png';
 import { MiniMe } from '@shared/ui/MiniMe';
-import { DEFAULT_RESTRICTED_ZONES, generateMiniMePositions } from './lib/generateMiniMePositions';
+import { generateMiniMePositions } from './lib/generateMiniMePositions';
 import { DEFAULT_MINI_MESSAGES } from './constants';
 import styles from './MiniRoom.module.css';
 import type { GuestBook } from './types';
@@ -25,11 +25,7 @@ interface MiniRoomSceneProps {
   restrictedZones?: RestrictedZone[];
 }
 
-export function MiniRoomScene({
-  entries,
-  restrictedZones = DEFAULT_RESTRICTED_ZONES,
-  mainMiniMe,
-}: MiniRoomSceneProps) {
+export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: MiniRoomSceneProps) {
   const seed = useMemo(
     () =>
       entries.reduce(

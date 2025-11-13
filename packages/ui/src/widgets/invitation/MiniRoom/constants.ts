@@ -23,15 +23,6 @@ export const DEFAULT_MINI_MESSAGES: GuestBook[] = [
   },
 ] as const;
 
-export const DEFAULT_MINI_CHARACTERS = [
-  { id: 'default-1', miniMeId: 1 },
-  { id: 'default-2', miniMeId: 2 },
-  { id: 'default-3', miniMeId: 4 },
-  { id: 'default-4', miniMeId: 5 },
-  { id: 'default-5', miniMeId: 6 },
-  { id: 'default-6', miniMeId: 7 },
-] as const;
-
 export const MOCK_GUEST_BOOK_ENTRIES: GuestBook[] = [
   {
     id: 1,
@@ -68,5 +59,11 @@ export const MOCK_GUEST_BOOK_ENTRIES: GuestBook[] = [
     content: '사진만 봐도 두 사람의 사랑이 느껴진다 :)',
     from: '민수',
     miniMeId: 11,
+  },
+  {
+    id: 7,
+    content: '행복하세용!!!:)',
+    from: '동료',
+    miniMeId: 30,
   },
 ];

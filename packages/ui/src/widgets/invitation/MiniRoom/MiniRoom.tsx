@@ -9,11 +9,13 @@ import styles from './MiniRoom.module.css';
 import type { RestrictedZone } from './lib/generateMiniMePositions';
 import { fetchGuestBookList } from './api/guestBook';
 import { prepareMiniRoomEntries } from './lib/prepareMiniRoomEntries';
-import { DEFAULT_RESTRICTED_ZONES } from './lib/generateMiniMePositions';
+import { MINI_ROOM_METADATA } from './metadata';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
 
 interface MiniRoomProps {
   restrictedZones?: RestrictedZone[];
   mainMiniMe?: MainMiniMe | null;
+  roomId?: string;
 }
 
 const DEFAULT_SPECIAL_MINI: MainMiniMe = {
@@ -23,16 +25,22 @@ const DEFAULT_SPECIAL_MINI: MainMiniMe = {
   alt: '신랑 신부',
 };
 
-export function MiniRoom({
-  restrictedZones = DEFAULT_RESTRICTED_ZONES,
-  mainMiniMe = DEFAULT_SPECIAL_MINI,
-}: MiniRoomProps) {
+export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }: MiniRoomProps) {
+  const { customization } = useInvitation();
+
+  const roomTemplateId = customization?.miniRoom?.roomTemplateId ?? 'classic-garden';
+
   const { data: guestBookEntries = [] } = useSuspenseQuery({
     queryKey: ['guestBookList'],
     queryFn: fetchGuestBookList,
   });
 
-  const sceneEntries = useMemo(() => prepareMiniRoomEntries(guestBookEntries), [guestBookEntries]);
+  const metadata =
+    MINI_ROOM_METADATA.find((meta) => meta.id === roomTemplateId) ?? MINI_ROOM_METADATA[0];
+  const sceneEntries = useMemo(
+    () => prepareMiniRoomEntries(guestBookEntries, metadata),
+    [guestBookEntries, metadata],
+  );
 
   return (
     <div className={styles.wrapper}>
@@ -40,7 +48,7 @@ export function MiniRoom({
 
       <MiniRoomScene
         entries={sceneEntries}
-        restrictedZones={restrictedZones}
+        restrictedZones={restrictedZones ?? metadata.restrictedZones}
         mainMiniMe={mainMiniMe}
       />
 
