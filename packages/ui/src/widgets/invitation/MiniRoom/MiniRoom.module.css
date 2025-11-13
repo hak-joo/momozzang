@@ -61,26 +61,29 @@
 
 .speechBubble {
   position: absolute;
-  width: fit-content;
+  width: min(240px, 70%);
   max-width: min(240px, 70%);
-  min-width: 150px;
-  transform: translate(-40%, calc(-100% - 12px));
-
+  min-width: 100px;
+  transform: translate(-40%, calc(-100% - 8px));
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  padding: 12px 18px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  z-index: 4;
-  pointer-events: none;
+  align-items: center;
+  cursor: pointer;
+  z-index: 5;
 }
 
 .speechBubbleLeft {
-  transform: translate(-20%, calc(-100% - 12px));
+  transform: translate(-40%, calc(-100% - 12px));
 }
 
 .speechBubbleRight {
-  transform: translate(-90%, calc(-100% - 12px));
+  transform: translate(-80%, calc(-100% - 12px));
 }
 
 .speechBody {
@@ -98,6 +101,7 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  width: 100%;
 }
 
 .speechFrom {
@@ -110,6 +114,7 @@
 
 .previewBubble {
   position: absolute;
+  width: min(240px, 70%);
   max-width: min(240px, 70%);
   min-width: 100px;
   transform: translate(-40%, calc(-100% - 8px));
