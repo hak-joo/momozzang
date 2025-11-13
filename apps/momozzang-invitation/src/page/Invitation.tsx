@@ -16,7 +16,7 @@ function usePreloadWeddingChunk() {
 }
 
 function InvitationPage() {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   usePreloadWeddingChunk();
 
@@ -24,7 +24,7 @@ function InvitationPage() {
     <>
       {/* Intro UI */}
       {showIntro && <Intro next={() => setShowIntro(false)} label="Wedding day" />}
-      {showIntro && <IntroOverlay />}
+      {/* {showIntro && <IntroOverlay />} */}
 
       <div
         aria-hidden={showIntro ? 'true' : 'false'}
