@@ -2,12 +2,14 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import miniRoomBackground from '@shared/assets/images/mini-room.png';
 import speechBubbleImg from '@shared/assets/images/speech-bubble.png';
+import speechBubbleSelectedImg from '@shared/assets/images/speech-bubble-selected.png';
 import { MiniMe } from '@shared/ui/MiniMe';
 import { generateMiniMePositions } from './lib/generateMiniMePositions';
 import { DEFAULT_MINI_MESSAGES } from './constants';
 import styles from './MiniRoom.module.css';
 import type { GuestBook } from './types';
 import type { RestrictedZone } from './lib/generateMiniMePositions';
+import { SpeechBubbleDot } from '@shared/ui/decorations/SpeechBubbleDot';
 
 export interface MainMiniMe {
   src: string;
@@ -161,16 +163,28 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
             aria-label="말풍선 닫기"
             onClick={closeBubble}
           />
-
+          <SpeechBubbleDot
+            style={{
+              left: `${activeEntry.position.x > 55 ? activeEntry.position.x : activeEntry.position.x - 3}%`,
+              top: `${activeEntry.position.y - 15}%`,
+            }}
+            type="active"
+            className={clsx(
+              styles.speechBubbleDot,
+              activeEntry.position.x > 55
+                ? styles.speechBubbleDotRight
+                : styles.speechBubbleDotLeft,
+            )}
+          />
           <div
             className={clsx(
               styles.speechBubble,
               activeEntry.position.x > 55 ? styles.speechBubbleRight : styles.speechBubbleLeft,
             )}
             style={{
-              left: `${activeEntry.position.x}%`,
-              top: `${activeEntry.position.y - 10}%`,
-              backgroundImage: `url(${speechBubbleImg})`,
+              left: `${activeEntry.position.x < 20 ? 20 : activeEntry.position.x}%`,
+              top: `${activeEntry.position.y - 13}%`,
+              backgroundImage: `url(${speechBubbleSelectedImg})`,
             }}
           >
             <div className={styles.speechBody}>
@@ -184,22 +198,37 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
       )}
 
       {previewBubble && previewEntry?.position && (
-        <button
-          type="button"
-          className={clsx(
-            styles.previewBubble,
-            previewEntry.position.x > 55 ? styles.previewBubbleRight : styles.previewBubbleLeft,
-          )}
-          style={{
-            left: `${previewEntry.position.x}%`,
-            top: `${previewEntry.position.y - 10}%`,
-            backgroundImage: `url(${speechBubbleImg})`,
-          }}
-          onClick={() => handleSelectEntry(previewEntry.id, previewBubble.message)}
-          aria-label="축하 메시지 전체 보기"
-        >
-          <span className={styles.previewContent}>{previewBubble.message}</span>
-        </button>
+        <>
+          <button
+            type="button"
+            className={clsx(
+              styles.previewBubble,
+              previewEntry.position.x > 55 ? styles.previewBubbleRight : styles.previewBubbleLeft,
+            )}
+            style={{
+              left: `${previewEntry.position.x < 20 ? 20 : previewEntry.position.x}%`,
+              top: `${previewEntry.position.y - 13}%`,
+              backgroundImage: `url(${speechBubbleImg})`,
+            }}
+            onClick={() => handleSelectEntry(previewEntry.id, previewBubble.message)}
+            aria-label="축하 메시지 전체 보기"
+          >
+            <span className={styles.previewContent}>{previewBubble.message}</span>
+          </button>
+          <SpeechBubbleDot
+            style={{
+              left: `${previewEntry.position.x > 55 ? previewEntry.position.x : previewEntry.position.x - 3}%`,
+              top: `${previewEntry.position.y - 14}%`,
+            }}
+            type="preview"
+            className={clsx(
+              styles.speechBubbleDot,
+              previewEntry.position.x > 55
+                ? styles.speechBubbleDotRight
+                : styles.speechBubbleDotLeft,
+            )}
+          />
+        </>
       )}
 
       {entriesWithPosition.map((entry, index) => {

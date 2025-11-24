@@ -61,15 +61,14 @@
 
 .speechBubble {
   position: absolute;
-  width: min(240px, 70%);
   max-width: min(240px, 70%);
-  min-width: 100px;
+  min-width: 150px;
   transform: translate(-40%, calc(-100% - 8px));
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: transparent;
   border: none;
-  padding: 12px 18px;
+  padding: 0px 6px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -78,6 +77,14 @@
   z-index: 5;
 }
 
+.speechBubbleDot {
+  position: absolute;
+  z-index: 5;
+}
+
+.speechBubbleDotLeft {
+  transform: rotate(-90deg);
+}
 .speechBubbleLeft {
   transform: translate(-40%, calc(-100% - 12px));
 }
@@ -114,15 +121,15 @@
 
 .previewBubble {
   position: absolute;
-  width: min(240px, 70%);
+
   max-width: min(240px, 70%);
-  min-width: 100px;
+  min-width: 150px;
   transform: translate(-40%, calc(-100% - 8px));
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: transparent;
   border: none;
-  padding: 12px 18px;
+  padding: 6px 12px;
   display: flex;
   justify-content: center;
   align-items: center;

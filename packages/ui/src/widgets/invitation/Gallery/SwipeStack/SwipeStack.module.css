@@ -22,9 +22,8 @@
   position: absolute;
   inset: 0;
   border-radius: 16px;
-  border: 2px solid #aca4ff;
   overflow: hidden;
-  background: #aca4ff;
+  background: #fff;
   transform-origin: 50% 90%;
   box-shadow:
     0 14px 28px rgba(0, 0, 0, 0.24),
