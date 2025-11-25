@@ -40,6 +40,7 @@ export function SwipeStack({
   const snapTimerRef = useRef<number>(null);
   const isObservedRef = useRef(false);
   const [isObserved, setIsObserved] = useState(false);
+  const [autoClock, setAutoClock] = useState(0);
   const touchActionRestoreRef = useRef<string | null>(null);
 
   // 제스처 컨텍스트(렌더 유발 방지용 ref)
@@ -73,18 +74,26 @@ export function SwipeStack({
     if (Math.abs(delta) < 1e-4) {
       setSwipeDirection(0);
     } else {
-      // 왼쪽 스와이프(다음)일 때 activeIndex 증가 → dir = -1 (시각적 방향 기준)
       setSwipeDirection(delta > 0 ? -1 : +1);
     }
   }, [activeIndex]);
 
-  const beginSnap = useCallback((target: number | ((prev: number) => number)) => {
-    setIsSnapping(true);
-    setActiveIndex((prev) => (typeof target === 'function' ? target(prev) : target));
-
-    if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
-    snapTimerRef.current = window.setTimeout(() => setIsSnapping(false), 320);
+  const resetAutoClock = useCallback(() => {
+    setAutoClock((c) => c + 1);
   }, []);
+
+  const beginSnap = useCallback(
+    (target: number | ((prev: number) => number), opts?: { resetAutoClock?: boolean }) => {
+      setIsSnapping(true);
+      setActiveIndex((prev) => (typeof target === 'function' ? target(prev) : target));
+
+      if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+      snapTimerRef.current = window.setTimeout(() => setIsSnapping(false), 320);
+
+      if (opts?.resetAutoClock) resetAutoClock();
+    },
+    [resetAutoClock],
+  );
 
   useEffect(() => {
     return () => {
@@ -135,18 +144,16 @@ export function SwipeStack({
       const dx = e.clientX - startPointerXRef.current;
       const widthPx = widthPxRef.current;
 
-      // 왼쪽 드래그(dx<0) → activeIndex 증가(다음), 오른쪽 드래그(dx>0) → 감소(이전)
       const deltaIndex = -(dx / widthPx) * sensitivity;
       const nextActive = startActiveIndexRef.current + deltaIndex;
       setActiveIndex(nextActive);
 
-      // 이동량 기록 및 커밋-암 판정
       const drift = nextActive - startActiveIndexRef.current;
       driftFromStartRef.current = drift;
       const absDrift = Math.abs(drift);
 
       if (absDrift >= COMMIT_DEADZONE) {
-        armedDirectionRef.current = drift > 0 ? +1 : -1; // +1: 다음(왼쪽 스와이프), -1: 이전
+        armedDirectionRef.current = drift > 0 ? +1 : -1;
       } else {
         armedDirectionRef.current = 0;
       }
@@ -167,7 +174,7 @@ export function SwipeStack({
         targetInt = startInt + (armedDirectionRef.current > 0 ? +1 : -1);
       }
 
-      beginSnap(targetInt);
+      beginSnap(targetInt, { resetAutoClock: true });
 
       driftFromStartRef.current = 0;
       armedDirectionRef.current = 0;
@@ -180,7 +187,6 @@ export function SwipeStack({
     [activeIndex, beginSnap],
   );
 
-  // 자동 슬라이드(드래그 중에는 정지)
   useEffect(() => {
     if (imageCount <= 1 || !isObserved) return;
     const id = window.setInterval(() => {
@@ -188,7 +194,7 @@ export function SwipeStack({
       beginSnap((prev) => prev + 1);
     }, 3000);
     return () => window.clearInterval(id);
-  }, [beginSnap, imageCount, isObserved]);
+  }, [beginSnap, imageCount, isObserved, autoClock]);
 
   if (imageCount === 0) {
     return null;
