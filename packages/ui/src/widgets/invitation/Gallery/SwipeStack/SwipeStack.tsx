@@ -1,6 +1,6 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import styles from './SwipeStack.module.css';
-import { computeTransform, opacityFor, clamp } from './utils';
+import { computeTransform, opacityFor } from './utils';
 import { COMMIT_DEADZONE } from './constants';
 import type { GalleryImage } from '../Gallery';
 import clsx from 'clsx';
@@ -23,13 +23,24 @@ export function SwipeStack({
   const imageCount = images.length;
   const rootElRef = useRef<HTMLDivElement | null>(null);
 
-  // 핵심 상태: 연속 인덱스(드래그 중 실시간 반영)
-  const [activeIndex, setActiveIndex] = useState<number>(
-    clamp(initialIndex, 0, Math.max(0, imageCount - 1)),
+  const normalizeIndex = useCallback(
+    (idx: number) => {
+      if (imageCount === 0) return 0;
+      const mod = idx % imageCount;
+      return mod < 0 ? mod + imageCount : mod;
+    },
+    [imageCount],
   );
+
+  // 핵심 상태: 연속 인덱스(드래그 중 실시간 반영). 무한 루프를 위해 클램프하지 않음.
+  const [activeIndex, setActiveIndex] = useState<number>(normalizeIndex(initialIndex));
 
   // UI 제어용 최소 상태만 유지
   const [isSnapping, setIsSnapping] = useState(false);
+  const snapTimerRef = useRef<number>();
+  const isObservedRef = useRef(false);
+  const [isObserved, setIsObserved] = useState(false);
+  const touchActionRestoreRef = useRef<string | null>(null);
 
   // 제스처 컨텍스트(렌더 유발 방지용 ref)
   const isDraggingRef = useRef(false);
@@ -67,6 +78,34 @@ export function SwipeStack({
     }
   }, [activeIndex]);
 
+  const beginSnap = useCallback((target: number | ((prev: number) => number)) => {
+    setIsSnapping(true);
+    setActiveIndex((prev) => (typeof target === 'function' ? target(prev) : target));
+
+    window.clearTimeout(snapTimerRef.current);
+    snapTimerRef.current = window.setTimeout(() => setIsSnapping(false), 320);
+  }, []);
+
+  useEffect(() => {
+    return () => window.clearTimeout(snapTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    const el = rootElRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const visible = entry.isIntersecting;
+        isObservedRef.current = visible;
+        setIsObserved(visible);
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
       (e.target as Element).setPointerCapture?.(e.pointerId);
@@ -78,6 +117,12 @@ export function SwipeStack({
 
       driftFromStartRef.current = 0;
       armedDirectionRef.current = 0;
+
+      // 드래그 중 스크롤 방지
+      if (rootElRef.current) {
+        touchActionRestoreRef.current = rootElRef.current.style.touchAction || null;
+        rootElRef.current.style.touchAction = 'none';
+      }
     },
     [activeIndex],
   );
@@ -90,11 +135,7 @@ export function SwipeStack({
 
       // 왼쪽 드래그(dx<0) → activeIndex 증가(다음), 오른쪽 드래그(dx>0) → 감소(이전)
       const deltaIndex = -(dx / widthPx) * sensitivity;
-      const nextActive = clamp(
-        startActiveIndexRef.current + deltaIndex,
-        0,
-        Math.max(0, imageCount - 1),
-      );
+      const nextActive = startActiveIndexRef.current + deltaIndex;
       setActiveIndex(nextActive);
 
       // 이동량 기록 및 커밋-암 판정
@@ -108,7 +149,7 @@ export function SwipeStack({
         armedDirectionRef.current = 0;
       }
     },
-    [imageCount, sensitivity],
+    [sensitivity],
   );
 
   const onPointerUp = useCallback(
@@ -117,35 +158,42 @@ export function SwipeStack({
       if (!isDraggingRef.current) return;
       isDraggingRef.current = false;
 
-      const startInt = clamp(
-        Math.round(startActiveIndexRef.current),
-        0,
-        Math.max(0, imageCount - 1),
-      );
-      let targetInt = clamp(Math.round(activeIndex), 0, Math.max(0, imageCount - 1));
+      const startInt = Math.round(startActiveIndexRef.current);
+      let targetInt = Math.round(activeIndex);
 
       if (armedDirectionRef.current !== 0 && targetInt === startInt) {
-        targetInt = clamp(
-          startInt + (armedDirectionRef.current > 0 ? +1 : -1),
-          0,
-          Math.max(0, imageCount - 1),
-        );
+        targetInt = startInt + (armedDirectionRef.current > 0 ? +1 : -1);
       }
 
-      setIsSnapping(true);
-      setActiveIndex(targetInt);
-
-      window.clearTimeout((onPointerUp as any)._t);
-      (onPointerUp as any)._t = window.setTimeout(() => setIsSnapping(false), 320);
+      beginSnap(targetInt);
 
       driftFromStartRef.current = 0;
       armedDirectionRef.current = 0;
+
+      if (rootElRef.current) {
+        rootElRef.current.style.touchAction =
+          touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
+      }
     },
-    [activeIndex, imageCount],
+    [activeIndex, beginSnap],
   );
 
-  const startRender = Math.max(0, Math.floor(activeIndex) - renderRange);
-  const endRender = Math.min(imageCount - 1, Math.ceil(activeIndex) + renderRange);
+  // 자동 슬라이드(드래그 중에는 정지)
+  useEffect(() => {
+    if (imageCount <= 1 || !isObserved) return;
+    const id = window.setInterval(() => {
+      if (isDraggingRef.current) return;
+      beginSnap((prev) => prev + 1);
+    }, 3000);
+    return () => window.clearInterval(id);
+  }, [beginSnap, imageCount, isObserved]);
+
+  if (imageCount === 0) {
+    return null;
+  }
+
+  const startRender = Math.floor(activeIndex) - renderRange;
+  const endRender = Math.floor(activeIndex) + renderRange;
 
   const ratioStyle: React.CSSProperties = { ['--ratio' as any]: String(aspectRatio) };
 
@@ -162,16 +210,19 @@ export function SwipeStack({
       aria-roledescription="carousel"
       aria-label="Swipe stack"
     >
-      {images.slice(startRender, endRender + 1).map((image, localIdx) => {
-        const realIndex = localIdx + startRender;
-        const deltaToActive = realIndex - activeIndex;
+      {Array.from({ length: endRender - startRender + 1 }, (_, idx) => {
+        const virtualIndex = startRender + idx;
+        const imageIndex = normalizeIndex(virtualIndex);
+        const image = images[imageIndex];
+        const deltaToActive = virtualIndex - activeIndex;
         const transform = computeTransform(deltaToActive, swipeDirection, widthPxRef.current);
         const opacity = opacityFor(deltaToActive, swipeDirection);
         const zIndex = 1000 - Math.abs(deltaToActive) * 10;
+        const loopRound = Math.floor(virtualIndex / imageCount);
 
         return (
           <figure
-            key={realIndex}
+            key={`${imageIndex}-${loopRound}`}
             className={clsx(styles.card, {
               [styles.top]: Math.abs(deltaToActive) < 0.5,
             })}
@@ -179,7 +230,7 @@ export function SwipeStack({
             aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
           >
             <img className={styles.media} src={image.src} alt={image.alt ?? ''} draggable={false} />
-            <p className={styles.count}>{`${realIndex + 1} / ${imageCount}`}</p>
+            <p className={styles.count}>{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>
             <div className={styles.gloss} />
           </figure>
         );
