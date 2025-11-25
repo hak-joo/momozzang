@@ -82,7 +82,7 @@ function GuestBookFormContainer() {
         <Button variant="secondary">방명록 남기기</Button>
       </BottomSheet.Trigger>
 
-      <BottomSheet.Content height="90vh" className={styles.sheetContent}>
+      <BottomSheet.Content height="92vh" className={styles.sheetContent}>
         <BottomSheet.Close />
 
         {step === 'select' && <MiniMeSelectionStep />}

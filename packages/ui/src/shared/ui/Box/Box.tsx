@@ -2,14 +2,17 @@ import styles from './Box.module.css';
 import { clsx } from 'clsx';
 import heartBalloon from '@shared/assets/images/heart-balloon.png';
 import weddingDayImg from '@shared/assets/images/wedding-day.png';
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, CSSProperties } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'reversed';
+type DotOffset = 16 | 24;
 export interface Props {
+  wrapperClassName?: string;
   className?: string;
   variant: Variant;
   hasBalloon?: boolean;
   hasDecoration?: boolean;
+  dotOffset?: DotOffset;
 }
 
 function capitalize(value: string) {
@@ -17,12 +20,16 @@ function capitalize(value: string) {
 }
 
 export function Box({
+  wrapperClassName,
   className,
   hasBalloon = false,
   hasDecoration = false,
   children,
   variant = 'primary',
+  dotOffset = 16,
 }: PropsWithChildren<Props>) {
+  const boardStyle: CSSProperties = { ['--dot-offset' as string]: `${dotOffset}px` };
+
   const verticalPositions = ['top', 'bottom'] as const;
   const horizontalPositions = ['left', 'right'] as const;
   const dots = verticalPositions.flatMap((vertical) =>
@@ -40,7 +47,7 @@ export function Box({
   );
 
   return (
-    <div className={clsx(styles.wrapper)}>
+    <div className={clsx(styles.wrapper, wrapperClassName)}>
       {hasBalloon && (
         <>
           <img
@@ -69,6 +76,7 @@ export function Box({
           { [styles.hasDecoration]: hasDecoration },
           styles[`${variant}` as keyof typeof styles],
         )}
+        style={boardStyle}
       >
         {dots}
         {children}

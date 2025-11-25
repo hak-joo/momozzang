@@ -57,19 +57,19 @@
 }
 
 .dotTop {
-  top: 16px;
+  top: var(--dot-offset, 16px);
 }
 
 .dotBottom {
-  bottom: 16px;
+  bottom: var(--dot-offset, 16px);
 }
 
 .dotLeft {
-  left: 16px;
+  left: var(--dot-offset, 16px);
 }
 
 .dotRight {
-  right: 16px;
+  right: var(--dot-offset, 16px);
 }
 
 .balloon {

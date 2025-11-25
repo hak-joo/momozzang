@@ -8,7 +8,7 @@ export function GuestBookList({ entries = MOCK_GUEST_BOOK_ENTRIES }) {
   return (
     <BottomSheet.Root>
       <BottomSheet.Trigger asChild>
-        <Button variant="plain">{'전체 보기 >>'}</Button>
+        <Button variant="plain">{'전체 보기'}</Button>
       </BottomSheet.Trigger>
 
       <BottomSheet.Content height="90vh" className={styles.bottomSheetContent}>

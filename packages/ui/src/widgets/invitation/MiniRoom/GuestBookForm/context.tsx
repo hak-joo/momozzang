@@ -11,7 +11,7 @@ import { MINI_ME_IDS } from '@shared/lib/miniMe';
 
 export type Step = 'select' | 'message' | 'pin';
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 20;
 const MAX_MESSAGE_LENGTH = 200;
 const PIN_LENGTH = 4;
 

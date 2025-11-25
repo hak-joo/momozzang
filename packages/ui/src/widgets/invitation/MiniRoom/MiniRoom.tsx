@@ -41,15 +41,20 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
 
   return (
     <div className={styles.wrapper}>
-      <PixelBadge text="Mini Room" />
+      <div className={styles.header}>
+        <PixelBadge text="Mini Room" />
+        <p className={styles.description}>당신의 미니미로 축하의 마음을 전해보세요</p>
+      </div>
 
-      <MiniRoomScene
-        entries={sceneEntries}
-        restrictedZones={restrictedZones ?? metadata.restrictedZones}
-        mainMiniMe={mainMiniMe}
-      />
+      <div className={styles.body}>
+        <MiniRoomScene
+          entries={sceneEntries}
+          restrictedZones={restrictedZones ?? metadata.restrictedZones}
+          mainMiniMe={mainMiniMe}
+        />
 
-      <GuestBookList entries={guestBookEntries} />
+        <GuestBookList entries={guestBookEntries} />
+      </div>
       <GuestBookForm />
     </div>
   );

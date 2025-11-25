@@ -2,9 +2,29 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 16px;
+  gap: 28px;
   align-items: center;
   width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.description {
+  @mixin typo-body2;
+  color: var(--Purple-Purple_text, #512985);
+}
+
+.body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .stage {

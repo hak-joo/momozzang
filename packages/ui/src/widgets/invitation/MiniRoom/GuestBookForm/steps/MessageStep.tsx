@@ -27,7 +27,7 @@ export function MessageStep() {
         <p className={styles.description}>소중한 한마디를 남겨 주세요.</p>
       </header>
 
-      <Box variant="reversed" className={styles.boxBody}>
+      <Box variant="reversed" className={styles.boxBody} dotOffset={24}>
         <div className={styles.selectedPreview}>
           {selectedMiniMeId && <MiniMe miniMeId={selectedMiniMeId} size={40} />}
         </div>

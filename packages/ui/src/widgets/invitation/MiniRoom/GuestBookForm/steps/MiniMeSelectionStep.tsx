@@ -45,7 +45,12 @@ export function MiniMeSelectionStep() {
         <p className={styles.description}>방명록에 남길 미니미를 선택해 주세요.</p>
       </header>
 
-      <Box variant="reversed" className={styles.boxInner}>
+      <Box
+        variant="reversed"
+        wrapperClassName={styles.boxWrapper}
+        className={styles.boxInner}
+        dotOffset={24}
+      >
         <div
           className={styles.miniGrid}
           onPointerDown={handleSwipeStart}
