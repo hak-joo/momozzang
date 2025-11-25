@@ -28,7 +28,7 @@ export function Introduction() {
               <span>{groom?.name}</span>
             </p>
           </div>
-          <PixelHeart width={20} height={27} className={styles.pixelHeart} />
+          <PixelHeart width={28} height={27} className={styles.pixelHeart} />
           <div className={styles.person}>
             <p>{`${brideFather?.name} · ${brideMother?.name}의 딸`}</p>
             <p className={styles.name}>

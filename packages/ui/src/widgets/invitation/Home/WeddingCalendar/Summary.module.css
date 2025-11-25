@@ -32,16 +32,17 @@
 }
 
 .summaryDayName {
+  @mixin typo-desc2;
   width: 100%;
   text-align: center;
   font-family: var(--font-PyeongChang);
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.404px; /* 161.7% */
-  letter-spacing: -0.36px;
   background-color: #fff;
   border-bottom: 1px solid #c2e4ff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px;
 }
 
 .summaryDayDate {
@@ -64,8 +65,8 @@
 }
 
 .summaryDayNote {
-  font-size: 12px;
-  font-weight: 500;
+  @mixin typo-desc2;
+
   text-align: center;
 
   word-break: keep-all;

@@ -1,31 +1,29 @@
 :root {
-  /* weights */
   --font-weight-bold: 700;
 
-  /* base scale (px converted from pt) */
-  --font-size-22: 29.33px; /* 22pt */
-  --line-height-22: 37.33px; /* 28pt */
+  --font-size-22: 22px;
+  --line-height-22: 28px;
   --letter-spacing-22: -0.03em;
 
-  --font-size-18: 24px; /* 18pt */
-  --line-height-18: 32px; /* 24pt */
+  --font-size-18: 18px;
+  --line-height-18: 24px;
   --letter-spacing-18: -0.03em;
 
-  --font-size-16: 21.33px; /* 16pt */
-  --line-height-16: 29.33px; /* 22pt */
+  --font-size-16: 16px;
+  --line-height-16: 22px;
   --letter-spacing-16: -0.04em;
 
-  --font-size-14: 18.67px; /* 14pt */
-  --line-height-14: 26.67px; /* 20pt */
+  --font-size-14: 14px;
+  --line-height-14: 20px;
   --letter-spacing-14: -0.04em;
 
-  --font-size-13: 17.33px; /* 13pt */
-  --line-height-13: 21.33px; /* 16pt single */
-  --line-height-13-multi: 25.33px; /* 19pt multi */
+  --font-size-13: 13px;
+  --line-height-13: 16px;
+  --line-height-13-multi: 19px;
   --letter-spacing-13: -0.04em;
 
-  --font-size-12: 16px; /* 12pt */
-  --line-height-12: 18.67px; /* 14pt */
+  --font-size-12: 12px;
+  --line-height-12: 14px;
   --letter-spacing-12: -0.05em;
 }
 

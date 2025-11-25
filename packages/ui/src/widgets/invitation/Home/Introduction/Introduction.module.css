@@ -16,22 +16,12 @@
 .title {
   color: var(--Purple-Purple_text, #512985);
   text-align: center;
-  font-family: var(--font-DungGeunMo);
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 153%; /* 22.95px */
-  letter-spacing: -1.2px;
+  @mixin typo-heading3;
 }
 
 .message {
   text-align: center;
-  font-family: var(--font-PyeongChang);
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 163%; /* 26.08px */
-  letter-spacing: -1.28px;
+  @mixin typo-body2;
   white-space: pre-line;
 }
 
@@ -52,18 +42,13 @@
   font-family: var(--font-DungGeunMo);
 
   .name {
+    font-family: var(--font-PyeongChang);
     display: flex;
     align-items: center;
     gap: 6px;
 
     span:last-child {
-      font-size: 20px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 153%; /* 30.6px */
-      letter-spacing: -1.6px;
-
-      font-family: var(--font-PyeongChang);
+      @mixin typo-heading1;
     }
   }
 }

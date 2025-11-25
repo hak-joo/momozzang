@@ -1,8 +1,8 @@
 export function IconX() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path
-        d="M5.76 17.0999L4.5 15.8399L9.54 10.7999L4.5 5.7599L5.76 4.4999L10.8 9.5399L15.84 4.4999L17.1 5.7599L12.06 10.7999L17.1 15.8399L15.84 17.0999L10.8 12.0599L5.76 17.0999Z"
+        d="M6.4 18.9999L5 17.5999L10.6 11.9999L5 6.39988L6.4 4.99988L12 10.5999L17.6 4.99988L19 6.39988L13.4 11.9999L19 17.5999L17.6 18.9999L12 13.3999L6.4 18.9999Z"
         fill="currentColor"
       />
     </svg>

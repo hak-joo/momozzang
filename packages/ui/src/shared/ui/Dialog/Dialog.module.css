@@ -38,7 +38,6 @@
 
   z-index: 999;
   backdrop-filter: blur(16px);
-
 }
 
 .overlayBase {
@@ -103,6 +102,6 @@
 
 .close {
   position: absolute !important;
-  right: 0px;
-  top: 0px;
+  right: 8px;
+  top: 8px;
 }
