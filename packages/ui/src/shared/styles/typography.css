@@ -1,0 +1,108 @@
+:root {
+  --font-size-22: 29.33px; /* 22pt */
+  --line-height-22: 37.33px; /* 28pt */
+  --letter-spacing-22: -0.03em;
+
+  --font-size-18: 24px; /* 18pt */
+  --line-height-18: 32px; /* 24pt */
+  --letter-spacing-18: -0.03em;
+
+  --font-size-16: 21.33px; /* 16pt */
+  --line-height-16: 29.33px; /* 22pt */
+  --letter-spacing-16: -0.04em;
+
+  --font-size-14: 18.67px; /* 14pt */
+  --line-height-14: 26.67px; /* 20pt */
+  --letter-spacing-14: -0.04em;
+
+  --font-size-13: 17.33px; /* 13pt */
+  --line-height-13: 21.33px; /* 16pt (single line default) */
+  --line-height-13-multi: 25.33px; /* 19pt (multi-line variant) */
+  --letter-spacing-13: -0.04em;
+
+  --font-size-12: 16px; /* 12pt */
+  --line-height-12: 18.67px; /* 14pt */
+  --letter-spacing-12: -0.05em;
+
+  .font-bold {
+    font-weight: 700;
+  }
+}
+
+.font-22 {
+  font-size: var(--font-size-22);
+  line-height: var(--line-height-22);
+  letter-spacing: var(--letter-spacing-22);
+}
+
+.font-18 {
+  font-size: var(--font-size-18);
+  line-height: var(--line-height-18);
+  letter-spacing: var(--letter-spacing-18);
+}
+
+.font-16 {
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  letter-spacing: var(--letter-spacing-16);
+}
+
+.font-14 {
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+}
+
+.font-13 {
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13);
+  letter-spacing: var(--letter-spacing-13);
+}
+
+.font-13-multi {
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13-multi);
+  letter-spacing: var(--letter-spacing-13);
+}
+
+.font-12 {
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  letter-spacing: var(--letter-spacing-12);
+}
+
+.typo-heading1 {
+  @apply font-bold font-22;
+}
+
+.typo-heading2 {
+  @apply font-bold font-18;
+}
+
+.typo-heading3 {
+  @apply font-bold font-16;
+}
+
+.typo-heading4 {
+  @apply font-bold font-14;
+}
+
+.typo-tab {
+  @apply font-16;
+}
+
+.typo-body {
+  @apply font-14;
+}
+
+.typo-desc1-single {
+  @apply font-13;
+}
+
+.typo-desc1-multi {
+  @apply font-13-multi;
+}
+
+.typo-desc2 {
+  @apply font-12;
+}
