@@ -37,7 +37,7 @@ export function SwipeStack({
 
   // UI 제어용 최소 상태만 유지
   const [isSnapping, setIsSnapping] = useState(false);
-  const snapTimerRef = useRef<number>();
+  const snapTimerRef = useRef<number>(null);
   const isObservedRef = useRef(false);
   const [isObserved, setIsObserved] = useState(false);
   const touchActionRestoreRef = useRef<string | null>(null);
@@ -82,12 +82,14 @@ export function SwipeStack({
     setIsSnapping(true);
     setActiveIndex((prev) => (typeof target === 'function' ? target(prev) : target));
 
-    window.clearTimeout(snapTimerRef.current);
+    if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
     snapTimerRef.current = window.setTimeout(() => setIsSnapping(false), 320);
   }, []);
 
   useEffect(() => {
-    return () => window.clearTimeout(snapTimerRef.current);
+    return () => {
+      if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -230,7 +232,9 @@ export function SwipeStack({
             aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
           >
             <img className={styles.media} src={image.src} alt={image.alt ?? ''} draggable={false} />
-            <p className={styles.count}>{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>
+            <p
+              className={styles.count}
+            >{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>
             <div className={styles.gloss} />
           </figure>
         );
