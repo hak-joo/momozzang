@@ -1,4 +1,8 @@
 :root {
+  /* weights */
+  --font-weight-bold: 700;
+
+  /* base scale (px converted from pt) */
   --font-size-22: 29.33px; /* 22pt */
   --line-height-22: 37.33px; /* 28pt */
   --letter-spacing-22: -0.03em;
@@ -16,93 +20,100 @@
   --letter-spacing-14: -0.04em;
 
   --font-size-13: 17.33px; /* 13pt */
-  --line-height-13: 21.33px; /* 16pt (single line default) */
-  --line-height-13-multi: 25.33px; /* 19pt (multi-line variant) */
+  --line-height-13: 21.33px; /* 16pt single */
+  --line-height-13-multi: 25.33px; /* 19pt multi */
   --letter-spacing-13: -0.04em;
 
   --font-size-12: 16px; /* 12pt */
   --line-height-12: 18.67px; /* 14pt */
   --letter-spacing-12: -0.05em;
-
-  .font-bold {
-    font-weight: 700;
-  }
 }
 
-.font-22 {
+/* mixins (postcss-mixins) */
+
+@define-mixin font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+@define-mixin font-22 {
   font-size: var(--font-size-22);
   line-height: var(--line-height-22);
   letter-spacing: var(--letter-spacing-22);
 }
 
-.font-18 {
+@define-mixin font-18 {
   font-size: var(--font-size-18);
   line-height: var(--line-height-18);
   letter-spacing: var(--letter-spacing-18);
 }
 
-.font-16 {
+@define-mixin font-16 {
   font-size: var(--font-size-16);
   line-height: var(--line-height-16);
   letter-spacing: var(--letter-spacing-16);
 }
 
-.font-14 {
+@define-mixin font-14 {
   font-size: var(--font-size-14);
   line-height: var(--line-height-14);
   letter-spacing: var(--letter-spacing-14);
 }
 
-.font-13 {
+@define-mixin font-13 {
   font-size: var(--font-size-13);
   line-height: var(--line-height-13);
   letter-spacing: var(--letter-spacing-13);
 }
 
-.font-13-multi {
+@define-mixin font-13-multi {
   font-size: var(--font-size-13);
   line-height: var(--line-height-13-multi);
   letter-spacing: var(--letter-spacing-13);
 }
 
-.font-12 {
+@define-mixin font-12 {
   font-size: var(--font-size-12);
   line-height: var(--line-height-12);
   letter-spacing: var(--letter-spacing-12);
 }
 
-.typo-heading1 {
-  @apply font-bold font-22;
+/* role mixins */
+@define-mixin typo-heading1 {
+  @mixin font-bold;
+  @mixin font-22;
 }
 
-.typo-heading2 {
-  @apply font-bold font-18;
+@define-mixin typo-heading2 {
+  @mixin font-bold;
+  @mixin font-18;
 }
 
-.typo-heading3 {
-  @apply font-bold font-16;
+@define-mixin typo-heading3 {
+  @mixin font-bold;
+  @mixin font-16;
 }
 
-.typo-heading4 {
-  @apply font-bold font-14;
+@define-mixin typo-heading4 {
+  @mixin font-bold;
+  @mixin font-14;
 }
 
-.typo-tab {
-  @apply font-16;
+@define-mixin typo-body1 {
+  @mixin font-16;
 }
 
-.typo-body {
-  @apply font-14;
+@define-mixin typo-body2 {
+  @mixin font-14;
 }
 
-.typo-desc1-single {
-  @apply font-13;
+@define-mixin typo-desc1-single {
+  @mixin font-13;
 }
 
-.typo-desc1-multi {
-  @apply font-13-multi;
+@define-mixin typo-desc1-multi {
+  @mixin font-13-multi;
 }
 
-.typo-desc2 {
-  @apply font-12;
+@define-mixin typo-desc2 {
+  @mixin font-12;
 }
