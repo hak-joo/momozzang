@@ -29,7 +29,7 @@ export function WeddingDay({ date, ampm, hour, minute }: WeddingDayProps) {
   const timeLabel = createTimeLabel(ampm, hour, minute);
 
   return (
-    <Box variant="primary" hasBalloon>
+    <Box variant="primary" hasBalloon wrapperClassName={styles.wrapper}>
       <div className={styles.dateRow}>
         {dateTokens.map((token, index) =>
           token === '/' ? (

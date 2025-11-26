@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 100px;
+  gap: 80px;
+  width: 100%;
 }
 .imgContainer {
   position: relative;
-  margin: 24px 0;
 }
 
 .weddingDayContainer {
@@ -14,6 +14,7 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  width: 100%;
 }
 
 .weddingDayImg {

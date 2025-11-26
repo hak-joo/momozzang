@@ -35,7 +35,13 @@ export function WeddingCalendar() {
 
   return (
     <div className={styles.wrapper}>
-      <Box variant="primary" hasBalloon hasDecoration className={styles.calendarBox}>
+      <Box
+        variant="primary"
+        hasBalloon
+        hasDecoration
+        className={styles.calendarBox}
+        wrapperClassName={styles.calendarWrapper}
+      >
         <section className={styles.calendar}>
           <header className={styles.header}>{monthLabel}</header>
           <div className={styles.grid}>

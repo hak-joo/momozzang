@@ -11,9 +11,9 @@
   gap: 1px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border-radius: 14px;
-  border: 1px solid var(--calendar-border, rgba(255, 255, 255, 0.45));
-  background: var(--calendar-table-bg, rgba(255, 255, 255, 0.1));
-  box-shadow: 0 16px 24px rgba(149, 174, 255, 0.15);
+
+  border: 1px solid var(--Blue-Blue03, #a1ceff);
+
   overflow: hidden;
 }
 

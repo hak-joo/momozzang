@@ -14,7 +14,13 @@ export function Introduction() {
   } = metadata;
   return (
     <div className={styles.wrapper}>
-      <Box hasBalloon hasDecoration variant="secondary" className={styles.box}>
+      <Box
+        hasBalloon
+        hasDecoration
+        variant="secondary"
+        wrapperClassName={styles.boxWrapper}
+        className={styles.box}
+      >
         <p className={styles.title}>모시는 글</p>
         <p className={styles.message}>{message}</p>
 
