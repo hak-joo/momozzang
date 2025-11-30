@@ -20,7 +20,6 @@ interface Props {
 export function WeddingInvitation({ metadata }: Props) {
   const homeRef = useRef<HTMLDivElement>(null);
   const miniRoomRef = useRef<HTMLDivElement>(null);
-  const guestbookRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -28,7 +27,6 @@ export function WeddingInvitation({ metadata }: Props) {
 
   const sectionRefs = {
     home: homeRef,
-    guestbook: guestbookRef,
     gallery: galleryRef,
     miniRoom: miniRoomRef,
     directions: directionsRef,
@@ -70,7 +68,6 @@ export function WeddingInvitation({ metadata }: Props) {
           <SectionContainer ref={miniRoomRef}>
             <MiniRoom />
           </SectionContainer>
-          <SectionContainer ref={guestbookRef}></SectionContainer>
           <SectionContainer ref={galleryRef}>
             <Gallery
               images={[
