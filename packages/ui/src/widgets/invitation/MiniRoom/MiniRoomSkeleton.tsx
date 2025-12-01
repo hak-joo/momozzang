@@ -2,7 +2,6 @@ import miniRoomBackground from '@shared/assets/images/mini-room.png';
 import groomBrideMini from '@shared/assets/images/groom-bride.png';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 
-import { GuestBookList } from './GuestBookList/GuestBookList';
 import styles from './MiniRoom.module.css';
 
 interface MainMiniMe {
@@ -48,8 +47,6 @@ export function MiniRoomSkeleton() {
           />
         )}
       </div>
-
-      <GuestBookList />
     </div>
   );
 }

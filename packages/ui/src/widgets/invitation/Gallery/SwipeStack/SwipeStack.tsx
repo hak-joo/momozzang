@@ -2,7 +2,7 @@ import React, { useCallback, useLayoutEffect, useRef, useState, useEffect } from
 import styles from './SwipeStack.module.css';
 import { computeTransform, opacityFor } from './utils';
 import { COMMIT_DEADZONE } from './constants';
-import type { GalleryImage } from '../Gallery';
+import type { GalleryImage } from '../types';
 import clsx from 'clsx';
 
 export type SwipeStackProps = {
@@ -237,7 +237,7 @@ export function SwipeStack({
             style={{ transform, opacity, zIndex: Math.round(zIndex) }}
             aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
           >
-            <img className={styles.media} src={image.src} alt={image.alt ?? ''} draggable={false} />
+            <img className={styles.media} src={image.url} alt={image.alt ?? ''} draggable={false} />
             <p
               className={styles.count}
             >{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>

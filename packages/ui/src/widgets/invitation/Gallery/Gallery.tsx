@@ -5,24 +5,12 @@ import { GalleryItem } from './GalleryItem';
 import { Carousel } from './Carousel';
 import { SwipeStack } from './SwipeStack';
 import { PixelBadge } from '@shared/ui/PixelBadge';
+import { useParams } from 'react-router-dom';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { MOCK_GALLERY_LIST } from './constants';
 
-export type GalleryImage = {
-  src: string;
-  alt?: string;
-};
-
-type GalleryProps = {
-  images: GalleryImage[];
-  cols?: 2 | 3;
-};
-
-export function Gallery({ images, cols = 3 }: GalleryProps) {
-  const [expanded, setExpanded] = useState(false);
-  const [carouselIndex, setCarouselIndex] = useState<number | null>(null);
-
-  const maxRows = 4;
-  const visibleCount = expanded ? images.length : cols * maxRows;
-
+export function Gallery() {
+  const images = MOCK_GALLERY_LIST;
   return (
     <>
       <div className={styles.title}>
@@ -30,27 +18,6 @@ export function Gallery({ images, cols = 3 }: GalleryProps) {
       </div>
 
       <SwipeStack images={images} />
-
-      {/* <div
-        className={clsx(styles.galleryGrid, expanded && styles.expanded)}
-        style={{ '--gallery-cols': cols } as React.CSSProperties}
-      >
-        {images.slice(0, visibleCount).map((img, i) => (
-          <GalleryItem key={img.alt} image={img} onClick={() => setCarouselIndex(i)} />
-        ))}
-      </div>
-      {!expanded && images.length > visibleCount && (
-        <button className={styles.moreButton} onClick={() => setExpanded(true)}>
-          더보기
-        </button>
-      )}
-      {carouselIndex !== null && (
-        <Carousel
-          images={images}
-          startIndex={carouselIndex}
-          onClose={() => setCarouselIndex(null)}
-        />
-      )} */}
     </>
   );
 }
