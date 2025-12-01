@@ -149,7 +149,7 @@ export function Direction() {
                   </div>
                 ))}
               </div>
-              <div className={styles.subDescription}>
+              <div>
                 {item.subInfo &&
                   item.subInfo.map((line, index) => (
                     <p
