@@ -113,10 +113,26 @@ export const exampleWeddingInvitation: WeddingInvitation = {
 
   etcInfo: {
     enabled: true,
-    busInfo: '대절버스는 수원역 5번 출구 앞에서 12:20 출발',
-    carInfo: '주차는 지하 2~4층 이용 가능(2시간 무료)',
-    atmInfo: '1층 로비 ATM 이용 가능',
-    additionalItems: [{ id: 'etc-1', label: '드레스 코드', value: '봄 컬러 포멀' }],
+    busInfo: {
+      info: ['정류장: 한국무역센터 삼성역 (정류장코드 23-201)'],
+      subInfo: [
+        '간선: 146, 333, 341, 360, 740',
+        '지선: 3411',
+        '광역: 6450',
+        '마을: 강남07, 강남08',
+        '직생: 1100, 1700, 2000, 2000-1, 7007, 500-2, 9303',
+      ],
+    },
+    carInfo: {
+      info: ['내비게이션 검색어: 한국도심공항'],
+      subInfo: ['한국도심공항 터미널 주차장 이용', '축의대에서 2시간 무료 주차권 수령해 주세요.'],
+    },
+    metroInfo: {
+      info: ['2호선 삼성역 5번 출구 (도보 7분)', '9호선 봉은사역 7번 출구 (도보 10분)'],
+      subInfo: [
+        '역삼역 방향 250m 직진 후 현대백화점 코너에서 우측 방향 약 150m 지점 도심공항 터미널 3층 소노펠리체 컨벤션',
+      ],
+    },
   },
 
   congratulatoryMoneyInfo: {

@@ -1,4 +1,4 @@
-import { useMemo, type KeyboardEvent, type MouseEvent } from 'react';
+import { Fragment, useMemo, type KeyboardEvent, type MouseEvent } from 'react';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import styles from './Direction.module.css';
 import { NaverMap } from '@shared/ui/NaverMap';
@@ -14,9 +14,19 @@ import type { MapProviderKey, MapProviderSpec } from './types';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
 
+type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
+
+const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo'];
+const transportationIcon: Record<TransportationType, { src: string; label: string }> = {
+  busInfo: { src: metroImg, label: '버스' },
+  carInfo: { src: carImg, label: '자차' },
+  metroInfo: { src: metroImg, label: '지하철' },
+};
+
 export function Direction() {
   const {
     weddingHallInfo: { latitude, longitude, hallName, hallDetail, address, tel },
+    etcInfo,
   } = useInvitation();
   const { info } = useToast();
   const handleCopyAddress = () => {
@@ -120,36 +130,37 @@ export function Direction() {
       )}
 
       <div className={styles.transportationList}>
-        <div className={styles.transportation}>
-          <div className={styles.title}>
-            <img width={24} src={carImg} alt="Car" />
-            <span>자차</span>
-          </div>
-          <div className={styles.description}>
-            <p>한국도심공항터미널 주차장 이용</p>
-            <p>네비게이션 검색어: ㅁㅁㅁ</p>
-          </div>
-        </div>
-        <div className={styles.transportation}>
-          <div className={styles.title}>
-            <img width={24} src={metroImg} alt="Metro" />
-            <span>지하철</span>
-          </div>
-          <div className={styles.description}>
-            <p>삼성역 2호선 4번 출구 도보 5분</p>
-            <p>봉은사역 7호선 1번 출구 도보 7분</p>
-          </div>
-        </div>
-        <div className={styles.transportation}>
-          <div className={styles.title}>
-            <img width={24} src={carImg} alt="Car" />
-            <span>자차</span>
-          </div>
-          <div className={styles.description}>
-            <p>한국도심공항터미널 주차장 이용</p>
-            <p>네비게이션 검색어: ㅁㅁㅁ</p>
-          </div>
-        </div>
+        {transportationKeys.map((type) => {
+          const item = etcInfo[type];
+          if (item == null || typeof item === 'boolean') return null;
+          const icon = transportationIcon[type];
+
+          return (
+            <div className={styles.transportation} key={type}>
+              <div className={styles.title}>
+                <img width={24} src={icon.src} alt={icon.label} />
+                <div>{icon.label}</div>
+              </div>
+              <div className={styles.description}>
+                {item.info.map((line, index) => (
+                  <div key={`${type}-info-${index}`} className={styles.info}>
+                    <span className={styles.block} aria-hidden />
+                    <span className={styles.descriptionText}>{line}</span>
+                  </div>
+                ))}
+              </div>
+              <div className={styles.subDescription}>
+                {item.subInfo &&
+                  item.subInfo.map((line, index) => (
+                    <p
+                      key={`${type}-sub-${index}`}
+                      className={styles.subDescriptionText}
+                    >{`- ${line}`}</p>
+                  ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

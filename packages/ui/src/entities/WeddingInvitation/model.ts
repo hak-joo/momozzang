@@ -81,18 +81,15 @@ export interface RsvpSettings {
 }
 
 export interface EtcItem {
-  id: string;
-  label: string;
-  value: string;
+  info: string[];
+  subInfo?: string[];
 }
 export interface EtcInfo {
   enabled: boolean;
-  busInfo?: string;
-  carInfo?: string;
-  atmInfo?: string;
-  additionalItems: EtcItem[];
+  busInfo: EtcItem;
+  carInfo: EtcItem;
+  metroInfo: EtcItem;
 }
-
 export interface Account {
   id: string;
   target: DepositTarget; // self | parent | custom

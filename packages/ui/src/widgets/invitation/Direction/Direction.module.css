@@ -6,16 +6,11 @@
 }
 
 .title {
+  @mixin typo-heading1;
   display: flex;
   flex-direction: column;
   align-items: center;
   color: #512985;
-  text-align: center;
-  font-size: 18.9px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -0.189px;
 }
 
 .weddinghallInfo {
@@ -74,28 +69,56 @@
   border-top: 1px dashed #a7d1ff;
 
   .transportation {
-    padding-top: 24px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 16px;
     justify-content: center;
     border-bottom: 1px dashed #a7d1ff;
-    padding-bottom: 24px;
 
     .title {
+      @mixin typo-heading2;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      flex-direction: row;
+      gap: 6px;
+    }
+
+    .block {
+      width: 6px;
+      height: 6px;
+      background: #7a6cff;
+      margin-top: 6px;
+      flex-shrink: 0;
     }
 
     .description {
       margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .descriptionText {
       color: #512985;
-      font-size: 12.96px;
+      font-size: 15px;
       font-style: normal;
       font-weight: 400;
-      line-height: normal;
-      letter-spacing: -0.13px;
+      line-height: 21px; /* 140% */
+      letter-spacing: -0.15px;
+    }
+
+    .subDescriptionText {
+      color: #967eb6;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: -0.12px;
     }
   }
 }

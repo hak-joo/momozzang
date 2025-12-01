@@ -20,14 +20,14 @@ export function createMapProviders(params: {
       webFallback: `https://map.naver.com/v5/directions/${lng},${lat}`,
     },
     tmap: {
-      label: '티맵',
+      label: '티맵 지도',
       iosScheme: `tmap://route?goalname=${encodedName}&goalx=${lng}&goaly=${lat}`,
       androidScheme: `tmap://route?goalname=${encodedName}&goalx=${lng}&goaly=${lat}`,
       iosStore: 'https://apps.apple.com/kr/app/t-map-내비게이션-운전대리/id431589174',
       androidStore: 'market://details?id=com.sktelecom.tmap.ku',
     },
     kakaoNavi: {
-      label: '카카오내비',
+      label: '카카오맵 지도',
       iosScheme: `kakaonavi://navigate?elat=${lat}&elng=${lng}&ename=${encodedName}`,
       androidScheme: `kakaonavi://navigate?elat=${lat}&elng=${lng}&ename=${encodedName}`,
       iosStore: 'https://apps.apple.com/kr/app/kakao-navi/id869776366',
