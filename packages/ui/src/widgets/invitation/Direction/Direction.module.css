@@ -21,32 +21,23 @@
   gap: 4px;
 
   .hallName {
+    @mixin typo-heading4;
     display: flex;
     align-items: center;
     justify-content: center;
 
     color: #512985;
     text-align: center;
-    font-size: 14.4px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.144px;
   }
 
   .address {
+    @mixin typo-body2;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     color: #512985;
     text-align: center;
-
-    font-size: 14.4px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: -0.144px;
   }
 
   .hallDetail {

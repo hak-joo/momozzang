@@ -79,7 +79,7 @@ export function Account() {
       const cleanedAccountNumber = accountNumber.replace('-', '');
       await navigator.clipboard.writeText(cleanedAccountNumber);
       info({
-        title: '계좌번호를 복사했어요',
+        title: '계좌번호가 복사되었습니다.',
         description: cleanedAccountNumber,
         duration: 3200,
       });
@@ -157,7 +157,7 @@ export function Account() {
       </Accordion.Root>
 
       <div className={styles.footer}>
-        <p> 화한은 감사히 마음으로 받겠습니다.</p>
+        <p> 화환은 감사히 마음으로 받겠습니다.</p>
         <p> 저희를 생각해 주시는 마음만으로도 감사드립니다.</p>
       </div>
     </div>

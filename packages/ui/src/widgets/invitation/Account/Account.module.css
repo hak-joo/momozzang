@@ -8,25 +8,17 @@
     margin-bottom: 16px;
 
     .title {
+      @mixin typo-heading2;
       color: #512985;
       text-align: center;
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: normal;
-      letter-spacing: -0.18px;
     }
 
     .description {
+      @mixin typo-body2;
       display: flex;
       flex-direction: column;
       color: #512985;
       text-align: center;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 23px; /* 164.286% */
-      letter-spacing: -0.14px;
     }
   }
 }
@@ -61,13 +53,9 @@
 }
 
 .triggerLabel {
+  @mixin typo-heading4;
   color: #512985;
   text-align: center;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: -0.14px;
 }
 
 .triggerName {
@@ -98,12 +86,8 @@
 }
 
 .accountOwner {
+  @mixin typo-heading3;
   color: #512985;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 16px; /* 100% */
-  letter-spacing: -0.16px;
   margin-bottom: 4px;
 }
 
@@ -111,25 +95,18 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: #512985;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.12px;
 }
 
 .accountDetailValue {
+  @mixin typo-desc2;
   color: #512985;
-  font-weight: 500;
-  letter-spacing: -0.12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .footer {
-  margin-top: 48px;
+  margin-top: 20vh;
   color: #512985;
   text-align: center;
   font-size: 12px;

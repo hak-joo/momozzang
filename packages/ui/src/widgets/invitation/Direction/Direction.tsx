@@ -97,7 +97,7 @@ export function Direction() {
   return (
     <div className={styles.direction}>
       <div className={styles.title}>
-        <PixelBadge text="LOCATION" />
+        <PixelBadge text="Location" />
       </div>
 
       <div className={styles.weddinghallInfo}>
