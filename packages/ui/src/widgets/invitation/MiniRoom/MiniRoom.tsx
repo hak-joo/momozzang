@@ -7,11 +7,11 @@ import { GuestBookForm } from './GuestBookForm';
 import { MiniRoomScene, type MainMiniMe } from './MiniRoomScene';
 import styles from './MiniRoom.module.css';
 import type { RestrictedZone } from './lib/generateMiniMePositions';
-import { fetchGuestBookList } from './api/guestBook';
+import { fetchTopGuestBookList, guestBookQueryKeys } from './api/guestBook';
 import { prepareMiniRoomEntries } from './lib/prepareMiniRoomEntries';
 import { MINI_ROOM_METADATA } from './metadata';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
-
+import { useParams } from 'react-router-dom';
 interface MiniRoomProps {
   restrictedZones?: RestrictedZone[];
   mainMiniMe?: MainMiniMe | null;
@@ -28,16 +28,26 @@ const DEFAULT_SPECIAL_MINI: MainMiniMe = {
 export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }: MiniRoomProps) {
   const { customization } = useInvitation();
 
+  const { invitationId } = useParams();
+  const isMock = !invitationId;
+
   const roomTemplateId = customization?.miniRoom?.roomTemplateId ?? 'classic-garden';
 
-  const { data: guestBookEntries = [] } = useSuspenseQuery({
-    queryKey: ['guestBookList'],
-    queryFn: fetchGuestBookList,
+  const { data: topGuestBookEntries = [] } = useSuspenseQuery({
+    queryKey: guestBookQueryKeys.top(invitationId, isMock),
+    queryFn: () =>
+      fetchTopGuestBookList({
+        invitationId: invitationId,
+        isMock,
+      }),
   });
 
   const metadata =
     MINI_ROOM_METADATA.find((meta) => meta.id === roomTemplateId) ?? MINI_ROOM_METADATA[0];
-  const sceneEntries = useMemo(() => prepareMiniRoomEntries(guestBookEntries), [guestBookEntries]);
+  const sceneEntries = useMemo(
+    () => prepareMiniRoomEntries(topGuestBookEntries),
+    [topGuestBookEntries],
+  );
 
   return (
     <div className={styles.wrapper}>
@@ -53,7 +63,7 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
           mainMiniMe={mainMiniMe}
         />
 
-        <GuestBookList entries={guestBookEntries} />
+        <GuestBookList entries={topGuestBookEntries} />
       </div>
       <GuestBookForm />
     </div>

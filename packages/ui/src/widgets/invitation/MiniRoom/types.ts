@@ -1,6 +1,6 @@
 export type GuestBook = {
   id: number;
-  content: string;
-  from?: string;
+  contents: string;
+  writer?: string;
   miniMeId: number;
 };

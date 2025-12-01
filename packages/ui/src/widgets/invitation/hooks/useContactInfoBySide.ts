@@ -33,8 +33,6 @@ export function useContactInfoBySide(): ContactInfoBySide {
     } = metadata;
 
     const getParents = (side: Side): ContactRelation[] => {
-      if (!parents?.enabled) return [];
-
       const entries: ContactRelation[] = [];
       const father = side === 'groom' ? parents.groomFather : parents.brideFather;
       const mother = side === 'groom' ? parents.groomMother : parents.brideMother;

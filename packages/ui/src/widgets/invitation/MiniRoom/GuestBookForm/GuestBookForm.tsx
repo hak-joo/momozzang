@@ -2,11 +2,15 @@ import { useCallback, useState } from 'react';
 import * as BottomSheet from '@shared/ui/BottomSheet';
 import { Button } from '@shared/ui/Button';
 import { MessageDialogProvider, useMessageDialog } from '@shared/ui/MessageDialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { saveGuestBook, guestBookQueryKeys } from '../api/guestBook';
 import { GuestBookFormProvider, useGuestBookFormContext } from './context';
 import { MiniMeSelectionStep } from './steps/MiniMeSelectionStep';
 import { MessageStep } from './steps/MessageStep';
-import { PinStep } from './steps/PinStep';
 import styles from './GuestBookForm.module.css';
+import { useParams } from 'react-router-dom';
+import { useToast } from '@shared/ui/Toast';
+import { PixelChevronLeftIcon, PixelChevronRightIcon } from '@shared/ui/Icon/PixelChevron';
 
 export function GuestBookForm() {
   return (
@@ -19,6 +23,9 @@ export function GuestBookForm() {
 }
 
 function GuestBookFormContainer() {
+  const { invitationId } = useParams();
+  const isMock = !invitationId;
+
   const confirm = useMessageDialog();
   const {
     step,
@@ -28,11 +35,17 @@ function GuestBookFormContainer() {
     selectedMiniMeId,
     nickname,
     message,
-    pinCodes,
+    password,
     canSubmit,
   } = useGuestBookFormContext();
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
+  const saveMutation = useMutation({
+    mutationFn: saveGuestBook,
+  });
+
+  const { info } = useToast();
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
@@ -64,30 +77,58 @@ function GuestBookFormContainer() {
   const handleSubmit = useCallback(async () => {
     if (!canSubmit || isSubmitting || selectedMiniMeId === null) return;
     setIsSubmitting(true);
-    const payload = {
-      miniMeId: selectedMiniMeId,
-      nickname: nickname.trim(),
-      message: message.trim(),
-      passcode: pinCodes.join(''),
-    };
-    console.log('Guest book submission', payload);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    setIsSubmitting(false);
-    await attemptClose(true);
-  }, [attemptClose, canSubmit, isSubmitting, message, nickname, pinCodes, selectedMiniMeId]);
+    try {
+      await saveMutation.mutateAsync({
+        invitationId,
+        isMock,
+        miniMeId: selectedMiniMeId,
+        nickname: nickname.trim(),
+        message: message.trim(),
+        password,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: guestBookQueryKeys.list(invitationId, isMock),
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: guestBookQueryKeys.top(invitationId, isMock),
+      });
+
+      await attemptClose(true);
+      info({ title: '방명록을 남겼습니다.' });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [
+    attemptClose,
+    canSubmit,
+    invitationId,
+    isMock,
+    isSubmitting,
+    message,
+    nickname,
+    password,
+    queryClient,
+    saveMutation,
+    selectedMiniMeId,
+  ]);
 
   return (
     <BottomSheet.Root open={open} onOpenChange={handleOpenChange}>
       <BottomSheet.Trigger asChild>
-        <Button variant="secondary">방명록 남기기</Button>
+        <Button>
+          <span>방명록 남기기</span>
+          <PixelChevronLeftIcon width={12} height={12} />
+        </Button>
       </BottomSheet.Trigger>
 
       <BottomSheet.Content height="92vh" className={styles.sheetContent}>
         <BottomSheet.Close />
 
         {step === 'select' && <MiniMeSelectionStep />}
-        {step === 'message' && <MessageStep />}
-        {step === 'pin' && <PinStep onSubmit={handleSubmit} submitting={isSubmitting} />}
+        {step === 'message' && <MessageStep onSubmit={handleSubmit} submitting={isSubmitting} />}
       </BottomSheet.Content>
     </BottomSheet.Root>
   );

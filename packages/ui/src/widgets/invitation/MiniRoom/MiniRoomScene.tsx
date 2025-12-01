@@ -95,7 +95,7 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
     };
 
     const randomDefaultMessage = () =>
-      DEFAULT_MINI_MESSAGES[Math.floor(Math.random() * DEFAULT_MINI_MESSAGES.length)].content;
+      DEFAULT_MINI_MESSAGES[Math.floor(Math.random() * DEFAULT_MINI_MESSAGES.length)].contents;
 
     const scheduleNextPreview = () => {
       previewTimerRef.current = window.setTimeout(
@@ -106,7 +106,9 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
           }
           const entry = randomEntry();
           if (!entry) return;
-          const message = entry.from ? entry.content : (entry.content ?? randomDefaultMessage());
+          const message = entry.writer
+            ? entry.contents
+            : (entry.contents ?? randomDefaultMessage());
           setPreviewBubble({ miniId: entry.id, message });
           previewHideRef.current = window.setTimeout(() => {
             setPreviewBubble(null);
@@ -188,9 +190,9 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
             }}
           >
             <div className={styles.speechBody}>
-              <p className={styles.speechContent}>{activeOverride ?? activeEntry.content}</p>
-              {activeEntry.from && (
-                <span className={styles.speechFrom}>from. {activeEntry.from}</span>
+              <p className={styles.speechContent}>{activeOverride ?? activeEntry.contents}</p>
+              {activeEntry.writer && (
+                <span className={styles.speechFrom}>from. {activeEntry.writer}</span>
               )}
             </div>
           </div>
@@ -244,7 +246,7 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
             size={28}
             style={{ left: `${position.x}%`, top: `${position.y}%` }}
             interactive
-            aria-label={entry.from ? `${entry.from}의 미니미` : '축하 미니미'}
+            aria-label={entry.writer ? `${entry.writer}의 미니미` : '축하 미니미'}
             onClick={(event) => {
               event.stopPropagation();
               handleSelectEntry(entry.id);

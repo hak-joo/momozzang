@@ -16,7 +16,7 @@ export function prepareMiniRoomEntries(entries: GuestBook[]): GuestBook[] {
     fillers.push({
       id: -1000 - index,
       miniMeId: DEFAULT_MINI_MESSAGES[index].miniMeId,
-      content: DEFAULT_MINI_MESSAGES[index].content,
+      contents: DEFAULT_MINI_MESSAGES[index].contents,
     });
   }
 

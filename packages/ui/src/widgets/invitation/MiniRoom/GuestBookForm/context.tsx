@@ -9,11 +9,11 @@ import {
 } from 'react';
 import { MINI_ME_IDS } from '@shared/lib/miniMe';
 
-export type Step = 'select' | 'message' | 'pin';
+export type Step = 'select' | 'message';
 
 const PAGE_SIZE = 20;
 const MAX_MESSAGE_LENGTH = 200;
-const PIN_LENGTH = 4;
+const PASSWORD_LENGTH = 4;
 
 const chunk = <T,>(items: readonly T[], size: number) => {
   const result: T[][] = [];
@@ -35,8 +35,8 @@ interface GuestBookFormContextValue {
   setNickname: (value: string) => void;
   message: string;
   setMessage: (value: string) => void;
-  pinCodes: string[];
-  setPinDigit: (index: number, value: string) => void;
+  password: string;
+  setPassword: (value: string) => void;
   reset: () => void;
   canProceedSelect: boolean;
   canProceedMessage: boolean;
@@ -46,8 +46,6 @@ interface GuestBookFormContextValue {
 
 const GuestBookFormContext = createContext<GuestBookFormContextValue | null>(null);
 
-const defaultPin = Array.from({ length: PIN_LENGTH }, () => '');
-
 export function GuestBookFormProvider({ children }: React.PropsWithChildren) {
   const miniMePages = useMemo(() => chunk(MINI_ME_IDS, PAGE_SIZE), []);
   const [step, setStep] = useState<Step>('select');
@@ -55,7 +53,7 @@ export function GuestBookFormProvider({ children }: React.PropsWithChildren) {
   const [selectedMiniMeId, setSelectedMiniMeId] = useState<number | null>(null);
   const [nickname, setNickname] = useState('');
   const [message, setMessage] = useState('');
-  const [pinCodes, setPinCodes] = useState<string[]>(defaultPin);
+  const [password, setPassword] = useState('');
 
   const reset = useCallback(() => {
     setStep('select');
@@ -63,24 +61,16 @@ export function GuestBookFormProvider({ children }: React.PropsWithChildren) {
     setSelectedMiniMeId(null);
     setNickname('');
     setMessage('');
-    setPinCodes(defaultPin);
+    setPassword('');
   }, []);
 
   const selectMiniMe = useCallback((miniMeId: number) => {
     setSelectedMiniMeId(miniMeId);
   }, []);
 
-  const setPinDigit = useCallback((index: number, value: string) => {
-    setPinCodes((prev) => {
-      const next = [...prev];
-      next[index] = value;
-      return next;
-    });
-  }, []);
-
   const canProceedSelect = selectedMiniMeId !== null;
   const canProceedMessage = nickname.trim().length > 0 && message.trim().length > 0;
-  const canSubmit = pinCodes.every((digit) => digit.length === 1);
+  const canSubmit = canProceedMessage && password.length === PASSWORD_LENGTH;
 
   const isDirty =
     step !== 'select' ||
@@ -88,7 +78,7 @@ export function GuestBookFormProvider({ children }: React.PropsWithChildren) {
     selectedMiniMeId !== null ||
     nickname.length > 0 ||
     message.length > 0 ||
-    pinCodes.some((digit) => digit.length > 0);
+    password.length > 0;
 
   const value = useMemo<GuestBookFormContextValue>(
     () => ({
@@ -103,8 +93,8 @@ export function GuestBookFormProvider({ children }: React.PropsWithChildren) {
       setNickname,
       message,
       setMessage,
-      pinCodes,
-      setPinDigit,
+      password,
+      setPassword,
       reset,
       canProceedSelect,
       canProceedMessage,
@@ -118,7 +108,7 @@ export function GuestBookFormProvider({ children }: React.PropsWithChildren) {
       selectedMiniMeId,
       nickname,
       message,
-      pinCodes,
+      password,
       selectMiniMe,
       reset,
       canProceedSelect,
@@ -138,4 +128,4 @@ export function useGuestBookFormContext() {
 }
 
 export const GUESTBOOK_MAX_MESSAGE_LENGTH = MAX_MESSAGE_LENGTH;
-export const GUESTBOOK_PIN_LENGTH = PIN_LENGTH;
+export const GUESTBOOK_PASSWORD_LENGTH = PASSWORD_LENGTH;

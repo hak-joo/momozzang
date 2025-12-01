@@ -1,23 +1,39 @@
 import { Button } from '@shared/ui/Button';
 import { Box } from '@shared/ui/Box';
 import { MiniMe } from '@shared/ui/MiniMe';
-import { useGuestBookFormContext, GUESTBOOK_MAX_MESSAGE_LENGTH } from '../context';
+import {
+  useGuestBookFormContext,
+  GUESTBOOK_MAX_MESSAGE_LENGTH,
+  GUESTBOOK_PASSWORD_LENGTH,
+} from '../context';
 import styles from '../GuestBookForm.module.css';
 
-export function MessageStep() {
+interface MessageStepProps {
+  onSubmit: () => void;
+  submitting?: boolean;
+}
+
+export function MessageStep({ onSubmit, submitting = false }: MessageStepProps) {
   const {
     selectedMiniMeId,
     nickname,
     setNickname,
     message,
     setMessage,
-    canProceedMessage,
+    password,
+    setPassword,
+    canSubmit,
     setStep,
   } = useGuestBookFormContext();
 
-  const handleNext = () => {
-    if (!canProceedMessage) return;
-    setStep('pin');
+  const handleSubmit = () => {
+    if (!canSubmit || submitting) return;
+    onSubmit();
+  };
+
+  const handlePasswordChange = (value: string) => {
+    const sanitized = value.replace(/[^0-9]/g, '').slice(0, GUESTBOOK_PASSWORD_LENGTH);
+    setPassword(sanitized);
   };
 
   return (
@@ -54,12 +70,24 @@ export function MessageStep() {
               {message.length}/{GUESTBOOK_MAX_MESSAGE_LENGTH}
             </span>
           </label>
+
+          <label className={styles.field}>
+            <input
+              className={styles.input}
+              value={password}
+              placeholder="숫자 4자리를 입력해주세요"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={GUESTBOOK_PASSWORD_LENGTH}
+              onChange={(event) => handlePasswordChange(event.target.value)}
+            />
+          </label>
         </div>
       </Box>
 
       <div className={styles.actions}>
-        <Button fullWidth disabled={!canProceedMessage} onClick={handleNext}>
-          다음
+        <Button fullWidth disabled={!canSubmit || submitting} onClick={handleSubmit}>
+          {submitting ? '완료 중...' : '완료'}
         </Button>
         <button type="button" className={styles.backButton} onClick={() => setStep('select')}>
           이전으로
