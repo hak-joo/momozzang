@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/api/:path*", "destination": "https://momozzang.onrender.com/:path*" }]
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://momozzang.onrender.com/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
