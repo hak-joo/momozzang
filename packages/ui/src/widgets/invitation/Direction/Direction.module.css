@@ -22,6 +22,7 @@
 
   .hallName {
     @mixin typo-heading4;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,12 +40,6 @@
     color: #512985;
     text-align: center;
   }
-
-  .hallDetail {
-    color: rgba(81, 41, 133, 0.8);
-    font-size: 13px;
-    font-weight: 500;
-  }
 }
 
 .linkButton {
@@ -57,7 +52,7 @@
 .transportationList {
   display: flex;
   flex-direction: column;
-  border-top: 1px dashed #a7d1ff;
+  border-top: 2px dashed #a7d1ff;
 
   .transportation {
     padding: 24px;
@@ -65,7 +60,7 @@
     flex-direction: column;
     gap: 16px;
     justify-content: center;
-    border-bottom: 1px dashed #a7d1ff;
+    border-bottom: 2px dashed #a7d1ff;
 
     .title {
       @mixin typo-heading2;
@@ -96,20 +91,14 @@
     }
 
     .descriptionText {
-      color: #512985;
-      font-size: 15px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 21px; /* 140% */
-      letter-spacing: -0.15px;
+      @mixin typo-body2;
+      color: var(--Purple-Purple_text, #512985);
     }
 
     .subDescriptionText {
-      color: #967eb6;
-      font-size: 12px;
-      font-weight: 500;
-      line-height: 1.5;
-      letter-spacing: -0.12px;
+      @mixin typo-body2;
+      font-family: var(--font-Wanted-Sans);
+      color: var(--Purple-Purple_desc, #967eb6);
     }
   }
 }

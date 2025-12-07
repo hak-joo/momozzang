@@ -57,18 +57,3 @@
     }
   }
 }
-
-.parents {
-  color: var(--Purple-Purple_text, #512985);
-  text-align: center;
-  font-family: var(--font-DungGeunMo);
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 153%; /* 21.42px */
-  letter-spacing: -1.12px;
-}
-
-.pixelHeart {
-  color: var(--Purple-Purple01, #aca4ff);
-}

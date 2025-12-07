@@ -62,22 +62,13 @@
     flex-direction: column;
     gap: 4px;
     padding: 6px 0;
+    @mixin typo-desc2;
     .content {
       color: var(--Purple-Purple_text, #512985);
-      font-size: 15px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 153%; /* 22.95px */
-      letter-spacing: -0.45px;
     }
 
     .from {
       color: var(--Purple-Purple_text, #512985);
-      font-size: 13px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 153%; /* 19.89px */
-      letter-spacing: -0.52px;
     }
   }
 }
@@ -104,7 +95,7 @@
 
 .totalButton {
   font-weight: 700;
-  border-radius: 0px;
+  border-radius: 0px !important;
   padding: 0px;
   min-height: 32px !important;
   border-bottom: 2px solid var(--Purple-Purple04, #7871c2);

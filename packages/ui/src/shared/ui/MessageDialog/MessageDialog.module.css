@@ -8,15 +8,13 @@
 }
 
 .title {
-  font-size: 18px;
-  font-weight: 600;
+  @mixin typo-heading2;
   color: #4d3186;
   margin: 0;
 }
 
 .message {
-  font-size: 14px;
-  color: #5f588a;
+  @mixin typo-body2;
   margin: 0;
   line-height: 1.5;
 }

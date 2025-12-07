@@ -95,6 +95,10 @@
   @mixin font-bold;
   @mixin font-14;
 }
+@define-mixin typo-heading5 {
+  @mixin font-bold;
+  @mixin font-13;
+}
 
 @define-mixin typo-body1 {
   @mixin font-16;

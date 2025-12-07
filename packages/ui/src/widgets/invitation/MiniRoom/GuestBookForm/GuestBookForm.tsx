@@ -118,8 +118,8 @@ function GuestBookFormContainer() {
   return (
     <BottomSheet.Root open={open} onOpenChange={handleOpenChange}>
       <BottomSheet.Trigger asChild>
-        <Button>
-          <span>방명록 남기기</span>
+        <Button shape="round">
+          방명록 남기기
           <PixelChevronLeftIcon width={12} height={12} />
         </Button>
       </BottomSheet.Trigger>
