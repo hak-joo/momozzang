@@ -10,6 +10,7 @@ import styles from './MiniRoom.module.css';
 import type { GuestBook } from './types';
 import type { RestrictedZone } from './lib/generateMiniMePositions';
 import { SpeechBubbleDot } from '@shared/ui/decorations/SpeechBubbleDot';
+import { AboutUs } from './AboutUs';
 
 export interface MainMiniMe {
   src: string;
@@ -256,17 +257,21 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
       })}
 
       {mainMiniMe && (
-        <img
-          src={mainMiniMe.src}
-          alt={mainMiniMe.alt ?? '신랑 신부'}
+        <div
           className={styles.specialMini}
           style={{
             left: `${mainMiniMe.position.x}%`,
             top: `${mainMiniMe.position.y}%`,
-            width: mainMiniMe.width ?? 92,
           }}
-          draggable={false}
-        />
+        >
+          <AboutUs />
+          <img
+            width={mainMiniMe.width ?? 92}
+            src={mainMiniMe.src}
+            alt={mainMiniMe.alt ?? '신랑 신부'}
+            draggable={false}
+          />
+        </div>
       )}
     </div>
   );

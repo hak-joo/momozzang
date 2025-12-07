@@ -151,6 +151,14 @@ export interface Parents {
   others?: Array<{ side: Side; relationLabel: string; person: Person }>;
 }
 
+export interface AboutUs {
+  title: string;
+  brideDesc: string;
+  brideImageUrl: string;
+  groomDesc: string;
+  groomImageUrl: string;
+}
+
 export interface WeddingInvitation {
   version: string;
   theme: ThemeKind;
@@ -174,6 +182,8 @@ export interface WeddingInvitation {
   album?: AlbumSettings;
   bgm?: BgmSettings;
   customization?: Customization;
+
+  aboutUs?: AboutUs;
 }
 
 /** 화면 호환용 평면 모델 (원한다면 사용) */

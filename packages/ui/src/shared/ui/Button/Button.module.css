@@ -64,9 +64,9 @@
 }
 
 .sizeSm {
-  min-height: 36px;
+  min-height: 40px;
   padding: 0 16px;
-  font-size: 14px;
+  @apply typo-heading5;
 }
 
 .sizeMd {

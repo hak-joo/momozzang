@@ -205,4 +205,11 @@ export const exampleWeddingInvitation: WeddingInvitation = {
       roomTemplateId: 'classic-garden',
     },
   },
+  aboutUs: {
+    title: '같은 여름에 태어난 두사람',
+    brideDesc: '신부 이모짱은 어떤 사람이냐면요',
+    brideImageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600',
+    groomDesc: '신랑 이모짱은 어떤 사람이냐면요',
+    groomImageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600',
+  },
 };
