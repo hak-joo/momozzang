@@ -24,7 +24,7 @@ export function InvitationExperience({
   metadata,
   introLabel = 'Wedding day',
 }: InvitationExperienceProps) {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   usePreloadWeddingChunk();
 
