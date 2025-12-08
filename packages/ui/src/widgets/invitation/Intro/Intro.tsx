@@ -10,7 +10,7 @@ type IntroProps = {
   label?: string;
 };
 
-const ANIMATION_DURATION = 100000;
+const ANIMATION_DURATION = 4000;
 const dayMap: Record<string, string> = {
   일: 'SUN',
   월: 'MON',
