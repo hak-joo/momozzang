@@ -2,6 +2,7 @@
   width: 100%;
   position: fixed;
   top: calc(50px - 37px);
+
   left: 0;
   z-index: 100;
   display: flex;
@@ -17,7 +18,7 @@
 }
 
 .header button {
-  font-family: var(--font-PyeongChang);
+  @mixin typo-heading4;
   color: #f9f9f9;
   border-radius: 12px 12px 0 0;
   background: #a696ea;
