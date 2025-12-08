@@ -1,23 +1,7 @@
 import { MOCK_GUEST_BOOK_ENTRIES } from '../constants';
 import type { GuestBook } from '../types';
 
-type GuestBookResponse = {
-  id: number;
-  weddingInvitationId: string;
-  writer: string;
-  title: string;
-  contents: string;
-  password: number;
-  miniMeId: number;
-};
-
-const toGuestBook = (item: GuestBookResponse): GuestBook => ({
-  id: item.id,
-  writer: item.writer,
-  contents: item.contents,
-  miniMeId: item.miniMeId,
-});
-const TOP_LIMIT = 10;
+const TOP_LIMIT = 2;
 async function fetchJson<T>(
   input: RequestInfo | URL,
   init?: RequestInit,
@@ -74,19 +58,25 @@ export const guestBookQueryKeys = {
 interface GuestBookListParams {
   invitationId?: string | null;
   isMock?: boolean;
+  isTop?: boolean;
 }
 
 export async function fetchGuestBookList({
   invitationId,
   isMock,
+  isTop,
 }: GuestBookListParams): Promise<GuestBook[]> {
   if (isMock || !invitationId) {
     return getMockGuestBooks(TOP_LIMIT);
   }
 
-  const data = await fetchJson<GuestBookResponse[]>(`/api/guestbook/${invitationId}`);
-  const mapped = data.map(toGuestBook);
-  return mapped.slice(0, TOP_LIMIT);
+  const url = isTop
+    ? `/api/guestbook/list/${invitationId}?limit=${TOP_LIMIT}`
+    : `/api/guestbook/list/${invitationId}`;
+
+  const data = await fetchJson<GuestBook[]>(url);
+
+  return data;
 }
 
 export async function fetchTopGuestBookList({
@@ -115,8 +105,8 @@ export async function fetchGuestBookDetail({
     return target ?? null;
   }
 
-  const data = await fetchJson<GuestBookResponse>(`/api/guestbook/detail/${id}/${numericPassword}`);
-  return toGuestBook(data);
+  const data = await fetchJson<GuestBook>(`/api/guestbook/detail/${id}/${numericPassword}`);
+  return data;
 }
 
 interface SaveGuestBookPayload {
