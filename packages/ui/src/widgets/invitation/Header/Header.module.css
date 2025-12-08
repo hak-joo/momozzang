@@ -3,7 +3,7 @@
   position: fixed;
   top: calc(50px - 37px);
 
-  left: 0;
+  left: 10px;
   z-index: 100;
   display: flex;
   justify-content: center;

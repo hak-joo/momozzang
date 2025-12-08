@@ -20,6 +20,7 @@
   --font-size-13: 13px;
   --line-height-13: 16px;
   --line-height-13-multi: 19px;
+  --line-height-13-heading: 15px;
   --letter-spacing-13: -0.04em;
 
   --font-size-12: 12px;
@@ -69,6 +70,11 @@
   letter-spacing: var(--letter-spacing-13);
 }
 
+@define-mixin font-13-heading {
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13-heading);
+}
+
 @define-mixin font-12 {
   font-size: var(--font-size-12);
   line-height: var(--line-height-12);
@@ -97,7 +103,7 @@
 }
 @define-mixin typo-heading5 {
   @mixin font-bold;
-  @mixin font-13;
+  @mixin font-13-heading;
 }
 
 @define-mixin typo-body1 {

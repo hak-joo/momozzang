@@ -33,6 +33,7 @@ body {
   font-family: var(--font-PyeongChang);
   min-width: 375px;
   max-height: 100vh;
+  max-height: 100dvh;
   overflow-y: hidden;
   margin: 0;
   padding: 0;
@@ -42,11 +43,13 @@ body {
 
 #root {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .app-frame {
   width: 100vw;
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: #fff;
   margin: 0 auto;
   box-sizing: border-box;

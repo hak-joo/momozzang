@@ -9,6 +9,7 @@
   width: 12px;
   background-color: #fff;
   height: 100vh;
+  height: 100dvh;
   position: sticky;
   top: 99px;
   left: 0;
@@ -20,6 +21,7 @@
 .mainWrapper {
   flex: 1;
   max-height: 100vh;
+  max-height: 100dvh;
   overflow-y: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
