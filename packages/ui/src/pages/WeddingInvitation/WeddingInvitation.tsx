@@ -47,40 +47,38 @@ export function WeddingInvitation({ metadata }: Props) {
   };
 
   return (
-    <InvitationProvider data={metadata}>
-      <main className={styles.main}>
-        <div className={styles.decorator}></div>
-        <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
-        <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
-        <Header currentMenu={currentMenu} onMenuClick={scrollToMenu} />
-        <div
-          id="main-wrapper"
-          className={styles.mainWrapper}
-          ref={mainWrapperRef}
-          data-at-top={isAtTop ? 'true' : 'false'}
-        >
-          <Blur className={styles.blur} />
+    <main className={styles.main}>
+      <div className={styles.decorator}></div>
+      <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
+      <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
+      <Header currentMenu={currentMenu} onMenuClick={scrollToMenu} />
+      <div
+        id="main-wrapper"
+        className={styles.mainWrapper}
+        ref={mainWrapperRef}
+        data-at-top={isAtTop ? 'true' : 'false'}
+      >
+        <Blur className={styles.blur} />
 
-          <SectionContainer ref={homeRef}>
-            <Home data={metadata} />
-          </SectionContainer>
+        <SectionContainer ref={homeRef}>
+          <Home data={metadata} />
+        </SectionContainer>
 
-          <SectionContainer ref={miniRoomRef}>
-            <MiniRoom />
-          </SectionContainer>
-          <SectionContainer ref={galleryRef}>
-            <Gallery />
-          </SectionContainer>
+        <SectionContainer ref={miniRoomRef}>
+          <MiniRoom />
+        </SectionContainer>
+        <SectionContainer ref={galleryRef}>
+          <Gallery />
+        </SectionContainer>
 
-          <SectionContainer ref={directionsRef}>
-            <Direction />
-          </SectionContainer>
+        <SectionContainer ref={directionsRef}>
+          <Direction />
+        </SectionContainer>
 
-          <SectionContainer ref={infoRef}>
-            <Account />
-          </SectionContainer>
-        </div>
-      </main>
-    </InvitationProvider>
+        <SectionContainer ref={infoRef}>
+          <Account />
+        </SectionContainer>
+      </div>
+    </main>
   );
 }

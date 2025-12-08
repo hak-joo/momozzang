@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Intro } from '@momozzang/ui/widgets/invitation/Intro';
 import type { WeddingInvitation } from '@momozzang/ui/entities/WeddingInvitation/model';
 import styles from './style.module.css';
+import { InvitationProvider } from '@momozzang/ui/entities/WeddingInvitation/Context';
 
 const WeddingInvitation = lazy(async () => {
   const module = await import('@momozzang/ui/pages/WeddingInvitation');
@@ -29,7 +30,7 @@ export function InvitationExperience({
   usePreloadWeddingChunk();
 
   return (
-    <>
+    <InvitationProvider data={metadata}>
       {showIntro && <Intro next={() => setShowIntro(false)} label={introLabel} />}
 
       <div
@@ -41,6 +42,6 @@ export function InvitationExperience({
           <WeddingInvitation metadata={metadata} />
         </Suspense>
       </div>
-    </>
+    </InvitationProvider>
   );
 }

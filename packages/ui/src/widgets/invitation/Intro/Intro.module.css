@@ -1,18 +1,33 @@
 .intro {
-  height: 100vh;
-  width: 100%;
   background-color: #000;
-
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  width: 100%;
+  height: 100vh;
 }
 
 .video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+}
+
+.contents {
+  @mixin typo-heading3;
+  color: #faffde;
+  text-align: center;
+  z-index: 1;
+  position: absolute;
+  top: 33%;
+  .couple {
+    display: flex;
+    align-items: center;
+  }
+
+  .heart {
+    color: #faffde;
+  }
 }
 
 .fallbackButton {

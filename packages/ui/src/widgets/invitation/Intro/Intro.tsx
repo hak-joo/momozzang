@@ -1,67 +1,66 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import styles from './Intro.module.css';
-import introVideo from '@shared/assets/videos/intro.mp4';
+import introPng from '@shared/assets/images/intro.png';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
+import dayjs from 'dayjs';
 
 type IntroProps = {
   next: () => void;
   label?: string;
 };
 
+const ANIMATION_DURATION = 100000;
+const dayMap: Record<string, string> = {
+  일: 'SUN',
+  월: 'MON',
+  화: 'TUE',
+  수: 'WED',
+  목: 'THU',
+  금: 'FRI',
+  토: 'SAT',
+};
+
+const AMPMMap: Record<string, string> = {
+  오전: 'AM',
+  오후: 'PM',
+};
+
 export function Intro({ next, label = 'Wedding day' }: IntroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [needsUserAction, setNeedsUserAction] = useState(false);
-
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const timer = setTimeout(next, ANIMATION_DURATION);
+    return () => clearTimeout(timer);
+  }, [next]);
 
-    video.muted = true;
+  const {
+    couple: { bride, groom },
+    weddingHallInfo,
+  } = useInvitation();
 
-    const tryPlay = async () => {
-      if (!video) return;
-      try {
-        await video.play();
-        setNeedsUserAction(false);
-      } catch {
-        setNeedsUserAction(true);
-      }
-    };
+  const weddingDate = useMemo(() => {
+    if (!weddingHallInfo) return '';
+    const { date, hour, minute } = weddingHallInfo;
+    const formattedDate = dayjs(date).format('YYYY.MM.DD');
+    const formattedAMPM = AMPMMap[dayjs().hour(hour).minute(minute).format('A')];
+    const formattedTime = dayjs().hour(hour).minute(minute).format(`hh:mm`);
+    const formattedDay = dayMap[dayjs(date).format('dd')];
 
-    const handleFirstInteraction = () => {
-      void tryPlay();
-      window.removeEventListener('touchend', handleFirstInteraction);
-      window.removeEventListener('pointerup', handleFirstInteraction);
-    };
-
-    window.addEventListener('touchend', handleFirstInteraction, { passive: true });
-    window.addEventListener('pointerup', handleFirstInteraction, { passive: true });
-
-    if (video.readyState >= 3) {
-      void tryPlay();
-    } else {
-      video.addEventListener('canplay', tryPlay, { once: true });
-    }
-
-    return () => {
-      window.removeEventListener('touchend', handleFirstInteraction);
-      window.removeEventListener('pointerup', handleFirstInteraction);
-      video.removeEventListener('canplay', tryPlay);
-    };
-  }, []);
+    const weddingDate = `${formattedDate} ${formattedDay} ${formattedTime} ${formattedAMPM}`;
+    return weddingDate;
+  }, [weddingHallInfo]);
 
   return (
     <div className={styles.intro}>
-      <video
-        ref={videoRef}
-        src={introVideo}
-        autoPlay
-        muted
-        playsInline
-        controls={needsUserAction}
-        preload="auto"
-        className={styles.video}
-        onEnded={next}
-      />
+      <img src={introPng} alt={label} className={styles.video} />
+
+      {bride && groom && (
+        <div className={styles.contents}>
+          <div>
+            {`신랑 ${bride.name}`} <PixelHeart className={styles.heart} /> {`신부 ${groom.name}`}
+          </div>
+          {weddingDate && <div>{weddingDate}</div>}
+        </div>
+      )}
     </div>
   );
 }
