@@ -10,7 +10,7 @@ import { MessageStep } from './steps/MessageStep';
 import styles from './GuestBookForm.module.css';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@shared/ui/Toast';
-import { PixelChevronLeftIcon, PixelChevronRightIcon } from '@shared/ui/Icon/PixelChevron';
+import { PixelChevronLeftIcon } from '@shared/ui/Icon/PixelChevron';
 
 export function GuestBookForm() {
   return (

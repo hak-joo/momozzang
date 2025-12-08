@@ -10,7 +10,7 @@ export function TotalGuestBookList() {
   const { invitationId } = useParams();
   const isMock = !invitationId;
 
-  const { data: guestBookEntries = [] } = useSuspenseQuery({
+  const { data: guestBookEntries = [], error } = useSuspenseQuery({
     queryKey: guestBookQueryKeys.list(invitationId, isMock),
     queryFn: () =>
       fetchGuestBookList({
@@ -18,6 +18,9 @@ export function TotalGuestBookList() {
         isMock,
       }),
   });
+
+  if (error) return null;
+
   return (
     <BottomSheet.Root>
       <BottomSheet.Trigger asChild>

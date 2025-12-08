@@ -33,7 +33,7 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
 
   const roomTemplateId = customization?.miniRoom?.roomTemplateId ?? 'classic-garden';
 
-  const { data: topGuestBookEntries = [] } = useSuspenseQuery({
+  const { data: topGuestBookEntries = [], error: guestBookError } = useSuspenseQuery({
     queryKey: guestBookQueryKeys.top(invitationId, isMock),
     queryFn: () =>
       fetchTopGuestBookList({
@@ -62,8 +62,7 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
           restrictedZones={restrictedZones ?? metadata.restrictedZones}
           mainMiniMe={mainMiniMe}
         />
-
-        <GuestBookList entries={topGuestBookEntries} />
+        {!guestBookError && <GuestBookList entries={topGuestBookEntries} />}
       </div>
       <GuestBookForm />
     </div>

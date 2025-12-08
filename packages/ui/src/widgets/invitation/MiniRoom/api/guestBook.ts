@@ -89,26 +89,6 @@ export async function fetchTopGuestBookList({
   return fetchGuestBookList({ invitationId, isMock });
 }
 
-export async function fetchGuestBookDetail({
-  id,
-  password,
-  isMock,
-}: {
-  id: number;
-  password: string;
-  isMock?: boolean;
-}): Promise<GuestBook | null> {
-  const numericPassword = Number(password);
-
-  if (isMock) {
-    const target = MOCK_GUEST_BOOK_ENTRIES.find((entry) => entry.id === id);
-    return target ?? null;
-  }
-
-  const data = await fetchJson<GuestBook>(`/api/guestbook/detail/${id}/${numericPassword}`);
-  return data;
-}
-
 interface SaveGuestBookPayload {
   invitationId?: string | null;
   miniMeId: number;
@@ -129,7 +109,6 @@ export async function saveGuestBook({
   if (isMock || !invitationId) return;
 
   const payload = {
-    id: 0,
     title: 'guestbook',
     writer: nickname,
     contents: message,
