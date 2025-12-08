@@ -8,14 +8,14 @@ type GuestBookResponse = {
   title: string;
   contents: string;
   password: number;
-  miniRoomId: number;
+  miniMeId: number;
 };
 
 const toGuestBook = (item: GuestBookResponse): GuestBook => ({
   id: item.id,
   writer: item.writer,
   contents: item.contents,
-  miniMeId: item.miniRoomId,
+  miniMeId: item.miniMeId,
 });
 const TOP_LIMIT = 10;
 async function fetchJson<T>(
@@ -144,7 +144,7 @@ export async function saveGuestBook({
     writer: nickname,
     contents: message,
     password: Number(password),
-    miniRoomId: miniMeId,
+    miniMeId: miniMeId,
     weddingInvitationId: invitationId,
   };
 
