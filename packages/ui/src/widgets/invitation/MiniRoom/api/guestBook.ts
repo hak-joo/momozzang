@@ -71,8 +71,8 @@ export async function fetchGuestBookList({
   }
 
   const url = isTop
-    ? `/api/guestbook/list/${invitationId}?limit=${TOP_LIMIT}`
-    : `/api/guestbook/list/${invitationId}`;
+    ? `/api/guestbook/${invitationId}?limit=${TOP_LIMIT}`
+    : `/api/guestbook/${invitationId}`;
 
   const data = await fetchJson<GuestBook[]>(url);
 
