@@ -51,6 +51,7 @@
   display: flex;
   flex-direction: column;
   border-top: 2px dashed #a7d1ff;
+  margin-top: 24px;
 
   .transportation {
     padding: 24px;

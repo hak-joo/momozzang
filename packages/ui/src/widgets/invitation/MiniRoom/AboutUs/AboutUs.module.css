@@ -61,25 +61,27 @@
   position: absolute;
   width: 28px;
   top: -24px;
-  left: 3%;
+  left: -2%;
+  z-index: 1;
 }
 .balloonRight {
   position: absolute;
   width: 28px;
-  top: -24px;
-  right: 3%;
+  bottom: 32px;
+  right: 1%;
+  z-index: 1;
 }
 /* 안쪽에 사진 두 칸 */
 .photoGrid {
   position: absolute;
 
-  inset: 5% 5% 5% 5%; /* 필요시 숫자 살짝씩 조절하면 됨 */
+  inset: 5% 7% 5% 3%; /* 필요시 숫자 살짝씩 조절하면 됨 */
 
   /* 프레임 안쪽 여백 (상/우/하/좌) */
 
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 6%; /* 가운데 여백 */
+  column-gap: 9%; /* 가운데 여백 */
 
   align-items: stretch;
 }

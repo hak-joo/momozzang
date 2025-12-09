@@ -4,6 +4,7 @@
   align-items: center;
   gap: 80px;
   width: 100%;
+  position: relative;
 }
 .imgContainer {
   position: relative;

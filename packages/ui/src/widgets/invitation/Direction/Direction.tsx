@@ -13,6 +13,7 @@ import metroImg from '@shared/assets/images/metro.png';
 import type { MapProviderKey, MapProviderSpec } from './types';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
+import { Decoration } from '@shared/ui/Decoration/Decoration';
 
 type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
 
@@ -162,6 +163,10 @@ export function Direction() {
           );
         })}
       </div>
+
+      <Decoration variant="sparkle" width={50} top={555} right={100} />
+      <Decoration variant="sparkleCrossDashed" width={28} top={860} left={40} />
+      <Decoration variant="sparkleCrossDashed" width={28} top={930} right={50} />
     </div>
   );
 }

@@ -8,10 +8,13 @@ import { ClipboardIcon } from '@shared/ui/Icon/ClipboardIcon';
 import { useToast } from '@shared/ui/Toast';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { smoothScrollWithin } from './utils';
+import { Decoration } from '@shared/ui/Decoration/Decoration';
+import brideImg from '@shared/assets/images/bride.png';
+import groomImg from '@shared/assets/images/groom.png';
 
-const SECTIONS: Array<{ side: Side; triggerLabel: string }> = [
-  { side: 'groom', triggerLabel: '신랑측에게' },
-  { side: 'bride', triggerLabel: '신부측에게' },
+const SECTIONS: Array<{ side: Side; triggerLabel: string; imageSrc: string }> = [
+  { side: 'groom', triggerLabel: '신랑측에게', imageSrc: groomImg },
+  { side: 'bride', triggerLabel: '신부측에게', imageSrc: brideImg },
 ];
 
 export function Account() {
@@ -80,7 +83,6 @@ export function Account() {
       await navigator.clipboard.writeText(cleanedAccountNumber);
       info({
         title: '계좌번호가 복사되었습니다.',
-        description: cleanedAccountNumber,
         duration: 3200,
       });
     } catch {
@@ -107,7 +109,7 @@ export function Account() {
         onValueChange={handleOpenValuesChange}
         data-invitation-scroll-container="true"
       >
-        {SECTIONS.map(({ side, triggerLabel }) => {
+        {SECTIONS.map(({ side, triggerLabel, imageSrc }) => {
           const sideData = contactInfoBySide[side];
           const hasAccounts = sideData.accounts.length > 0;
 
@@ -122,7 +124,10 @@ export function Account() {
             >
               <Accordion.Trigger className={styles.trigger}>
                 <div className={styles.triggerInner}>
-                  <span className={styles.triggerLabel}>{triggerLabel}</span>
+                  <div className={styles.triggerContent}>
+                    <img src={imageSrc} width={28} height={28} alt={side} />
+                    <span className={styles.triggerLabel}>{triggerLabel}</span>
+                  </div>
                 </div>
               </Accordion.Trigger>
               <Accordion.Content className={styles.content}>
@@ -160,6 +165,10 @@ export function Account() {
         <p> 화환은 감사히 마음으로 받겠습니다.</p>
         <p> 저희를 생각해 주시는 마음만으로도 감사드립니다.</p>
       </div>
+
+      <Decoration variant="sparkle" width={29} top={140} left={12} />
+      <Decoration variant="sparkle" width={36} bottom={240} left={12} />
+      <Decoration variant="sparkle" width={50} bottom={220} right={32} />
     </div>
   );
 }
