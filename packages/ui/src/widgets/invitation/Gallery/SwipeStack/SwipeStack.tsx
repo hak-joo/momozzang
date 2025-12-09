@@ -4,6 +4,7 @@ import { computeTransform, opacityFor } from './utils';
 import { COMMIT_DEADZONE } from './constants';
 import type { GalleryImage } from '../types';
 import clsx from 'clsx';
+import speechBubble from '@shared/assets/images/gallery-speech-bubble.png';
 
 export type SwipeStackProps = {
   images: GalleryImage[];
@@ -192,7 +193,7 @@ export function SwipeStack({
     const id = window.setInterval(() => {
       if (isDraggingRef.current) return;
       beginSnap((prev) => prev + 1);
-    }, 3000);
+    }, 100000);
     return () => window.clearInterval(id);
   }, [beginSnap, imageCount, isObserved, autoClock]);
 
@@ -206,45 +207,60 @@ export function SwipeStack({
   const ratioStyle: React.CSSProperties = { ['--ratio' as any]: String(aspectRatio) };
 
   return (
-    <div
-      ref={rootElRef}
-      className={`${styles.root} ${isSnapping ? styles.snapping : ''}`}
-      style={ratioStyle}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
-      tabIndex={0}
-      aria-roledescription="carousel"
-      aria-label="Swipe stack"
-    >
-      {Array.from({ length: endRender - startRender + 1 }, (_, idx) => {
-        const virtualIndex = startRender + idx;
-        const imageIndex = normalizeIndex(virtualIndex);
-        const image = images[imageIndex];
-        const deltaToActive = virtualIndex - activeIndex;
-        const transform = computeTransform(deltaToActive, swipeDirection, widthPxRef.current);
-        const opacity = opacityFor(deltaToActive, swipeDirection);
-        const zIndex = 1000 - Math.abs(deltaToActive) * 10;
-        const loopRound = Math.floor(virtualIndex / imageCount);
+    <>
+      <div
+        ref={rootElRef}
+        className={`${styles.root} ${isSnapping ? styles.snapping : ''}`}
+        style={ratioStyle}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        tabIndex={0}
+        aria-roledescription="carousel"
+        aria-label="Swipe stack"
+      >
+        {Array.from({ length: endRender - startRender + 1 }, (_, idx) => {
+          const virtualIndex = startRender + idx;
+          const imageIndex = normalizeIndex(virtualIndex);
+          const image = images[imageIndex];
+          const deltaToActive = virtualIndex - activeIndex;
+          const transform = computeTransform(deltaToActive, swipeDirection, widthPxRef.current);
+          const opacity = opacityFor(deltaToActive, swipeDirection);
+          const zIndex = 1000 - Math.abs(deltaToActive) * 10;
+          const loopRound = Math.floor(virtualIndex / imageCount);
 
-        return (
-          <figure
-            key={`${imageIndex}-${loopRound}`}
-            className={clsx(styles.card, {
-              [styles.top]: Math.abs(deltaToActive) < 0.5,
-            })}
-            style={{ transform, opacity, zIndex: Math.round(zIndex) }}
-            aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
-          >
-            <img className={styles.media} src={image.url} alt={image.alt ?? ''} draggable={false} />
-            <p
-              className={styles.count}
-            >{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>
-            <div className={styles.gloss} />
-          </figure>
-        );
-      })}
-    </div>
+          return (
+            <figure
+              key={`${imageIndex}-${loopRound}`}
+              className={clsx(styles.card, {
+                [styles.top]: Math.abs(deltaToActive) < 0.5,
+              })}
+              style={{ transform, opacity, zIndex: Math.round(zIndex) }}
+              aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
+            >
+              <img
+                className={styles.media}
+                src={image.url}
+                alt={image.alt ?? ''}
+                draggable={false}
+              />
+              <p
+                className={styles.count}
+              >{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>
+            </figure>
+          );
+        })}
+      </div>
+      <div className={styles.speechBubble}>
+        <img src={speechBubble} alt="" aria-hidden="true" />
+
+        <p className={styles.speechText}>
+          {normalizeIndex(Math.round(activeIndex)) === imageCount - 1
+            ? '마지막 사진이에요! (@ *3*@)'
+            : `사진을 옆으로 넘겨보세요!   >>>>>>`}
+        </p>
+      </div>
+    </>
   );
 }

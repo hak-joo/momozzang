@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import type { Person, Side } from '@entities/WeddingInvitation/model';
 import { Box } from '@shared/ui/Box';
 import { useContactInfoBySide } from '../../hooks/useContactInfoBySide';
+import { PixelChevronLeftIcon } from '@shared/ui/Icon/PixelChevron';
 
 type Tab = Side;
 
@@ -45,7 +46,9 @@ export function ContactInfo() {
   return (
     <Dialog.Root onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>
-        <Button variant="primary" fullWidth>{`축하의 말 전하기 ${'>'}`}</Button>
+        <Button variant="primary" fullWidth>
+          축하의 말 전하기 <PixelChevronLeftIcon width={12} height={12} />
+        </Button>
       </Dialog.Trigger>
       <Dialog.Content className={styles.content} useFadeInOut useOverlay useAutoClose usePortal>
         <Dialog.Close />
