@@ -94,9 +94,6 @@
 }
 
 .totalButton {
-  font-weight: 700;
-  border-radius: 0px !important;
-  padding: 0px;
-  min-height: 32px !important;
   border-bottom: 2px solid var(--Purple-Purple04, #7871c2);
+  border-radius: 0 !important;
 }

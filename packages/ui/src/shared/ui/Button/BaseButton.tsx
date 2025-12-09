@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 import styles from './Button.module.css';
 
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'plain';
 export type ButtonShape = 'round' | 'rect';
 

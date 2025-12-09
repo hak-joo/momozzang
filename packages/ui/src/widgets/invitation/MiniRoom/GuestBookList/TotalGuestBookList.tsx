@@ -24,8 +24,8 @@ export function TotalGuestBookList() {
   return (
     <BottomSheet.Root>
       <BottomSheet.Trigger asChild>
-        <Button variant="plain" className={styles.totalButton}>
-          {'전체 보기'}
+        <Button variant="plain" size="xs" className={styles.totalButton}>
+          전체 보기
         </Button>
       </BottomSheet.Trigger>
 

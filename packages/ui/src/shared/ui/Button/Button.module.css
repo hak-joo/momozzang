@@ -63,22 +63,26 @@
   display: flex;
 }
 
+.sizeXs {
+  min-height: 32px;
+  @mixin typo-heading5;
+}
 .sizeSm {
-  min-height: 40px;
+  min-height: 36px;
   padding: 0 16px;
-  @apply typo-heading5;
+  @mixin typo-heading5;
 }
 
 .sizeMd {
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 20px;
-  font-size: 16px;
+  @mixin typo-heading5;
 }
 
 .sizeLg {
-  min-height: 52px;
+  min-height: 44px;
   padding: 0 24px;
-  font-size: 18px;
+  @mixin typo-heading4;
 }
 
 .variantPrimary {
