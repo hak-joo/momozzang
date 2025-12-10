@@ -5,6 +5,7 @@ import { COMMIT_DEADZONE } from './constants';
 import type { GalleryImage } from '../types';
 import clsx from 'clsx';
 import speechBubble from '@shared/assets/images/gallery-speech-bubble.png';
+import purpleCat from '@shared/assets/images/purple-cat.png';
 
 export type SwipeStackProps = {
   images: GalleryImage[];
@@ -258,8 +259,11 @@ export function SwipeStack({
         <p className={styles.speechText}>
           {normalizeIndex(Math.round(activeIndex)) === imageCount - 1
             ? '마지막 사진이에요! (@ *3*@)'
-            : `사진을 옆으로 넘겨보세요!   >>>>>>`}
+            : `사진을 옆으로 넘겨보세요! >>>>>>`}
         </p>
+      </div>
+      <div className={styles.purpleCat}>
+        <img src={purpleCat} alt="" aria-hidden="true" />
       </div>
     </>
   );

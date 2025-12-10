@@ -98,3 +98,10 @@
 
   text-align: center;
 }
+
+.purpleCat {
+  width: 100%;
+  display: flex;
+  justify-self: flex-start;
+  margin-left: 20%;
+}
