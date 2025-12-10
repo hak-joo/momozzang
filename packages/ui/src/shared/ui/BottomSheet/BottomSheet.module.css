@@ -14,7 +14,7 @@
 
   padding: 24px 20px 32px;
   box-sizing: border-box;
-  z-index: 1000;
+  z-index: 999;
   max-height: 95vh;
   display: flex;
   flex-direction: column;

@@ -35,7 +35,14 @@ export function TotalGuestBookList() {
 
         <div className={styles.guestBookList}>
           {guestBookEntries.map(({ id, contents: content, writer: from, miniMeId }) => (
-            <GuestBook id={id} key={id} contents={content} writer={from} miniMeId={miniMeId} />
+            <GuestBook
+              id={id}
+              key={id}
+              contents={content}
+              writer={from}
+              miniMeId={miniMeId}
+              enableDelete
+            />
           ))}
         </div>
       </BottomSheet.Content>

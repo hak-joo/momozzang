@@ -1,0 +1,1 @@
+export { GuestBookDeleteDialog } from './DeleteDialog';

@@ -6,6 +6,7 @@ import {
   GUESTBOOK_MAX_MESSAGE_LENGTH,
   GUESTBOOK_PASSWORD_LENGTH,
 } from '../context';
+import { Input, Textarea } from '@shared/ui/Input';
 import styles from '../GuestBookForm.module.css';
 
 interface MessageStepProps {
@@ -49,8 +50,7 @@ export function MessageStep({ onSubmit, submitting = false }: MessageStepProps) 
         </div>
         <div className={styles.fieldList}>
           <label className={styles.field}>
-            <input
-              className={styles.input}
+            <Input
               value={nickname}
               placeholder="이름을 입력해주세요"
               maxLength={20}
@@ -59,8 +59,7 @@ export function MessageStep({ onSubmit, submitting = false }: MessageStepProps) 
           </label>
 
           <label className={styles.field}>
-            <textarea
-              className={styles.textarea}
+            <Textarea
               value={message}
               placeholder="축하 메시지를 남겨주세요"
               maxLength={GUESTBOOK_MAX_MESSAGE_LENGTH}
@@ -72,8 +71,7 @@ export function MessageStep({ onSubmit, submitting = false }: MessageStepProps) 
           </label>
 
           <label className={styles.field}>
-            <input
-              className={styles.input}
+            <Input
               value={password}
               placeholder="숫자 4자리를 입력해주세요"
               inputMode="numeric"

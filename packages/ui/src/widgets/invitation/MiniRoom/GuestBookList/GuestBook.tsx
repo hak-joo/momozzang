@@ -1,8 +1,17 @@
 import { MiniMe } from '@shared/ui/MiniMe';
 import styles from './GuestBook.module.css';
 import type { GuestBook } from '../types';
-
-export function GuestBook({ contents: content, writer: from, miniMeId = 1 }: GuestBook) {
+import { GuestBookDeleteDialog } from './DeleteDialog';
+interface Props extends GuestBook {
+  enableDelete?: boolean;
+}
+export function GuestBook({
+  id,
+  contents: content,
+  writer: from,
+  miniMeId = 1,
+  enableDelete = false,
+}: Props) {
   const writer = from?.trim().length ? from : '익명';
   return (
     <div className={styles.guestBookItem}>
@@ -13,6 +22,7 @@ export function GuestBook({ contents: content, writer: from, miniMeId = 1 }: Gue
         <p className={styles.content}>{content}</p>
         <p className={styles.from}>from. {writer}</p>
       </div>
+      {enableDelete && <GuestBookDeleteDialog id={id} />}
     </div>
   );
 }

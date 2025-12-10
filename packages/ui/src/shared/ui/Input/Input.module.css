@@ -1,0 +1,31 @@
+.field {
+  color: var(--Purple-Purple_text, #512985);
+  font-family: PyeongChang;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 153%;
+  letter-spacing: -0.12px;
+
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  background: #f2f5ff;
+  padding: 14px 16px;
+  box-sizing: border-box;
+}
+
+.field::placeholder {
+  color: var(--Purple-Purple03, #a696ea);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 153%;
+  letter-spacing: -0.12px;
+}
+
+.textarea {
+  min-height: 120px;
+  max-height: 150px;
+  resize: none;
+}
