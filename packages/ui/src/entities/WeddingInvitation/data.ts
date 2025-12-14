@@ -156,22 +156,18 @@ export const exampleWeddingInvitation: WeddingInvitation = {
     },
   ],
 
-  album: {
-    enabled: true,
-    maxCount: 20,
-    photos: [
-      {
-        id: 'p1',
-        url: 'https://cdn.example.com/invitations/hakjoo-minjeong/photo-01.jpg',
-        alt: '프리웨딩 메인 컷',
-      },
-      {
-        id: 'p2',
-        url: 'https://cdn.example.com/invitations/hakjoo-minjeong/photo-02.jpg',
-        alt: '야외 촬영 컷',
-      },
-    ],
-  },
+  album: [
+    {
+      id: 'p1',
+      url: 'https://cdn.example.com/invitations/hakjoo-minjeong/photo-01.jpg',
+      alt: '프리웨딩 메인 컷',
+    },
+    {
+      id: 'p2',
+      url: 'https://cdn.example.com/invitations/hakjoo-minjeong/photo-02.jpg',
+      alt: '야외 촬영 컷',
+    },
+  ],
 
   bgm: {
     enabled: true,
