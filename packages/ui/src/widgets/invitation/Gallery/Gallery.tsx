@@ -3,9 +3,14 @@ import { SwipeStack } from './SwipeStack';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 import { MOCK_GALLERY_LIST } from './constants';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
+import { useParams } from 'react-router-dom';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
 
 export function Gallery() {
-  const images = MOCK_GALLERY_LIST;
+  const { invitationId } = useParams();
+  const { album } = useInvitation();
+  const isMock = !invitationId;
+  const images = isMock ? MOCK_GALLERY_LIST : album;
   return (
     <>
       <div className={styles.title}>

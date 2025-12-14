@@ -179,7 +179,7 @@ export interface WeddingInvitation {
 
   images: ImageAsset[];
 
-  album?: AlbumSettings;
+  album: AlbumPhoto[];
   bgm?: BgmSettings;
   customization?: Customization;
 

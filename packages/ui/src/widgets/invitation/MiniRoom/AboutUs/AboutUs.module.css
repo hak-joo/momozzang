@@ -122,6 +122,7 @@
 
     .message {
       @mixin typo-body2;
+      white-space: pre-wrap;
     }
   }
 }
