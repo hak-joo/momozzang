@@ -248,7 +248,7 @@ export function SwipeStack({
               />
               <p
                 className={styles.count}
-              >{`${normalizeIndex(Math.round(activeIndex)) + 1} / ${imageCount}`}</p>
+              >{`${normalizeIndex(Math.round(activeIndex)) + 1}/${imageCount}`}</p>
             </figure>
           );
         })}
