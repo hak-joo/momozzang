@@ -3,13 +3,14 @@ import styles from './Header.module.css';
 
 type Props = {
   currentMenu: Menu;
+  isAtTop: boolean;
   onMenuClick?: (menu: Menu) => void;
 };
 
-export function Header({ currentMenu, onMenuClick }: Props) {
+export function Header({ currentMenu, isAtTop, onMenuClick }: Props) {
   return (
     <header className={styles.header}>
-      <nav>
+      <nav data-at-top={isAtTop ? 'true' : 'false'}>
         <button
           className={currentMenu === 'home' ? styles.active : ''}
           onClick={() => onMenuClick?.('home')}

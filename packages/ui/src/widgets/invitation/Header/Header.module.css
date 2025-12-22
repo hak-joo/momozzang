@@ -1,10 +1,9 @@
 .header {
   width: 100%;
   position: fixed;
-  top: calc(50px - 37px);
-
-  left: 10px;
+  top: 13px;
   z-index: 100;
+  left: 10px;
   display: flex;
   justify-content: center;
 }
@@ -14,7 +13,7 @@
 }
 
 .header nav > :not(:first-child) {
-  margin-left: -8px;
+  margin-left: -4px;
 }
 
 .header button {
@@ -27,14 +26,22 @@
   width: 72px;
   height: 37px;
   box-sizing: content-box;
+  transition: background-color 0.3s ease;
 }
 .header button.active {
   color: #623f99;
-  background: #ffffff80;
+  background: #cbe7fed6;
+  border-left: 1px solid #fff;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #fff;
   box-shadow: none;
 }
 
 .header button.active,
 .header button:hover {
-  z-index: 10;
+  /* z-index: 1; */
+}
+
+nav[data-at-top='false'] button.active {
+  background: linear-gradient(180deg, #cbe7fed6 0%, #fff 100%);
 }

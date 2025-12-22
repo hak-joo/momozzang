@@ -51,7 +51,7 @@ export function WeddingInvitation({ metadata }: Props) {
       <div className={styles.decorator}></div>
       <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
       <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
-      <Header currentMenu={currentMenu} onMenuClick={scrollToMenu} />
+      <Header currentMenu={currentMenu} isAtTop={isAtTop} onMenuClick={scrollToMenu} />
       <div
         id="main-wrapper"
         className={styles.mainWrapper}
