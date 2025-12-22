@@ -193,7 +193,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
   customization: {
     enabled: true,
     themeColor: '#F1FDF3',
-    mainImageUrl: 'https://cdn.example.com/invitations/hakjoo-minjeong/main.jpg',
+    mainImageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600',
     showDDay: true,
     mood: '기쁨',
     miniRoom: {

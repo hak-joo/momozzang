@@ -6,9 +6,6 @@
   width: 100%;
   position: relative;
 }
-.imgContainer {
-  position: relative;
-}
 
 .weddingDayContainer {
   display: flex;
@@ -16,21 +13,4 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-}
-
-.weddingDayImg {
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  pointer-events: none;
-  user-select: none;
-
-  width: 133.598px;
-  height: 91.812px;
-  transform: rotate(5.844deg);
-}
-.photoInRingImg {
-  width: 300px;
-  pointer-events: none;
-  user-select: none;
 }

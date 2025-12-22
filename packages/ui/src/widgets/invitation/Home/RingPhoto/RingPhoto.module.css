@@ -1,0 +1,32 @@
+.container {
+  width: 100%;
+  position: relative;
+}
+
+.svgBox {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.weddingDayImg {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  pointer-events: none;
+  user-select: none;
+
+  width: 135px;
+  height: 93px;
+  transform: rotate(5.844deg);
+}
+
+.diamondImg {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 65px;
+
+  pointer-events: none;
+  user-select: none;
+}
