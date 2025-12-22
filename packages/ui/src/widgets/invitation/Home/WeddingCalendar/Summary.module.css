@@ -58,10 +58,11 @@
 
 .summaryDayNumber {
   text-align: center;
-  font-family: var(--font-DungGeunMo);
-  font-size: 43.12px;
-  font-style: normal;
-  font-weight: 500;
+  font-family: var(--font-DepartureMono);
+  font-size: 36px;
+  letter-spacing: -11%;
+  line-height: 44px;
+  font-weight: 400;
 }
 
 .summaryDayNote {
