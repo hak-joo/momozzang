@@ -6,6 +6,7 @@ import type { GalleryImage } from '../types';
 import clsx from 'clsx';
 import speechBubble from '@shared/assets/images/gallery-speech-bubble.png';
 import purpleCat from '@shared/assets/images/purple-cat.png';
+import { useScrollLock } from './useScrollLock';
 
 export type SwipeStackProps = {
   images: GalleryImage[];
@@ -44,6 +45,9 @@ export function SwipeStack({
   const [isObserved, setIsObserved] = useState(false);
   const [autoClock, setAutoClock] = useState(0);
   const touchActionRestoreRef = useRef<string | null>(null);
+  const { lockScroll, unlockScroll } = useScrollLock(() =>
+    typeof document !== 'undefined' ? document.getElementById('main-wrapper') : null,
+  );
 
   // 제스처 컨텍스트(렌더 유발 방지용 ref)
   const isDraggingRef = useRef(false);
@@ -104,6 +108,16 @@ export function SwipeStack({
   }, []);
 
   useEffect(() => {
+    return () => {
+      if (mainWrapperOverflowRestoreRef.current) {
+        const { el, overflow } = mainWrapperOverflowRestoreRef.current;
+        el.style.overflow = overflow !== null ? overflow : '';
+        mainWrapperOverflowRestoreRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const el = rootElRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(
@@ -136,8 +150,9 @@ export function SwipeStack({
         touchActionRestoreRef.current = rootElRef.current.style.touchAction || null;
         rootElRef.current.style.touchAction = 'none';
       }
+      lockScroll();
     },
-    [activeIndex],
+    [activeIndex, lockScroll],
   );
 
   const onPointerMove = useCallback(
@@ -185,8 +200,9 @@ export function SwipeStack({
         rootElRef.current.style.touchAction =
           touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
       }
+      unlockScroll();
     },
-    [activeIndex, beginSnap],
+    [activeIndex, beginSnap, unlockScroll],
   );
 
   useEffect(() => {
