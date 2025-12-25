@@ -35,7 +35,7 @@ export function Home({ data }: Props) {
       <Decoration variant="sparkle" width={29} left={-30} top={130} />
       <Decoration variant="sparkle" width={36} left={-20} top={320} />
       <Decoration variant="sparkleCross" width={50} left={20} top={390} />
-      <Decoration variant="sparkle" width={50} right={48} top={630} />
+      <Decoration variant="sparkle" width={50} right={48} top={665} />
     </div>
   );
 }
