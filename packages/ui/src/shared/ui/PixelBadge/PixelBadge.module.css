@@ -1,6 +1,6 @@
 .root {
   --pixel-font-size: 30px;
-  --pixel-outline: 4px;
+  --pixel-outline: 2px;
   --pixel-text-gradient: linear-gradient(90deg, #aca4ff -1.18%, #6aa3ff 101.34%);
   --pixel-border-color: #ffffff;
   position: relative;
