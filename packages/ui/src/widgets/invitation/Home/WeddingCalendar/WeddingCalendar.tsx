@@ -26,10 +26,19 @@ export function WeddingCalendar() {
   const startWeekday = monthStart.day(); // 0=일 ~ 6=토
   const selectedDay = weddingDay.date();
 
-  const cells: (number | null)[] = [
-    ...Array(startWeekday).fill(null),
-    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-  ];
+  type CalendarCell = { day: number; inMonth: boolean };
+
+  const prevMonthDays = weddingDay.subtract(1, 'month').daysInMonth();
+  const leadingDays: CalendarCell[] = Array.from({ length: startWeekday }, (_, i) => ({
+    day: prevMonthDays - startWeekday + i + 1,
+    inMonth: false,
+  }));
+  const monthDays: CalendarCell[] = Array.from({ length: daysInMonth }, (_, i) => ({
+    day: i + 1,
+    inMonth: true,
+  }));
+
+  const cells: (CalendarCell | null)[] = [...leadingDays, ...monthDays];
   while (cells.length % 7 !== 0) cells.push(null);
   const weeks = chunk(cells, 7);
 
@@ -63,22 +72,24 @@ export function WeddingCalendar() {
             <div className={styles.weeks}>
               {weeks.map((week, rIdx) => (
                 <div key={`week-${rIdx}`} className={styles.week}>
-                  {week.map((day, cIdx) => (
+                  {week.map((cell, cIdx) => (
                     <div
                       key={`day-${rIdx}-${cIdx}`}
                       className={clsx(
                         styles.cell,
-                        !day && styles.cellOut,
+                        (!cell || !cell.inMonth) && styles.cellOut,
                         cIdx === 0 && styles.cellSunday,
                         cIdx === 6 && styles.cellSaturday,
-                        day === selectedDay && styles.cellSelected,
+                        cell?.inMonth && cell.day === selectedDay && styles.cellSelected,
                       )}
-                      aria-current={day === selectedDay ? 'date' : undefined}
+                      aria-current={cell?.inMonth && cell.day === selectedDay ? 'date' : undefined}
                     >
-                      {day && (
+                      {cell && (
                         <>
-                          {day === selectedDay && <span className={styles.dayMarker} aria-hidden />}
-                          <span className={styles.day}>{day}</span>
+                          {cell.inMonth && cell.day === selectedDay && (
+                            <span className={styles.dayMarker} aria-hidden />
+                          )}
+                          <span className={styles.day}>{cell.day}</span>
                         </>
                       )}
                     </div>
