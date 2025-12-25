@@ -82,6 +82,7 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  padding-right: 4%;
 }
 
 .speechBubble img {
@@ -93,9 +94,8 @@
   color: var(--Purple-Purple_text, #512985);
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 46%;
   transform: translate(-10%, -65%);
-
   text-align: center;
 }
 
@@ -103,5 +103,5 @@
   width: 100%;
   display: flex;
   justify-self: flex-start;
-  margin-left: 20%;
+  margin-top: -20px;
 }
