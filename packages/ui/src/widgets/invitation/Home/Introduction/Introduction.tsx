@@ -24,7 +24,13 @@ export function Introduction() {
         <p className={styles.title}>모시는 글</p>
         <p className={styles.message}>{message.replaceAll('\\n', '\n')}</p>
 
-        <img src={pixelWeddingImg} width={113} height={113} alt="픽셀 웨딩 사진" />
+        <img
+          className={styles.coupleMinime}
+          src={pixelWeddingImg}
+          width={113}
+          height={113}
+          alt="픽셀 웨딩 사진"
+        />
 
         <div className={styles.couple}>
           <div className={styles.person}>

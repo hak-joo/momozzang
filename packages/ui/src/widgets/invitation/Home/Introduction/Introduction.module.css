@@ -14,7 +14,7 @@
   width: 100%;
 }
 .box {
-  gap: 24px;
+  gap: 20px;
   width: 100%;
 }
 
@@ -30,12 +30,17 @@
   white-space: pre-line;
 }
 
+.coupleMinime {
+  margin-top: 28px;
+  margin-bottom: 8px;
+}
+
 .couple {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   align-self: stretch;
 }
 
@@ -45,7 +50,7 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-DungGeunMo);
-
+  letter-spacing: -1.28px;
   .name {
     font-family: var(--font-PyeongChang);
     display: flex;
@@ -56,4 +61,8 @@
       @mixin typo-heading1;
     }
   }
+}
+
+.pixelHeart {
+  margin: 6px 0;
 }
