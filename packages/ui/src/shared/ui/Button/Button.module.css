@@ -1,4 +1,5 @@
 .button {
+  font-family: var(--font-PyeongChang);
   position: relative;
   display: inline-flex;
   align-items: center;

@@ -46,7 +46,7 @@ export function ContactInfo() {
   return (
     <Dialog.Root onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>
-        <Button variant="primary" fullWidth>
+        <Button size="lg" variant="primary" fullWidth>
           축하의 말 전하기 <PixelChevronLeftIcon width={12} height={12} />
         </Button>
       </Dialog.Trigger>
