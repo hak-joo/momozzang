@@ -72,7 +72,7 @@ export function MiniMeSelectionStep() {
                 onClick={() => selectMiniMe(miniMeId)}
               >
                 <PixelHeart className={styles.miniHeart} />
-                <MiniMe miniMeId={miniMeId} size={30} />
+                <MiniMe miniMeId={miniMeId} size={40} />
               </button>
             );
           })}
