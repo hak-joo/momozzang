@@ -59,10 +59,10 @@ function GuestBookFormContainer() {
     async (force = false) => {
       if (!force && isDirty) {
         const shouldClose = await confirm({
-          title: '작성 중인 내용이 있어요.',
-          message: '작성 중인 내용이 사라집니다. 닫을까요?',
-          confirmText: '닫기',
-          cancelText: '계속 작성',
+          title: '작성 중인 방명록을 벗어나시겠습니까?',
+          message: '입력한 내용은 저장되지 않습니다.',
+          confirmText: '나가기',
+          cancelText: '취소',
         });
         if (!shouldClose) return false;
       }
