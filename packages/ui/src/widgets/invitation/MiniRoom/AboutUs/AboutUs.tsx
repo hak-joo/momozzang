@@ -47,16 +47,16 @@ export function AboutUs({ className }: Props) {
             <div className={styles.photoGrid}>
               <figure className={styles.photoSlot}>
                 <img
-                  src={aboutUs.brideImageUrl}
-                  alt={couple.bride.name}
+                  src={aboutUs.groomImageUrl}
+                  alt={couple.groom.name}
                   className={styles.photoImage}
                 />
               </figure>
 
               <figure className={styles.photoSlot}>
                 <img
-                  src={aboutUs.groomImageUrl}
-                  alt={couple.groom.name}
+                  src={aboutUs.brideImageUrl}
+                  alt={couple.bride.name}
                   className={styles.photoImage}
                 />
               </figure>
