@@ -1,6 +1,8 @@
 .root {
   position: relative;
-  width: 100%;
+  width: 272px;
+  display: flex;
+  justify-content: center;
   max-width: 760px;
   margin: 0 auto;
   perspective: 1100px;
@@ -29,7 +31,9 @@
     0 14px 28px rgba(0, 0, 0, 0.24),
     0 6px 12px rgba(0, 0, 0, 0.16);
   will-change: transform, opacity;
-  height: 400px;
+  width: 272px;
+  height: 424px;
+  box-sizing: border-box;
   padding: 16px 16px 24px 16px;
 
   &.top {
@@ -44,8 +48,8 @@
 }
 
 .media {
-  width: 100%;
-  height: calc(100% - 40px); /* padding 고려 */
+  width: 240px;
+  height: 360px;
 
   object-fit: cover;
 
