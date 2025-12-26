@@ -108,16 +108,6 @@ export function SwipeStack({
   }, []);
 
   useEffect(() => {
-    return () => {
-      if (mainWrapperOverflowRestoreRef.current) {
-        const { el, overflow } = mainWrapperOverflowRestoreRef.current;
-        el.style.overflow = overflow !== null ? overflow : '';
-        mainWrapperOverflowRestoreRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const el = rootElRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(
