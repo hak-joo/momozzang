@@ -69,7 +69,7 @@ export function AboutUs({ className }: Props) {
                 <span className={styles.relation}>신랑</span>
                 <span className={styles.name}>{couple.groom.name}</span>
               </div>
-              <div className={styles.message}>{aboutUs.groomDesc}</div>
+              <div className={styles.message}>{aboutUs.groomDesc.replaceAll('\\n', '\n')}</div>
             </div>
 
             <div className={styles.item}>
@@ -78,7 +78,7 @@ export function AboutUs({ className }: Props) {
                 <span className={styles.name}>{couple.bride.name}</span>
               </div>
 
-              <div className={styles.message}>{aboutUs.brideDesc}</div>
+              <div className={styles.message}>{aboutUs.brideDesc.replaceAll('\\n', '\n')}</div>
             </div>
           </div>
         </section>
