@@ -41,7 +41,7 @@ export function MiniMeSelectionStep() {
   return (
     <>
       <header className={styles.header}>
-        <h2 className={styles.title}>미니미 선택</h2>
+        <p className={styles.title}>미니미 선택</p>
         <p className={styles.description}>방명록에 남길 미니미를 선택해 주세요.</p>
       </header>
 
