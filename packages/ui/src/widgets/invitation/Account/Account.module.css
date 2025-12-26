@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 36px;
 
     .title {
       @mixin typo-heading2;
@@ -23,18 +23,18 @@
 }
 
 .content {
-  padding-bottom: 24px;
 }
 .box {
   align-items: flex-start;
   width: 100%;
+  padding: 20px 32px;
 }
 
 .accordion {
-  border-top: 2px dashed #8fc5fffc;
+  border-top: 1px dashed #8fc5fffc;
 
   .accordionItem {
-    border-bottom: 2px dashed #8fc5fffc;
+    border-bottom: 1px dashed #8fc5fffc;
   }
 }
 .trigger {
@@ -82,13 +82,12 @@
 .accountOwner {
   @mixin typo-heading3;
   color: #512985;
-  margin-bottom: 4px;
 }
 
 .accountDetails {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .accountDetailValue {
@@ -96,7 +95,7 @@
   color: #512985;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .footer {

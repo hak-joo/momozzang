@@ -10,7 +10,14 @@
   align-items: center;
   justify-content: center;
   padding: 32px 24px;
-  border-radius: 12px;
+
+  &.rect {
+    border-radius: 12px;
+  }
+
+  &.rounded {
+    border-radius: 16px;
+  }
 
   &.hasDecoration {
     padding-top: 60px;

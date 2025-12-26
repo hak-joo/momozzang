@@ -135,7 +135,7 @@ export function Account() {
                   <ul className={styles.accountList}>
                     {sideData.accounts.map(({ relationLabel, account }) => (
                       <li key={account.id}>
-                        <Box variant="reversed" className={styles.box}>
+                        <Box variant="reversed" className={styles.box} shape="rounded">
                           <p className={styles.accountRelation}>{relationLabel}</p>
                           <div className={styles.accountDetails}>
                             <p className={styles.accountOwner}>{account.accountHolder}</p>

@@ -5,7 +5,7 @@
   width: 100%;
 }
 
-.title {
+.mainTitle {
   @mixin typo-heading1;
   display: flex;
   flex-direction: column;
@@ -54,33 +54,34 @@
 .transportationList {
   display: flex;
   flex-direction: column;
-  border-top: 2px dashed #a7d1ff;
+  border-top: 1px dashed #a7d1ff;
 
   .transportation {
-    padding: 24px;
+    padding: 32px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+
     justify-content: center;
-    border-bottom: 2px dashed #a7d1ff;
+    border-bottom: 1px dashed #a7d1ff;
 
     .title {
       @mixin typo-heading2;
       display: flex;
       flex-direction: row;
       gap: 6px;
+      margin-bottom: 16px;
     }
 
     .block {
       width: 6px;
       height: 6px;
-      background: #7a6cff;
+      background: var(--Purple-Purple_text, #512985);
       margin-top: 6px;
       flex-shrink: 0;
     }
 
     .description {
-      margin-top: 8px;
+      margin-bottom: 8px;
       display: flex;
       flex-direction: column;
       gap: 6px;

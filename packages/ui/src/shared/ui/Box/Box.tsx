@@ -5,11 +5,13 @@ import weddingDayImg from '@shared/assets/images/wedding-day.png';
 import type { PropsWithChildren, CSSProperties } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'reversed' | 'plain';
+type Shape = 'rect' | 'rounded';
 type DotOffset = 16 | 24;
 export interface Props {
   wrapperClassName?: string;
   className?: string;
   variant: Variant;
+  shape?: Shape;
   hasBalloon?: boolean;
   hasDecoration?: boolean;
   dotOffset?: DotOffset;
@@ -22,6 +24,7 @@ function capitalize(value: string) {
 export function Box({
   wrapperClassName,
   className,
+  shape = 'rect',
   hasBalloon = false,
   hasDecoration = false,
   children,
@@ -75,6 +78,7 @@ export function Box({
           className,
           { [styles.hasDecoration]: hasDecoration },
           styles[`${variant}` as keyof typeof styles],
+          styles[`${shape}` as keyof typeof styles],
         )}
         style={boardStyle}
       >

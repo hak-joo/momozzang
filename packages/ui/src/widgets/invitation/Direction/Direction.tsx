@@ -10,6 +10,7 @@ import { createMapProviders } from './constants';
 
 import carImg from '@shared/assets/images/car.png';
 import metroImg from '@shared/assets/images/metro.png';
+import busImg from '@shared/assets/images/bus.png';
 import type { MapProviderKey, MapProviderSpec } from './types';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
@@ -19,7 +20,7 @@ type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
 
 const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo'];
 const transportationIcon: Record<TransportationType, { src: string; label: string }> = {
-  busInfo: { src: metroImg, label: '버스' },
+  busInfo: { src: busImg, label: '버스' },
   carInfo: { src: carImg, label: '자차' },
   metroInfo: { src: metroImg, label: '지하철' },
 };
@@ -97,7 +98,7 @@ export function Direction() {
 
   return (
     <div className={styles.direction}>
-      <div className={styles.title}>
+      <div className={styles.mainTitle}>
         <PixelBadge text="Location" />
       </div>
 
