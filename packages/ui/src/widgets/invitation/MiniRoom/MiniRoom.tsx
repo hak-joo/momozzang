@@ -7,7 +7,7 @@ import { GuestBookForm } from './GuestBookForm';
 import { MiniRoomScene, type MainMiniMe } from './MiniRoomScene';
 import styles from './MiniRoom.module.css';
 import type { RestrictedZone } from './lib/generateMiniMePositions';
-import { fetchTopGuestBookList, guestBookQueryKeys } from './api/guestBook';
+import { fetchGuestBookList, guestBookQueryKeys } from './api/guestBook';
 import { prepareMiniRoomEntries } from './lib/prepareMiniRoomEntries';
 import { MINI_ROOM_METADATA } from './metadata';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
@@ -36,9 +36,10 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
   const { data: topGuestBookEntries = [], error: guestBookError } = useSuspenseQuery({
     queryKey: guestBookQueryKeys.top(invitationId, isMock),
     queryFn: () =>
-      fetchTopGuestBookList({
+      fetchGuestBookList({
         invitationId: invitationId,
         isMock,
+        isTop: true,
       }),
   });
 

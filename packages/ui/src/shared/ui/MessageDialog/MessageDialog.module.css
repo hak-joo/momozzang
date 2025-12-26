@@ -2,28 +2,47 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 28px 24px;
+  padding: 0px;
   align-items: stretch;
   text-align: center;
   border-radius: 16px;
+  width: 350px;
+}
+.boxWrapper {
+  gap: 16px;
+  padding: 0px;
+  width: 100%;
+}
+
+.box {
+  padding: 0px;
+  width: 100%;
+}
+.confirm {
+  padding: 16px;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .title {
   @mixin typo-heading2;
-  color: #4d3186;
+  color: var(--Purple-Purple_text, #512985);
   margin: 0;
 }
 
 .message {
   @mixin typo-body2;
+  color: var(--Purple-Purple_text, #512985);
   margin: 0;
   line-height: 1.5;
 }
 
 .actions {
   display: flex;
-  flex-direction: column;
   gap: 10px;
+  margin-bottom: 24px;
 }
 
 .overlay {

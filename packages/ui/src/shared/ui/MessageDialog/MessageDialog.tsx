@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 import * as Dialog from '@shared/ui/Dialog';
 import { Button } from '@shared/ui/Button';
 import styles from './MessageDialog.module.css';
+import { Box } from '../Box';
 
 interface MessageDialogOptions {
   title: string;
@@ -63,16 +64,20 @@ export function MessageDialogProvider({ children }: React.PropsWithChildren) {
           overlayClassName={styles.overlay}
           useAutoClose={false}
         >
-          {title && <p className={styles.title}>{title}</p>}
-          {message && <p className={styles.message}>{message}</p>}
-          <div className={styles.actions}>
-            <Button fullWidth onClick={() => closeDialog(true)}>
-              {confirmText}
-            </Button>
-            <Button fullWidth variant="ghost" onClick={() => closeDialog(false)}>
-              {cancelText}
-            </Button>
-          </div>
+          <Box variant="plain" wrapperClassName={styles.boxWrapper} className={styles.box}>
+            <div className={styles.confirm}>
+              {title && <p className={styles.title}>{title}</p>}
+              {message && <p className={styles.message}>{message}</p>}
+            </div>
+            <div className={styles.actions}>
+              <Button size="sm" onClick={() => closeDialog(true)}>
+                {confirmText}
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => closeDialog(false)}>
+                {cancelText}
+              </Button>
+            </div>
+          </Box>
         </Dialog.Content>
       </Dialog.Root>
     </MessageDialogContext.Provider>

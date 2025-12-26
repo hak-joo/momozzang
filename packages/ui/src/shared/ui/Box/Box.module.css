@@ -48,6 +48,14 @@
       background: #bfbce0;
     }
   }
+  &.plain {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    .dot {
+      background: #95aeff;
+    }
+  }
 }
 
 .dot {

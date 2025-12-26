@@ -4,7 +4,7 @@ import heartBalloon from '@shared/assets/images/heart-balloon.png';
 import weddingDayImg from '@shared/assets/images/wedding-day.png';
 import type { PropsWithChildren, CSSProperties } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'reversed';
+type Variant = 'primary' | 'secondary' | 'reversed' | 'plain';
 type DotOffset = 16 | 24;
 export interface Props {
   wrapperClassName?: string;
