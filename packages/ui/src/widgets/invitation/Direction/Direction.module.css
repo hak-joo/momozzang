@@ -1,7 +1,7 @@
 .direction {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+
   width: 100%;
 }
 
@@ -11,6 +11,7 @@
   flex-direction: column;
   align-items: center;
   color: #512985;
+  margin-bottom: 18px;
 }
 
 .weddinghallInfo {
@@ -18,6 +19,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 28px;
 
   .hallName {
     @mixin typo-heading4;
@@ -42,16 +44,17 @@
 }
 
 .linkButton {
+  margin-top: 16px;
+  margin-bottom: 48px;
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .transportationList {
   display: flex;
   flex-direction: column;
   border-top: 2px dashed #a7d1ff;
-  margin-top: 24px;
 
   .transportation {
     padding: 24px;
