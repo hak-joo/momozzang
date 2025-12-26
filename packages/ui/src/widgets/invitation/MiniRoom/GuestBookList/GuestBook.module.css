@@ -95,6 +95,7 @@
 }
 
 .totalButton {
+  min-height: 20px !important;
   border-bottom: 2px solid var(--Purple-Purple04, #7871c2);
   border-radius: 0 !important;
 }

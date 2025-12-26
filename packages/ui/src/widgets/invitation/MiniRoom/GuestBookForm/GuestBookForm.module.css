@@ -1,3 +1,6 @@
+.triggerButton {
+  width: 215px;
+}
 .sheetContent {
   display: flex;
   flex-direction: column;
