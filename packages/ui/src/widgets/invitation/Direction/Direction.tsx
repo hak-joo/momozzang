@@ -87,7 +87,6 @@ export function Direction() {
 
         const cleanup = () => {
           window.clearTimeout(timer);
-          window.removeEventListener('blur', cancelFallback);
           window.removeEventListener('pagehide', cancelFallback);
           document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
@@ -111,7 +110,6 @@ export function Direction() {
           }
         }, 1200);
 
-        window.addEventListener('blur', cancelFallback);
         window.addEventListener('pagehide', cancelFallback);
         document.addEventListener('visibilitychange', handleVisibilityChange);
 

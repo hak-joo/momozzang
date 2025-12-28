@@ -19,7 +19,7 @@
 }
 
 .mainWrapper {
-  z-index: 10;
+  
   flex: 1;
   max-height: 100vh;
   max-height: 100dvh;
