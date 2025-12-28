@@ -82,14 +82,41 @@ export function Direction() {
 
       if (mobile && scheme) {
         const start = Date.now();
-        const timer = window.setTimeout(() => {
+        let cancelled = false;
+        let timer: number;
+
+        const cleanup = () => {
+          window.clearTimeout(timer);
+          window.removeEventListener('blur', cancelFallback);
+          window.removeEventListener('pagehide', cancelFallback);
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+
+        const cancelFallback = () => {
+          cancelled = true;
+          cleanup();
+        };
+
+        const handleVisibilityChange = () => {
+          if (document.visibilityState === 'hidden') {
+            cancelFallback();
+          }
+        };
+
+        timer = window.setTimeout(() => {
+          if (cancelled) return;
+          cleanup();
           if (Date.now() - start < 1600) {
             openFallback(true);
           }
         }, 1200);
 
+        window.addEventListener('blur', cancelFallback);
+        window.addEventListener('pagehide', cancelFallback);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
         window.location.href = scheme;
-        window.setTimeout(() => window.clearTimeout(timer), 2000);
+        window.setTimeout(() => cleanup(), 2000);
         return;
       } else {
         openFallback();
