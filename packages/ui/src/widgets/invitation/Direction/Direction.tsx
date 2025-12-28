@@ -1,11 +1,10 @@
-import { Fragment, useMemo, type KeyboardEvent, type MouseEvent } from 'react';
+import { useMemo } from 'react';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import styles from './Direction.module.css';
 import { NaverMap } from '@shared/ui/NaverMap';
 import { PhoneIcon } from '@shared/ui/Icon/Phone';
 import { Button, IconButton } from '@shared/ui/Button';
 import { ClipboardIcon } from '@shared/ui/Icon/ClipboardIcon';
-import { isAndroid, isIOS } from '@shared/util/platform';
 import { createMapProviders } from './constants';
 
 import carImg from '@shared/assets/images/car.png';
@@ -15,6 +14,7 @@ import type { MapProviderKey, MapProviderSpec } from './types';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
+import { useMapNavigation } from './useMapNavigation';
 
 type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
 
@@ -48,78 +48,7 @@ export function Direction() {
     return createMapProviders({ latitude, longitude, name: hallName ?? '웨딩홀' });
   }, [latitude, longitude, hallName]);
 
-  const handleClickMapLink =
-    (providerKey: MapProviderKey) =>
-    (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      if (!mapProviders || typeof window === 'undefined') return;
-
-      const provider = mapProviders[providerKey];
-      const mobile = isIOS() || isAndroid();
-      const scheme = isIOS() ? provider.iosScheme : provider.androidScheme;
-      const storeLink = isIOS() ? provider.iosStore : provider.androidStore;
-      const webLink = provider.webFallback;
-      const fallbackUrl = webLink ?? mapProviders.naver?.webFallback ?? 'https://map.naver.com/v5/';
-      const openStore = (forceSelf = false) => {
-        if (!storeLink) return;
-        if (mobile || forceSelf) {
-          window.location.href = storeLink;
-        } else {
-          window.open(storeLink, '_blank', 'noopener,noreferrer');
-        }
-      };
-      const openFallback = (forceSelf = false) => {
-        if (fallbackUrl) {
-          if (mobile || forceSelf) {
-            window.location.href = fallbackUrl;
-          } else {
-            window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-          }
-        } else {
-          openStore(forceSelf);
-        }
-      };
-
-      if (mobile && scheme) {
-        const start = Date.now();
-        let cancelled = false;
-        let timer: number;
-
-        const cleanup = () => {
-          window.clearTimeout(timer);
-          window.removeEventListener('pagehide', cancelFallback);
-          document.removeEventListener('visibilitychange', handleVisibilityChange);
-        };
-
-        const cancelFallback = () => {
-          cancelled = true;
-          cleanup();
-        };
-
-        const handleVisibilityChange = () => {
-          if (document.visibilityState === 'hidden') {
-            cancelFallback();
-          }
-        };
-
-        timer = window.setTimeout(() => {
-          if (cancelled) return;
-          cleanup();
-          if (Date.now() - start < 1600) {
-            openFallback(true);
-          }
-        }, 1200);
-
-        window.addEventListener('pagehide', cancelFallback);
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-
-        window.location.href = scheme;
-        window.setTimeout(() => cleanup(), 2000);
-        return;
-      } else {
-        openFallback();
-      }
-    };
+  const handleClickMapLink = useMapNavigation(mapProviders);
 
   return (
     <div className={styles.direction}>
