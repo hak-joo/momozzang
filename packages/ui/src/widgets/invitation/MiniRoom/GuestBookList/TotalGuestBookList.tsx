@@ -1,26 +1,13 @@
-import * as BottomSheet from '@shared/ui/BottomSheet';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { fetchGuestBookList, guestBookQueryKeys } from '../api/guestBook';
-import { useParams } from 'react-router-dom';
 import { Button } from '@shared/ui/Button';
-import styles from './GuestBook.module.css';
+import * as BottomSheet from '@shared/ui/BottomSheet';
 import { GuestBook } from './GuestBook';
+import type { GuestBook as TGuestBook } from '../types';
+import styles from './GuestBook.module.css';
 
-export function TotalGuestBookList() {
-  const { invitationId } = useParams();
-  const isMock = !invitationId;
-
-  const { data: guestBookEntries = [], error } = useSuspenseQuery({
-    queryKey: guestBookQueryKeys.list(invitationId, isMock),
-    queryFn: () =>
-      fetchGuestBookList({
-        invitationId,
-        isMock,
-      }),
-  });
-
-  if (error) return null;
-
+interface Props {
+  guestBookEntries: TGuestBook[];
+}
+export function TotalGuestBookList({ guestBookEntries }: Props) {
   return (
     <BottomSheet.Root>
       <BottomSheet.Trigger asChild>

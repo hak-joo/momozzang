@@ -90,10 +90,6 @@ function GuestBookFormContainer() {
         queryKey: guestBookQueryKeys.list(invitationId, isMock),
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: guestBookQueryKeys.top(invitationId, isMock),
-      });
-
       await attemptClose(true);
       info({ title: '방명록을 남겼습니다.' });
     } catch (error) {

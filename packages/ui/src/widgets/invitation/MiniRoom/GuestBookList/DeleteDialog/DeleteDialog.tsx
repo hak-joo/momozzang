@@ -28,9 +28,6 @@ export function GuestBookDeleteDialog({ id }: Props) {
         queryKey: guestBookQueryKeys.list(invitationId, isMock),
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: guestBookQueryKeys.top(invitationId, isMock),
-      });
       info({
         title: '방명록이 삭제되었습니다.',
       });

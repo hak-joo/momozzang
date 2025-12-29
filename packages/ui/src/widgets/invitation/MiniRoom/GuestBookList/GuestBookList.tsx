@@ -15,10 +15,12 @@ export function GuestBookList({ entries }: Props) {
 
   return (
     <>
-      {entries.map(({ id, contents: content, writer: from, miniMeId }) => (
-        <GuestBook id={id} key={id} contents={content} writer={from} miniMeId={miniMeId} />
-      ))}
-      <TotalGuestBookList />
+      {entries
+        .filter((entry, index) => index < 2)
+        .map(({ id, contents: content, writer: from, miniMeId }) => (
+          <GuestBook id={id} key={id} contents={content} writer={from} miniMeId={miniMeId} />
+        ))}
+      <TotalGuestBookList guestBookEntries={entries} />
     </>
   );
 }

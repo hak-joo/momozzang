@@ -33,22 +33,18 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
 
   const roomTemplateId = customization?.miniRoom?.roomTemplateId ?? 'classic-garden';
 
-  const { data: topGuestBookEntries = [], error: guestBookError } = useSuspenseQuery({
-    queryKey: guestBookQueryKeys.top(invitationId, isMock),
+  const { data: guestBookEntries = [], error: guestBookError } = useSuspenseQuery({
+    queryKey: guestBookQueryKeys.list(invitationId, isMock),
     queryFn: () =>
       fetchGuestBookList({
         invitationId: invitationId,
         isMock,
-        isTop: true,
       }),
   });
 
   const metadata =
     MINI_ROOM_METADATA.find((meta) => meta.id === roomTemplateId) ?? MINI_ROOM_METADATA[0];
-  const sceneEntries = useMemo(
-    () => prepareMiniRoomEntries(topGuestBookEntries),
-    [topGuestBookEntries],
-  );
+  const sceneEntries = useMemo(() => prepareMiniRoomEntries(guestBookEntries), [guestBookEntries]);
 
   return (
     <div className={styles.wrapper}>
@@ -63,7 +59,7 @@ export function MiniRoom({ restrictedZones, mainMiniMe = DEFAULT_SPECIAL_MINI }:
           restrictedZones={restrictedZones ?? metadata.restrictedZones}
           mainMiniMe={mainMiniMe}
         />
-        {!guestBookError && <GuestBookList entries={topGuestBookEntries} />}
+        {!guestBookError && <GuestBookList entries={guestBookEntries} />}
       </div>
       <GuestBookForm />
     </div>
