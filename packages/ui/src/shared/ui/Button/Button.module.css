@@ -67,23 +67,27 @@
 .sizeXs {
   min-height: 32px;
   @mixin typo-heading5;
+  font-weight: var(--button-font-weight);
 }
 .sizeSm {
   min-height: 36px;
   padding: 0 16px;
   @mixin typo-heading5;
+  font-weight: var(--button-font-weight);
 }
 
 .sizeMd {
   min-height: 40px;
   padding: 0 20px;
   @mixin typo-heading5;
+  font-weight: var(--button-font-weight);
 }
 
 .sizeLg {
   min-height: 44px;
   padding: 0 24px;
   @mixin typo-heading4;
+  font-weight: var(--button-font-weight);
 }
 
 .variantPrimary {
