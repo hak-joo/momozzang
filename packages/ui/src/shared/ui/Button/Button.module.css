@@ -13,10 +13,7 @@
   cursor: pointer;
   transition:
     transform 150ms ease,
-    box-shadow 150ms ease,
     filter 150ms ease;
-  box-shadow: var(--button-shadow);
-  text-shadow: 0 1px 3px rgba(32, 24, 71, 0.35);
 
   &.shapeRound {
     border-radius: 24px;
@@ -41,7 +38,6 @@
 .button:active {
   transform: translateY(1px);
   filter: brightness(0.97);
-  box-shadow: 0 4px 12px rgba(84, 64, 171, 0.2);
 }
 
 .button:hover:not(:disabled) {
@@ -55,7 +51,6 @@
 
 .button:disabled {
   cursor: not-allowed;
-  box-shadow: none;
   text-shadow: none;
 }
 
@@ -98,7 +93,6 @@
     var(--color-primary-strong) 100%
   );
   color: var(--color-primary-contrast);
-  box-shadow: var(--button-shadow);
 }
 
 .variantPrimary.button:disabled {
@@ -113,7 +107,6 @@
     var(--color-primary-accent) 100%
   );
   color: var(--color-primary-text);
-  box-shadow: 0 6px 14px rgba(149, 174, 255, 0.35);
 }
 
 .variantSecondary.button:disabled {
@@ -128,7 +121,6 @@
 .variantGhost {
   background: transparent;
   color: var(--color-primary-text);
-  box-shadow: none;
   border: 1px solid rgba(149, 174, 255, 0.5);
   backdrop-filter: blur(4px);
 }
@@ -150,7 +142,6 @@
 .variantPlain {
   background: transparent;
   color: var(--button-plain-color, var(--color-primary-text));
-  box-shadow: none;
   text-shadow: none;
 }
 
@@ -180,29 +171,18 @@
 .iconButton {
   padding: 0;
   border-radius: var(--icon-button-radius);
-  box-shadow: var(--icon-button-shadow);
   aspect-ratio: 1;
   min-height: auto;
   gap: 0;
 }
 
-.iconButton:hover:not(:disabled) {
-  box-shadow: 0 10px 20px rgba(81, 41, 133, 0.3);
-}
-
-.iconButtonPlain {
-  box-shadow: none;
-}
-
 .iconButtonPlain:hover:not(:disabled),
 .iconButtonPlain:focus-visible {
   background: rgba(149, 174, 255, 0.12);
-  box-shadow: none;
 }
 
 .iconButtonPlain:active:not(:disabled) {
   background: rgba(149, 174, 255, 0.2);
-  box-shadow: none;
 }
 
 .iconButtonPlain:disabled {
