@@ -11,6 +11,7 @@
   line-height: 1;
   color: var(--color-primary-contrast);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     transform 150ms ease,
     filter 150ms ease;
