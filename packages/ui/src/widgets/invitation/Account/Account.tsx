@@ -11,6 +11,7 @@ import { smoothScrollWithin } from './utils';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import brideImg from '@shared/assets/images/bride.png';
 import groomImg from '@shared/assets/images/groom.png';
+import { DdayBadge } from '@shared/ui/DdayBadge';
 
 const SECTIONS: Array<{ side: Side; triggerLabel: string; imageSrc: string }> = [
   { side: 'groom', triggerLabel: '신랑측에게', imageSrc: groomImg },
@@ -162,6 +163,7 @@ export function Account() {
       </Accordion.Root>
 
       <div className={styles.footer}>
+        <DdayBadge remainingDays={10} />
         <p> 화환은 감사히 마음으로 받겠습니다.</p>
         <p> 저희를 생각해 주시는 마음만으로도 감사드립니다.</p>
       </div>

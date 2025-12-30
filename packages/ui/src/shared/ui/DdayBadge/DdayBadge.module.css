@@ -1,0 +1,57 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.dDayBadge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+
+  .heart {
+    color: var(--Purple-Purple02, #aca4ff);
+  }
+  .day {
+    position: relative;
+    width: 100%;
+    padding: 6px 0px;
+    border-radius: 4px;
+    border-top: 1px dashed #82b8f3;
+    border-bottom: 1px dashed #82b8f3;
+    background: #d2e5ff;
+    box-shadow: 0 0 7px 0 #fff;
+
+    font-family: var(--font-DepartureMono);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.54px;
+    color: #a696ea;
+  }
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  background-color: #fff;
+  position: absolute;
+}
+
+.dotTop {
+  top: 4px;
+}
+.dotBottom {
+  bottom: 4px;
+}
+.dotLeft {
+  left: 5px;
+}
+.dotRight {
+  right: 5px;
+}
