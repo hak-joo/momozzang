@@ -93,8 +93,8 @@
 .variantPrimary {
   background: linear-gradient(
     180deg,
-    var(--color-primary-soft) 0%,
-    var(--color-primary-base) 60%,
+    var(--color-primary-soft) 20%,
+    var(--color-primary-base) 80%,
     var(--color-primary-strong) 100%
   );
   color: var(--color-primary-contrast);

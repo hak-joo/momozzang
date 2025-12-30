@@ -18,7 +18,6 @@
 
 .header button {
   @mixin typo-heading4;
-  font-weight: 500;
   color: #f9f9f9;
   border-radius: 12px 12px 0 0;
   background: #a696ea;

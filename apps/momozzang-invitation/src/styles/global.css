@@ -100,6 +100,7 @@ body {
 
 /* 버튼 reset */
 button {
+  font-family: var(--font-PyeongChang);
   background: inherit;
   border: none;
   box-shadow: none;

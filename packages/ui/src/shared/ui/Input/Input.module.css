@@ -1,6 +1,6 @@
 .field {
   color: var(--Purple-Purple_text, #512985);
-  font-family: PyeongChang;
+  font-family: var(--font-PyeongChang);
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
