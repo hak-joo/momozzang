@@ -98,10 +98,25 @@
       color: var(--Purple-Purple_text, #512985);
     }
 
+    .subDescription {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      margin-top: 4px;
+    }
+
+    .subDescriptionBullet {
+      @mixin typo-body2;
+      color: var(--Purple-Purple_desc, #967eb6);
+      flex-shrink: 0;
+    }
+
     .subDescriptionText {
       @mixin typo-body2;
       font-family: var(--font-Wanted-Sans);
       color: var(--Purple-Purple_desc, #967eb6);
+      flex: 1;
+      white-space: pre-line;
     }
   }
 }

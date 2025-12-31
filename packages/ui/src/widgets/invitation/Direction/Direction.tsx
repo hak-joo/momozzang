@@ -108,10 +108,14 @@ export function Direction() {
               <div>
                 {item.subInfo &&
                   item.subInfo.map((line, index) => (
-                    <p
-                      key={`${type}-sub-${index}`}
-                      className={styles.subDescriptionText}
-                    >{`- ${line}`}</p>
+                    <div key={`${type}-sub-${index}`} className={styles.subDescription}>
+                      <span className={styles.subDescriptionBullet} aria-hidden>
+                        -
+                      </span>
+                      <span className={styles.subDescriptionText}>
+                        {line.replace(/^-\\s*/, '').replaceAll('\\n', '\n')}
+                      </span>
+                    </div>
                   ))}
               </div>
             </div>
