@@ -259,15 +259,17 @@ export function SwipeStack({
           );
         })}
       </div>
-      <div className={styles.speechBubble}>
-        <img src={speechBubble} alt="" aria-hidden="true" />
-
-        <p className={styles.speechText}>
-          {normalizeIndex(Math.round(activeIndex)) === imageCount - 1
-            ? '마지막 사진이에요! (@ *3*@)'
-            : `사진을 옆으로 넘겨보세요! >>>>>>`}
-        </p>
+      <div
+        className={styles.speechBubble}
+        style={{
+          backgroundImage: `url(${speechBubble})`,
+        }}
+      >
+        {normalizeIndex(Math.round(activeIndex)) === imageCount - 1
+          ? '마지막 사진이에요! (@ *3*@)'
+          : `사진을 옆으로 넘겨보세요! >>>>>>`}
       </div>
+
       <div className={styles.purpleCat}>
         <img src={purpleCat} alt="" aria-hidden="true" />
       </div>
