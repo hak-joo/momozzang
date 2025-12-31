@@ -42,7 +42,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
     const { date, hour, minute } = weddingHallInfo;
     const formattedDate = dayjs(date).format('YYYY.MM.DD');
     const formattedAMPM = AMPMMap[dayjs().hour(hour).minute(minute).format('A')];
-    const formattedTime = dayjs().hour(hour).minute(minute).format(`hh:mm`);
+    const formattedTime = dayjs().hour(hour).minute(minute).format(`HH:mm`);
     const formattedDay = dayMap[dayjs(date).format('dd')];
 
     const weddingDate = `${formattedDate} ${formattedDay} ${formattedTime} ${formattedAMPM}`;
