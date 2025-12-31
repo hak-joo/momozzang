@@ -56,7 +56,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
       {bride && groom && (
         <div className={styles.contents}>
           <div>
-            {`신랑 ${bride.name}`} <PixelHeart className={styles.heart} /> {`신부 ${groom.name}`}
+            {`신랑 ${groom.name}`} <PixelHeart className={styles.heart} /> {`신부 ${bride.name}`}
           </div>
           {weddingDate && <div>{weddingDate}</div>}
         </div>
