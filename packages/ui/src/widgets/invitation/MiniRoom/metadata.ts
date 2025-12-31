@@ -24,7 +24,7 @@ export const MINI_ROOM_METADATA: MiniRoomMetadata[] = [
     label: '클래식 가든',
     imageSrc: 'mini-room.png',
     restrictedZones: [
-      { x1: 0, x2: 100, y1: 0, y2: 40 },
+      { x1: 0, x2: 100, y1: 0, y2: 55 },
       { x1: 40, x2: 70, y1: 50, y2: 70 },
     ],
     frame: { minX: 10, maxX: 90, minY: 28, maxY: 92 },
