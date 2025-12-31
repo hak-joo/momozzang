@@ -163,7 +163,7 @@ export function Account() {
       </Accordion.Root>
 
       <div className={styles.footer}>
-        <DdayBadge remainingDays={10} />
+        <DdayBadge />
         <p> 화환은 감사히 마음으로 받겠습니다.</p>
         <p> 저희를 생각해 주시는 마음만으로도 감사드립니다.</p>
       </div>
