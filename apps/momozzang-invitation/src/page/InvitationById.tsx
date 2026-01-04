@@ -18,7 +18,21 @@ function InvitationByIdPage() {
   }
 
   if (invitationQuery.isPending) {
-    return <div>Loading invitation...</div>;
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          background: '#000',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   if (invitationQuery.isError || !invitationQuery.data) {

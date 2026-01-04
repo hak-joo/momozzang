@@ -4,12 +4,12 @@ import type { MapProviderKey, MapProviderSpec } from './types';
 
 type MapProviders = Record<MapProviderKey, MapProviderSpec> | null;
 
-export function useMapNavigation(mapProviders: MapProviders) {
+export function useMapNavigation(mapProviders: MapProviders, isMock = false) {
   return useCallback(
     (providerKey: MapProviderKey) =>
       (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (!mapProviders || typeof window === 'undefined') return;
+        if (!mapProviders || typeof window === 'undefined' || isMock) return;
 
         const provider = mapProviders[providerKey];
         const mobile = isIOS() || isAndroid();

@@ -15,6 +15,7 @@ import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import { useMapNavigation } from './useMapNavigation';
+import { useParams } from 'react-router-dom';
 
 type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
 
@@ -26,6 +27,8 @@ const transportationIcon: Record<TransportationType, { src: string; label: strin
 };
 
 export function Direction() {
+  const { invitationId } = useParams();
+  const isMock = !invitationId;
   const {
     weddingHallInfo: { latitude, longitude, hallName, hallDetail, address, tel },
     etcInfo,
@@ -34,11 +37,12 @@ export function Direction() {
   const handleCopyAddress = () => {
     if (navigator?.clipboard?.writeText) {
       void navigator.clipboard.writeText(address);
-      info({ title: '주소가 복사되었습니다.', description: address });
+      info({ title: '주소가 복사되었습니다.' });
     }
   };
 
   const handleContact = () => {
+    if (isMock) return;
     if (typeof window === 'undefined') return;
     window.location.href = `tel:${tel}`;
   };
@@ -48,7 +52,7 @@ export function Direction() {
     return createMapProviders({ latitude, longitude, name: hallName ?? '웨딩홀' });
   }, [latitude, longitude, hallName]);
 
-  const handleClickMapLink = useMapNavigation(mapProviders);
+  const handleClickMapLink = useMapNavigation(mapProviders, isMock);
 
   return (
     <div className={styles.direction}>
