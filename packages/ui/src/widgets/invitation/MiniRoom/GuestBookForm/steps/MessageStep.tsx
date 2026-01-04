@@ -73,7 +73,7 @@ export function MessageStep({ onSubmit, submitting = false }: MessageStepProps) 
           <label className={styles.field}>
             <Input
               value={password}
-              placeholder="숫자 4자리를 입력해주세요"
+              placeholder="비밀번호 4자리를 입력해주세요"
               inputMode="numeric"
               pattern="[0-9]*"
               maxLength={GUESTBOOK_PASSWORD_LENGTH}
