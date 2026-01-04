@@ -18,8 +18,9 @@ const AM_PM_LABEL: Record<AmPm, string> = {
 };
 
 function createTimeLabel(ampm: AmPm, hour: number, minute: number) {
+  const hourLabel = hour > 12 && ampm === 'PM' ? hour - 12 : hour;
   const minuteLabel = minute > 0 ? ` ${minute}분` : '';
-  return `${AM_PM_LABEL[ampm]} ${hour}시${minuteLabel}`;
+  return `${AM_PM_LABEL[ampm]} ${hourLabel}시${minuteLabel}`;
 }
 
 export function WeddingDay({ date, ampm, hour, minute }: WeddingDayProps) {
