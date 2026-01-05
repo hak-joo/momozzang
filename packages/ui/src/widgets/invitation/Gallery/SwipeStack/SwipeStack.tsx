@@ -125,6 +125,9 @@ export function SwipeStack({
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
+      // 이미 드래그 중이거나 캡처된 상태면 무시
+      if (isDraggingRef.current) return;
+
       (e.target as Element).setPointerCapture?.(e.pointerId);
       isDraggingRef.current = true;
       setIsSnapping(false);
@@ -137,7 +140,10 @@ export function SwipeStack({
 
       // 드래그 중 스크롤 방지
       if (rootElRef.current) {
-        touchActionRestoreRef.current = rootElRef.current.style.touchAction || null;
+        // 이미 저장된 값이 있다면(비정상 케이스) 덮어쓰지 않음
+        if (touchActionRestoreRef.current === null) {
+          touchActionRestoreRef.current = rootElRef.current.style.touchAction || null;
+        }
         rootElRef.current.style.touchAction = 'none';
       }
       lockScroll();
@@ -189,6 +195,7 @@ export function SwipeStack({
       if (rootElRef.current) {
         rootElRef.current.style.touchAction =
           touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
+        touchActionRestoreRef.current = null;
       }
       unlockScroll();
     },

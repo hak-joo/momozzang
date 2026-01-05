@@ -6,6 +6,9 @@ export function useScrollLock(resolveTarget: ScrollTargetResolver) {
   const restoreRef = useRef<{ el: HTMLElement; overflow: string | null } | null>(null);
 
   const lockScroll = useCallback(() => {
+    // 이미 잠금 상태라면 덮어쓰지 않음 (중복 lock 호출 방지)
+    if (restoreRef.current) return;
+
     const el = resolveTarget();
     if (!el) return;
     restoreRef.current = { el, overflow: el.style.overflow || null };
