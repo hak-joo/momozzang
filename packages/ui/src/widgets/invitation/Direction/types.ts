@@ -6,5 +6,6 @@ export type MapProviderSpec = {
   androidScheme?: string;
   iosStore?: string;
   androidStore?: string;
+  androidPackage?: string;
   webFallback?: string;
 };

@@ -17,6 +17,7 @@ export function createMapProviders(params: {
       androidScheme: `nmap://route/car?dlat=${lat}&dlng=${lng}&dname=${encodedName}`,
       iosStore: 'https://apps.apple.com/kr/app/naver-map-navigation/id311867728',
       androidStore: 'https://play.google.com/store/apps/details?id=com.nhn.android.nmap',
+      androidPackage: 'com.nhn.android.nmap',
       webFallback: `https://map.naver.com/v5/directions/${lng},${lat}`,
     },
     tmap: {
@@ -24,7 +25,8 @@ export function createMapProviders(params: {
       iosScheme: `tmap://route?goalname=${encodedName}&goalx=${lng}&goaly=${lat}`,
       androidScheme: `tmap://route?goalname=${encodedName}&goalx=${lng}&goaly=${lat}`,
       iosStore: 'https://apps.apple.com/kr/app/t-map-내비게이션-운전대리/id431589174',
-      androidStore: 'market://details?id=com.sktelecom.tmap.ku',
+      androidStore: 'market://details?id=com.skt.tmap.ku',
+      androidPackage: 'com.skt.tmap.ku',
     },
     kakaoNavi: {
       label: '카카오맵 지도',
@@ -32,6 +34,7 @@ export function createMapProviders(params: {
       androidScheme: `kakaonavi://navigate?elat=${lat}&elng=${lng}&ename=${encodedName}`,
       iosStore: 'https://apps.apple.com/kr/app/kakao-navi/id869776366',
       androidStore: 'https://play.google.com/store/apps/details?id=com.locnall.KimGiSa',
+      androidPackage: 'com.locnall.KimGiSa',
       webFallback: `https://map.kakao.com/link/to/${encodedName},${lat},${lng}`,
     },
   };
