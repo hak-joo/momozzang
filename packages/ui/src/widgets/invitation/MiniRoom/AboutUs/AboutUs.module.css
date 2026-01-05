@@ -100,18 +100,24 @@
 }
 
 .contents {
-  padding: 0px 12px;
+  padding-right: 12px;
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
 
   .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     flex: 1;
     color: var(--Purple-Purple_text, #512985);
-    .title {
+    .contentTitle {
       display: flex;
-      justify-content: center;
       align-items: center;
       gap: 2px;
+
+      margin-bottom: 4px;
       .relation {
         @mixin typo-body2;
       }

@@ -65,7 +65,7 @@ export function AboutUs({ className }: Props) {
 
           <div className={styles.contents}>
             <div className={styles.item}>
-              <div className={styles.title}>
+              <div className={styles.contentTitle}>
                 <span className={styles.relation}>신랑</span>
                 <span className={styles.name}>{couple.groom.name}</span>
               </div>
@@ -73,7 +73,7 @@ export function AboutUs({ className }: Props) {
             </div>
 
             <div className={styles.item}>
-              <div className={styles.title}>
+              <div className={styles.contentTitle}>
                 <span className={styles.relation}>신부</span>
                 <span className={styles.name}>{couple.bride.name}</span>
               </div>
