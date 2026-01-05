@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import styles from './Direction.module.css';
 import { NaverMap } from '@shared/ui/NaverMap';
@@ -114,6 +114,9 @@ export function Direction() {
           if (item == null || typeof item === 'boolean') return null;
           const icon = transportationIcon[type];
 
+          const formatSubInfo = (line: string) =>
+            line.replace(/^-\\s*/, '').replaceAll('\\n', '\n');
+
           return (
             <div className={styles.transportation} key={type}>
               <div className={styles.title}>
@@ -122,22 +125,35 @@ export function Direction() {
               </div>
               <div className={styles.description}>
                 {item.info.map((line, index) => (
-                  <div key={`${type}-info-${index}`} className={styles.info}>
-                    <span className={styles.block} aria-hidden />
-                    <span className={styles.descriptionText}>{line}</span>
-                  </div>
+                  <Fragment key={`${type}-info-${index}`}>
+                    <div className={styles.info}>
+                      <span className={styles.block} aria-hidden />
+                      <span className={styles.descriptionText}>{line}</span>
+                    </div>
+                    {item.subInfo?.[index] && (
+                      <div className={styles.subDescription}>
+                        <span className={styles.subDescriptionBullet} aria-hidden>
+                          -
+                        </span>
+                        <span className={styles.subDescriptionText}>
+                          {formatSubInfo(item.subInfo[index])}
+                        </span>
+                      </div>
+                    )}
+                  </Fragment>
                 ))}
               </div>
               <div>
                 {item.subInfo &&
-                  item.subInfo.map((line, index) => (
-                    <div key={`${type}-sub-${index}`} className={styles.subDescription}>
+                  item.subInfo.slice(item.info.length).map((line, index) => (
+                    <div
+                      key={`${type}-sub-${item.info.length + index}`}
+                      className={styles.subDescription}
+                    >
                       <span className={styles.subDescriptionBullet} aria-hidden>
                         -
                       </span>
-                      <span className={styles.subDescriptionText}>
-                        {line.replace(/^-\\s*/, '').replaceAll('\\n', '\n')}
-                      </span>
+                      <span className={styles.subDescriptionText}>{formatSubInfo(line)}</span>
                     </div>
                   ))}
               </div>

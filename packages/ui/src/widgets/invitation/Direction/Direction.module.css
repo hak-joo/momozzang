@@ -81,7 +81,6 @@
     }
 
     .description {
-      margin-bottom: 8px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -102,7 +101,7 @@
       display: flex;
       gap: 6px;
       align-items: flex-start;
-      margin-top: 4px;
+      margin-top: 0;
     }
 
     .subDescriptionBullet {
@@ -117,6 +116,14 @@
       color: var(--Purple-Purple_desc, #967eb6);
       flex: 1;
       white-space: pre-line;
+    }
+
+    .info + .subDescription {
+      margin-top: 4px;
+    }
+
+    .subDescription + .info {
+      margin-top: 4px;
     }
   }
 }
