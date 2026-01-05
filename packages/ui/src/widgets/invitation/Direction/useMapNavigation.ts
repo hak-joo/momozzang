@@ -10,7 +10,15 @@ type MapProviders = Record<MapProviderKey, MapProviderSpec> | null;
 // For this snippet, we keep the existing "try scheme -> timeout -> fallback" logic for iOS,
 // while using the cleaner "intent://" approach for Android.
 
-export function useMapNavigation(mapProviders: MapProviders, isMock = false) {
+export function useMapNavigation(
+  mapProviders: MapProviders,
+  options?: {
+    isMock?: boolean;
+    onFallback?: (fallbackUrl: string) => void;
+  },
+) {
+  const { isMock = false, onFallback } = options ?? {};
+
   return useCallback(
     (providerKey: MapProviderKey) =>
       (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
@@ -25,26 +33,13 @@ export function useMapNavigation(mapProviders: MapProviders, isMock = false) {
         if (isAndroidDevice) {
           const { androidScheme, androidPackage, webFallback, androidStore } = provider;
           if (!androidScheme || !androidPackage) return;
-
-          // Remove the scheme prefix (e.g. "nmap://") to get the path/query
-          // format: nmap://route/car?... -> route/car?...
-          // But actually, we need to construct the intent properly.
-          // Usually: intent://[HOST]/[PATH]?[QUERY]#Intent;scheme=[SCHEME];package=[PACKAGE];...
           
-          // Let's parse the androidScheme to extract host/path/query
-          // e.g. nmap://route/car?dlat=...
-          // scheme: nmap
-          // host+path+query: //route/car?dlat=...
-          
-          // A safer way is ensuring we replace the strictly known prefix.
-          // Or we can just strip everything before `://`
           const schemeIndex = androidScheme.indexOf('://');
           if (schemeIndex === -1) return;
           
           const schemeName = androidScheme.substring(0, schemeIndex);
-          const resourcePath = androidScheme.substring(schemeIndex + 3); // "route/car?dlat=..."
+          const resourcePath = androidScheme.substring(schemeIndex + 3);
 
-          // Fallback priority: Web URL -> Store URL
           const fallback = webFallback ?? androidStore ?? '';
           const fallbackParam = fallback ? `S.browser_fallback_url=${encodeURIComponent(fallback)};` : '';
 
@@ -54,83 +49,34 @@ export function useMapNavigation(mapProviders: MapProviders, isMock = false) {
           return;
         }
 
-        // 2) iOS / Others: Use the custom scheme + timeout fallback approach
+        // 2) iOS: Try Custom Scheme, then trigger onFallback if provided
         const scheme = provider.iosScheme;
-        const fallbackUrl = provider.webFallback ?? provider.iosStore; // Fallback to store if web undefined
+        const fallbackUrl = provider.webFallback ?? provider.iosStore;
 
         if (isIOSDevice && scheme) {
-          const start = Date.now();
-          let cancelled = false;
-          let timer: number;
-          let blurCheck: number | undefined;
-
-          const cleanup = () => {
-            window.clearTimeout(timer);
-            if (blurCheck) window.clearTimeout(blurCheck);
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('pagehide', cancelFallback);
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-          };
-
-          const cancelFallback = () => {
-            cancelled = true;
-            cleanup();
-          };
-
-          const handleVisibilityChange = () => {
-            if (document.visibilityState === 'hidden') {
-              cancelFallback();
-            }
-          };
-
-          const handleBlur = () => {
-            // If the alert "Open in..." appears or app opens, blur happens.
-            // On some iOS versions, we might want to cancel fallback if we blur quickly.
-            blurCheck = window.setTimeout(() => {
-              if (document.visibilityState === 'hidden') {
-                cancelFallback();
-              }
-            }, 250);
-          };
-          
-          const openFallback = (forceSelf = false) => {
-            if (!fallbackUrl) return;
-            if (forceSelf) {
-             window.location.href = fallbackUrl;
-            } else {
-             window.location.href = fallbackUrl;
-            }
-          };
-
-          timer = window.setTimeout(() => {
-            if (cancelled) return;
-            cleanup();
-            if (Date.now() - start < 2000) {
-              openFallback(true);
-            }
-          }, 1500);
-
-          window.addEventListener('blur', handleBlur);
-          window.addEventListener('pagehide', cancelFallback);
-          document.addEventListener('visibilitychange', handleVisibilityChange);
-
-          window.location.href = scheme;
-          return;
+           window.location.href = scheme;
+           
+           // If we have a fallback URL and a callback, notify the parent to show UI
+           if (fallbackUrl && onFallback) {
+             // We use a small delay so the user sees "Open in App?" dialog first.
+             setTimeout(() => {
+               onFallback(fallbackUrl);
+             }, 500);
+           }
+           return;
         }
 
-        // 3) PC or other non-mobile: Simply open the Web Fallback
+        // 3) PC / Others
         const desktopFallback = provider.webFallback;
         if (desktopFallback) {
           window.open(desktopFallback, '_blank', 'noopener,noreferrer');
         } else {
-          // If no web fallback (e.g. TMap), maybe open store or do nothing?
-          // Existing logic opened store if no web link.
           if (provider.androidStore || provider.iosStore) {
              const store = provider.androidStore || provider.iosStore;
              window.open(store, '_blank', 'noopener,noreferrer');
           }
         }
       },
-    [mapProviders],
+    [mapProviders, isMock, onFallback],
   );
 }

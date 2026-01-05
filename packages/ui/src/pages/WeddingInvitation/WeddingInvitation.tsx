@@ -13,6 +13,7 @@ import springImage from '../../shared/assets/images/spring.png';
 import { Account } from '@widgets/invitation/Account';
 import { Blur } from '@shared/ui/Blur';
 import MiniRoom from '@widgets/invitation/MiniRoom';
+import { MessageDialogProvider } from '@shared/ui/MessageDialog';
 
 interface Props {
   metadata: WeddingInvitation;
@@ -47,38 +48,40 @@ export function WeddingInvitation({ metadata }: Props) {
   };
 
   return (
-    <main className={styles.main}>
-      <div className={styles.decorator}></div>
-      <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
-      <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
-      <Header currentMenu={currentMenu} isAtTop={isAtTop} onMenuClick={scrollToMenu} />
-      <div
-        id="main-wrapper"
-        className={styles.mainWrapper}
-        ref={mainWrapperRef}
-        data-at-top={isAtTop ? 'true' : 'false'}
-      >
-        <Blur className={styles.blur} />
+    <MessageDialogProvider>
+      <main className={styles.main}>
+        <div className={styles.decorator}></div>
+        <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
+        <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
+        <Header currentMenu={currentMenu} isAtTop={isAtTop} onMenuClick={scrollToMenu} />
+        <div
+          id="main-wrapper"
+          className={styles.mainWrapper}
+          ref={mainWrapperRef}
+          data-at-top={isAtTop ? 'true' : 'false'}
+        >
+          <Blur className={styles.blur} />
 
-        <SectionContainer ref={homeRef}>
-          <Home data={metadata} />
-        </SectionContainer>
+          <SectionContainer ref={homeRef}>
+            <Home data={metadata} />
+          </SectionContainer>
 
-        <SectionContainer ref={miniRoomRef}>
-          <MiniRoom />
-        </SectionContainer>
-        <SectionContainer ref={galleryRef}>
-          <Gallery />
-        </SectionContainer>
+          <SectionContainer ref={miniRoomRef}>
+            <MiniRoom />
+          </SectionContainer>
+          <SectionContainer ref={galleryRef}>
+            <Gallery />
+          </SectionContainer>
 
-        <SectionContainer ref={directionsRef}>
-          <Direction />
-        </SectionContainer>
+          <SectionContainer ref={directionsRef}>
+            <Direction />
+          </SectionContainer>
 
-        <SectionContainer ref={infoRef}>
-          <Account />
-        </SectionContainer>
-      </div>
-    </main>
+          <SectionContainer ref={infoRef}>
+            <Account />
+          </SectionContainer>
+        </div>
+      </main>
+    </MessageDialogProvider>
   );
 }

@@ -13,6 +13,7 @@ import busImg from '@shared/assets/images/bus.png';
 import type { MapProviderKey, MapProviderSpec } from './types';
 import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
+import { useMessageDialog } from '@shared/ui/MessageDialog';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import { useMapNavigation } from './useMapNavigation';
 import { useParams } from 'react-router-dom';
@@ -34,6 +35,8 @@ export function Direction() {
     etcInfo,
   } = useInvitation();
   const { info } = useToast();
+  const confirm = useMessageDialog();
+
   const handleCopyAddress = () => {
     if (navigator?.clipboard?.writeText) {
       void navigator.clipboard.writeText(address);
@@ -47,12 +50,28 @@ export function Direction() {
     window.location.href = `tel:${tel}`;
   };
 
+  const handleFallback = async (fallbackUrl: string) => {
+    const result = await confirm({
+      title: '앱이 열리지 않았나요?',
+      message: '앱이 설치되어 있지 않다면\n웹으로 연결해 드릴까요?',
+      confirmText: '웹으로 연결',
+      cancelText: '취소',
+    });
+
+    if (result) {
+      window.location.href = fallbackUrl;
+    }
+  };
+
   const mapProviders = useMemo<Record<MapProviderKey, MapProviderSpec> | null>(() => {
     if (typeof latitude !== 'number' || typeof longitude !== 'number') return null;
     return createMapProviders({ latitude, longitude, name: hallName ?? '웨딩홀' });
   }, [latitude, longitude, hallName]);
 
-  const handleClickMapLink = useMapNavigation(mapProviders, isMock);
+  const handleClickMapLink = useMapNavigation(mapProviders, {
+    isMock,
+    onFallback: handleFallback,
+  });
 
   return (
     <div className={styles.direction}>

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import * as BottomSheet from '@shared/ui/BottomSheet';
 import { Button } from '@shared/ui/Button';
-import { MessageDialogProvider, useMessageDialog } from '@shared/ui/MessageDialog';
+import { useMessageDialog } from '@shared/ui/MessageDialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { saveGuestBook, guestBookQueryKeys } from '../api/guestBook';
 import { GuestBookFormProvider, useGuestBookFormContext } from './context';
@@ -14,11 +14,9 @@ import { PixelChevronLeftIcon } from '@shared/ui/Icon/PixelChevron';
 
 export function GuestBookForm() {
   return (
-    <MessageDialogProvider>
-      <GuestBookFormProvider>
-        <GuestBookFormContainer />
-      </GuestBookFormProvider>
-    </MessageDialogProvider>
+    <GuestBookFormProvider>
+      <GuestBookFormContainer />
+    </GuestBookFormProvider>
   );
 }
 
