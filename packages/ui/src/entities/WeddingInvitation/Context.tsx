@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import type { WeddingInvitation } from './model';
 
 const InvitationContext = createContext<WeddingInvitation | null>(null);
@@ -11,6 +11,13 @@ export function InvitationProvider({
   children: React.ReactNode;
 }) {
   const value = useMemo(() => data, [data]);
+
+  useEffect(() => {
+    if (data.invitationInfo.title) {
+      document.title = data.invitationInfo.title;
+    }
+  }, [data.invitationInfo.title]);
+
   return <InvitationContext.Provider value={value}>{children}</InvitationContext.Provider>;
 }
 
