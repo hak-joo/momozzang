@@ -87,6 +87,11 @@ export function useMapNavigation(
         if (desktopFallback) {
           window.open(desktopFallback, '_blank', 'noopener,noreferrer');
         } else {
+          if (providerKey === 'tmap') {
+            alert('티맵은 모바일 앱에서만 이용 가능합니다.');
+            return;
+          }
+
           if (provider.androidStore || provider.iosStore) {
              const store = provider.androidStore || provider.iosStore;
              window.open(store, '_blank', 'noopener,noreferrer');

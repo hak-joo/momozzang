@@ -30,11 +30,12 @@ export function createMapProviders(params: {
     },
     kakaoNavi: {
       label: '카카오맵 지도',
-      iosScheme: `kakaonavi://navigate?elat=${lat}&elng=${lng}&ename=${encodedName}`,
-      androidScheme: `kakaonavi://navigate?elat=${lat}&elng=${lng}&ename=${encodedName}`,
-      iosStore: 'https://apps.apple.com/kr/app/kakao-navi/id869776366',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.locnall.KimGiSa',
-      androidPackage: 'com.locnall.KimGiSa',
+      // Switch from kakaonavi to kakaomap for generic usage & better URL support
+      iosScheme: `kakaomap://route?ep=${lat},${lng}&by=CAR`, 
+      androidScheme: `kakaomap://route?ep=${lat},${lng}&by=CAR`,
+      iosStore: 'https://apps.apple.com/kr/app/kakao-map/id304608425',
+      androidStore: 'market://details?id=net.daum.android.map',
+      androidPackage: 'net.daum.android.map',
       webFallback: `https://map.kakao.com/link/to/${encodedName},${lat},${lng}`,
     },
   };

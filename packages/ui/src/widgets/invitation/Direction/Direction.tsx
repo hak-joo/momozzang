@@ -59,7 +59,7 @@ export function Direction() {
     });
 
     if (result) {
-      window.location.href = fallbackUrl;
+      window.open(fallbackUrl, '_blank');
     }
   };
 
