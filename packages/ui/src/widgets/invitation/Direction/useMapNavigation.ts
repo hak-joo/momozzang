@@ -56,13 +56,29 @@ export function useMapNavigation(
         if (isIOSDevice && scheme) {
            window.location.href = scheme;
            
-           // If we have a fallback URL and a callback, notify the parent to show UI
            if (fallbackUrl && onFallback) {
-             // We use a small delay so the user sees "Open in App?" dialog first.
-             setTimeout(() => {
-               onFallback(fallbackUrl);
-             }, 500);
+             // 1. 예약: 2.5초 뒤에 "앱 안 열렸나요?" 다이얼로그 띄우기
+             const timer = setTimeout(() => {
+               // 여전히 페이지가 보이고(visible), 포커스가 있다면 -> 앱이 안 열린 것으로 간주
+               if (document.visibilityState === 'visible') {
+                  onFallback(fallbackUrl);
+               }
+             }, 2500);
+
+             // 2. 감시: 만약 그 사이에 앱으로 이동해서 페이지가 숨겨지면(hidden) -> 예약 취소!
+             const checkVisibility = () => {
+               if (document.visibilityState === 'hidden') {
+                 clearTimeout(timer);
+                 document.removeEventListener('visibilitychange', checkVisibility);
+               }
+             };
+
+             document.addEventListener('visibilitychange', checkVisibility);
+             
+             // (선택) PageHide(탭 닫기/이동) 시에도 취소
+             window.addEventListener('pagehide', () => clearTimeout(timer), { once: true });
            }
+           
            return;
         }
 
