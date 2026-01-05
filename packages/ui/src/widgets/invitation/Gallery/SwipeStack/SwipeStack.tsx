@@ -57,6 +57,9 @@ export function SwipeStack({
   const driftFromStartRef = useRef(0); // 시작점 대비 이동량(연속 인덱스)
   const armedDirectionRef = useRef<-1 | 0 | 1>(0); // +1: 다음(왼쪽 스와이프), -1: 이전
 
+  const startPointerYRef = useRef(0);
+  const isSwipeLockedRef = useRef(false);
+
   // 방향 추정을 위해 직전 activeIndex 보관
   const lastActiveIndexRef = useRef(activeIndex);
   const [swipeDirection, setSwipeDirection] = useState<-1 | 0 | 1>(0);
@@ -130,48 +133,74 @@ export function SwipeStack({
 
       (e.target as Element).setPointerCapture?.(e.pointerId);
       isDraggingRef.current = true;
+      isSwipeLockedRef.current = false; // 초기화
       setIsSnapping(false);
 
       startPointerXRef.current = e.clientX;
+      startPointerYRef.current = e.clientY;
       startActiveIndexRef.current = activeIndex;
 
       driftFromStartRef.current = 0;
       armedDirectionRef.current = 0;
 
-      // 드래그 중 스크롤 방지
-      if (rootElRef.current) {
-        // 이미 저장된 값이 있다면(비정상 케이스) 덮어쓰지 않음
-        if (touchActionRestoreRef.current === null) {
-          touchActionRestoreRef.current = rootElRef.current.style.touchAction || null;
-        }
-        rootElRef.current.style.touchAction = 'none';
-      }
-      lockScroll();
+      // Note: onPointerDown에서 lockScroll()을 호출하지 않음. 방향 확인 후 호출.
     },
-    [activeIndex, lockScroll],
+    [activeIndex],
   );
 
   const onPointerMove = useCallback(
     (e: React.PointerEvent) => {
       if (!isDraggingRef.current) return;
+
       const dx = e.clientX - startPointerXRef.current;
+      const dy = e.clientY - startPointerYRef.current;
       const widthPx = widthPxRef.current;
 
-      const deltaIndex = -(dx / widthPx) * sensitivity;
-      const nextActive = startActiveIndexRef.current + deltaIndex;
-      setActiveIndex(nextActive);
+      // 아직 방향이 결정되지 않았다면 판별 시도
+      if (!isSwipeLockedRef.current) {
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
 
-      const drift = nextActive - startActiveIndexRef.current;
-      driftFromStartRef.current = drift;
-      const absDrift = Math.abs(drift);
+        // 데드존(10px)을 넘어야 방향 판별 시작
+        if (absDx < 10 && absDy < 10) return;
 
-      if (absDrift >= COMMIT_DEADZONE) {
-        armedDirectionRef.current = drift > 0 ? +1 : -1;
-      } else {
-        armedDirectionRef.current = 0;
+        if (absDx > absDy) {
+          // 가로 스와이프 확정 -> 스크롤 잠금 및 스와이프 시작
+          isSwipeLockedRef.current = true;
+          if (rootElRef.current) {
+            if (touchActionRestoreRef.current === null) {
+              touchActionRestoreRef.current = rootElRef.current.style.touchAction || null;
+            }
+            rootElRef.current.style.touchAction = 'none';
+          }
+          lockScroll();
+        } else {
+          // 세로 스크롤 확정 -> 드래그 취소 및 브라우저에게 제어권 넘김
+          isDraggingRef.current = false;
+          (e.target as Element).releasePointerCapture?.(e.pointerId);
+          return;
+        }
+      }
+
+      // 스와이프 로직 (가로 스와이프 확정 상태)
+      if (isSwipeLockedRef.current) {
+        // dx를 반영할 때, startPointerX가 아니라 "현재 위치 - 시작 위치"를 사용하므로
+        // 방향 판별 전 움직임도 포함해서 자연스럽게 이어짐.
+        const deltaIndex = -(dx / widthPx) * sensitivity;
+        const nextActive = startActiveIndexRef.current + deltaIndex;
+        setActiveIndex(nextActive);
+
+        const drift = nextActive - startActiveIndexRef.current;
+        driftFromStartRef.current = drift;
+
+        if (Math.abs(drift) >= COMMIT_DEADZONE) {
+          armedDirectionRef.current = drift > 0 ? +1 : -1;
+        } else {
+          armedDirectionRef.current = 0;
+        }
       }
     },
-    [sensitivity],
+    [sensitivity, lockScroll],
   );
 
   const onPointerUp = useCallback(
@@ -180,24 +209,49 @@ export function SwipeStack({
       if (!isDraggingRef.current) return;
       isDraggingRef.current = false;
 
-      const startInt = Math.round(startActiveIndexRef.current);
-      let targetInt = Math.round(activeIndex);
+      // 가로 스와이프가 확정되지 않은 상태(짧은 탭 등)였다면 아무것도 하지 않거나,
+      // 탭 동작으로 간주할 수 있음. 여기서는 그냥 종료.
+      // 하지만 스와이프 락이 걸린 상태였다면 스냅 처리 및 스크롤 잠금 해제 필요.
 
-      if (armedDirectionRef.current !== 0 && targetInt === startInt) {
-        targetInt = startInt + (armedDirectionRef.current > 0 ? +1 : -1);
+      if (isSwipeLockedRef.current) {
+         const startInt = Math.round(startActiveIndexRef.current);
+          let targetInt = Math.round(activeIndex);
+
+          if (armedDirectionRef.current !== 0 && targetInt === startInt) {
+            targetInt = startInt + (armedDirectionRef.current > 0 ? +1 : -1);
+          }
+
+          beginSnap(targetInt, { resetAutoClock: true });
+
+          if (rootElRef.current) {
+            rootElRef.current.style.touchAction =
+              touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
+            touchActionRestoreRef.current = null;
+          }
+          unlockScroll();
+      } else {
+        // 스와이프가 아니었으므로 스냅 처리만 (혹은 원래 자리 유지)
+        // 하지만 activeIndex가 변하지 않았으므로 beginSnap 호출 필요 없음.
+        // 다만 클릭 등으로 인식될 수 있음. 여기서는 별도 처리 없음.
+        // 안전을 위해 스냅 타이머만 정리
+        setIsSnapping(false);
       }
-
-      beginSnap(targetInt, { resetAutoClock: true });
+      
+      // Safety Unlock: 혹시 모를 잠금 고착 방지를 위해 일정 시간 후 잠금 해제 시도
+      // 단, 새로운 드래그가 시작되지 않았을 때만 수행
+      setTimeout(() => {
+        if (!isDraggingRef.current) {
+          unlockScroll();
+          if (rootElRef.current && touchActionRestoreRef.current !== null) {
+            rootElRef.current.style.touchAction = touchActionRestoreRef.current;
+            touchActionRestoreRef.current = null;
+          }
+        }
+      }, 100);
 
       driftFromStartRef.current = 0;
       armedDirectionRef.current = 0;
-
-      if (rootElRef.current) {
-        rootElRef.current.style.touchAction =
-          touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
-        touchActionRestoreRef.current = null;
-      }
-      unlockScroll();
+      isSwipeLockedRef.current = false;
     },
     [activeIndex, beginSnap, unlockScroll],
   );
