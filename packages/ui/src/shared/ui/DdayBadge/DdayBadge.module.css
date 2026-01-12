@@ -21,9 +21,9 @@
     width: 100%;
     padding: 6px 0px;
     border-radius: 4px;
-    border-top: 1px dashed #82b8f3;
-    border-bottom: 1px dashed #82b8f3;
-    background: #d2e5ff;
+    border-top: 1px dashed var(--color-primary-border, #82b8f3);
+    border-bottom: 1px dashed var(--color-primary-border, #82b8f3);
+    background: var(--color-primary-soft, #d2e5ff);
     box-shadow: 0 0 7px 0 #fff;
 
     font-family: var(--font-DepartureMono);

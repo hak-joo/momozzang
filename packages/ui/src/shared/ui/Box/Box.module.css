@@ -25,18 +25,18 @@
 
   &.primary {
     border: 1px solid rgba(255, 255, 255, 0.5);
-    background: #c2e4ff;
+    background: var(--color-primary-soft, #c2e4ff);
     box-shadow:
       0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
       0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;
     .dot {
-      background: #95aeff;
+      background: var(--color-primary-accent);
     }
   }
 
   &.secondary {
     border: 1px solid var(--basic-white-05, rgba(255, 255, 255, 0.5));
-    background: var(--Blue-Blue01, #ebf6ff);
+    background: var(--color-primary-bg-light, #ebf6ff);
     box-shadow: 0 4px 4px 0 rgba(176, 196, 255, 0.3) inset;
 
     .dot {
@@ -60,7 +60,7 @@
     border: none;
     box-shadow: none;
     .dot {
-      background: #95aeff;
+      background: var(--color-primary-accent, #95aeff);
     }
   }
 }

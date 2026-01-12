@@ -12,7 +12,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border-radius: 14px;
 
-  border: 1px solid var(--Blue-Blue03, #a1ceff);
+  border: 1px solid var(--Blue-Blue03, var(--color-primary-border, #a1ceff));
 
   overflow: hidden;
 }
@@ -22,7 +22,7 @@
   flex-direction: column;
   align-items: center;
   min-height: 118px;
-  color: var(--Blue-Blue03, #a1ceff);
+  color: var(--Blue-Blue03, var(--color-primary-border, #a1ceff));
   opacity: 0.89;
 }
 
@@ -37,7 +37,7 @@
   text-align: center;
   font-family: var(--font-PyeongChang);
   background-color: #fff;
-  border-bottom: 1px solid #c2e4ff;
+  border-bottom: 1px solid var(--color-primary-soft, #c2e4ff);
 
   display: flex;
   justify-content: center;

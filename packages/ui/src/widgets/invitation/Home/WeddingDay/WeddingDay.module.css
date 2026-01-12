@@ -18,7 +18,7 @@
   width: 24px;
   height: 30px;
   border-radius: 5.4px;
-  background: #95aeff;
+  background: var(--color-primary-accent, #95aeff);
   box-shadow:
     2.7px 3.6px 3.6px 0 rgba(144, 186, 241, 0.25) inset,
     0 -1.8px 1.8px 0 rgba(255, 255, 255, 0.6) inset,
@@ -30,7 +30,7 @@
 }
 
 .separator {
-  color: #76a3ff;
+  color: var(--color-primary-accent, #76a3ff);
   text-align: center;
   font-family: var(--font-DungGeunMo);
   font-size: 18px;
@@ -42,7 +42,7 @@
 
 .timeText {
   margin-top: 16px;
-  color: #6aa3ff;
+  color: var(--color-primary-accent, #6aa3ff);
   font-size: 16px;
   font-weight: 600;
   text-align: center;
@@ -53,7 +53,7 @@
   position: absolute;
   width: 6px;
   height: 6px;
-  background: #78a9ff;
+  background: var(--color-primary-border, #78a9ff);
 }
 
 .dotTop {
