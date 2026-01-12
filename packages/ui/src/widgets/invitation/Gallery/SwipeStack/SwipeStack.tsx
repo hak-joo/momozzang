@@ -7,6 +7,10 @@ import clsx from 'clsx';
 import speechBubble from '@shared/assets/images/gallery-speech-bubble.png';
 import purpleCat from '@shared/assets/images/purple-cat.png';
 import { useScrollLock } from './useScrollLock';
+import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { getThemeHue } from '@shared/styles/utils';
+import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 
 export type SwipeStackProps = {
   images: GalleryImage[];
@@ -23,6 +27,10 @@ export function SwipeStack({
   aspectRatio = 4 / 4,
   renderRange = 3,
 }: SwipeStackProps) {
+  const { customization } = useInvitation();
+  const themeHue = getThemeHue(customization?.themeColor);
+  const speechBubbleImg = useImageHueShift(speechBubble, themeHue);
+
   const imageCount = images.length;
   const rootElRef = useRef<HTMLDivElement | null>(null);
 
@@ -323,7 +331,7 @@ export function SwipeStack({
       <div
         className={styles.speechBubble}
         style={{
-          backgroundImage: `url(${speechBubble})`,
+          backgroundImage: `url(${speechBubbleImg})`,
         }}
       >
         {normalizeIndex(Math.round(activeIndex)) === imageCount - 1
@@ -332,7 +340,7 @@ export function SwipeStack({
       </div>
 
       <div className={styles.purpleCat}>
-        <img src={purpleCat} alt="" aria-hidden="true" />
+        <ThemedImage src={purpleCat} targetHue={themeHue} alt="" aria-hidden="true" />
       </div>
     </>
   );
