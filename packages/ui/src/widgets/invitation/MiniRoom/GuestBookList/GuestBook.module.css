@@ -1,5 +1,5 @@
 .title {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text);
   text-align: center;
   font-size: 24px;
   font-style: normal;
@@ -23,17 +23,6 @@
   gap: 8px;
   scrollbar-width: none;
   -ms-overflow-style: none;
-}
-
-.buttonAllView {
-  color: var(--Purple-Purple04, #7871c2);
-  text-align: right;
-
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -0.96px;
 }
 
 .guestBookItem {
@@ -65,11 +54,11 @@
     padding: 6px 0;
     @mixin typo-desc2;
     .content {
-      color: var(--Purple-Purple_text, #512985);
+      color: var(--color-primary-text);
     }
 
     .from {
-      color: var(--Purple-Purple_text, #512985);
+      color: var(--color-primary-text);
     }
   }
 }
@@ -89,17 +78,17 @@
     0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
     0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;
 
-  color: var(--Purple-Purple04, #7871c2);
+  color: var(--color-primary-medium);
   text-align: center;
   @mixin typo-desc2;
 }
 
 .totalButton {
   min-height: 20px !important;
-  border-bottom: 2px solid var(--Purple-Purple04, #7871c2);
+  border-bottom: 2px solid var(--color-primary-medium);
   border-radius: 0 !important;
 }
 
 .trashIcon {
-  color: var(--Purple-Purple02, #aca4ff);
+  color: var(--color-primary-border);
 }

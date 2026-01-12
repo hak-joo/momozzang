@@ -1,5 +1,5 @@
 .field {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text);
   font-family: var(--font-PyeongChang);
   font-size: 12px;
   font-style: normal;
@@ -16,7 +16,7 @@
 }
 
 .field::placeholder {
-  color: var(--Purple-Purple03, #a696ea);
+  color: var(--color-primary-base);
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

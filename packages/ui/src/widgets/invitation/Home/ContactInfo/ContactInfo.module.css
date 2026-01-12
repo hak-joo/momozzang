@@ -17,13 +17,13 @@
 }
 
 .title {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   @mixin typo-heading2;
   text-align: center;
 }
 
 .desc {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   @mixin typo-body2;
   text-align: center;
 }
@@ -52,7 +52,7 @@
   &.active {
     --button-plain-color: var(--Basic-Gray_text, #484848);
     .icon {
-      color: var(--Purple-Purple02, #a696ea);
+      color: var(--color-primary-base, #512985);
     }
   }
 }

@@ -16,7 +16,7 @@
 
 .description {
   @mixin typo-body2;
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text);
 }
 
 .body {
@@ -133,7 +133,7 @@
 }
 
 .speechFrom {
-  color: #7c5bb8;
+  color: var(--color-primary-medium);
   font-size: 9px;
   font-weight: 500;
   line-height: 1.2;

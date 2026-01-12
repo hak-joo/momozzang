@@ -14,7 +14,7 @@
 }
 
 .header {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   display: flex;
   align-items: center;
   flex-direction: column;

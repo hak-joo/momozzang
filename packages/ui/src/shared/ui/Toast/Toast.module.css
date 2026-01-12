@@ -69,26 +69,6 @@
   gap: 6px;
 }
 
-.closeButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  border: 1px solid rgba(49, 32, 93, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(236, 231, 244, 0.8);
-  color: #31205d;
-  cursor: pointer;
-}
-
-.closeButton:hover {
-  background: rgba(236, 231, 244, 1);
-}
-
 .closeIcon {
   width: 14px;
   height: 14px;

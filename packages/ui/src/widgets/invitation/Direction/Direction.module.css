@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #512985;
+  color: var(--color-primary-text);
   margin-bottom: 18px;
 }
 
@@ -28,7 +28,7 @@
     align-items: center;
     justify-content: center;
 
-    color: #512985;
+    color: var(--color-primary-text);
     text-align: center;
   }
 
@@ -38,7 +38,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    color: #512985;
+    color: var(--color-primary-text);
     text-align: center;
   }
 }
@@ -75,7 +75,7 @@
     .block {
       width: 6px;
       height: 6px;
-      background: var(--Purple-Purple_text, #512985);
+      background: var(--color-primary-text);
       margin-top: 6px;
       flex-shrink: 0;
     }
@@ -95,7 +95,7 @@
 
     .descriptionText {
       @mixin typo-body2;
-      color: var(--Purple-Purple_text, #512985);
+      color: var(--color-primary-text);
     }
 
     .subDescription {
@@ -107,14 +107,14 @@
 
     .subDescriptionBullet {
       @mixin typo-body2;
-      color: var(--Purple-Purple_desc, #967eb6);
+      color: var(--color-primary-desc);
       flex-shrink: 0;
     }
 
     .subDescriptionText {
       @mixin typo-body2;
       font-family: var(--font-Wanted-Sans);
-      color: var(--Purple-Purple_desc, #967eb6);
+      color: var(--color-primary-desc);
       flex: 1;
       white-space: pre-line;
     }

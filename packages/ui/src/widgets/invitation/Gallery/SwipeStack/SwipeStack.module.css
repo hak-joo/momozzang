@@ -91,7 +91,7 @@
   padding-bottom: 8px;
   margin-bottom: 16px;
   @mixin typo-desc2;
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;

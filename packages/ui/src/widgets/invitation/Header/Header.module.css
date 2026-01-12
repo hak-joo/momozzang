@@ -20,7 +20,7 @@
   @mixin typo-heading4;
   color: #f9f9f9;
   border-radius: 12px 12px 0 0;
-  background: #a696ea;
+  background: var(--color-primary-base);
   box-shadow: 0 0 18px 0 rgba(0, 0, 0, 0.25);
 
   width: 72px;
@@ -29,7 +29,7 @@
   transition: background-color 0.3s ease;
 }
 .header button.active {
-  color: #623f99;
+  color: var(--color-primary-text);
   background: #cbe7fed6;
   border-left: 1px solid #fff;
   border-top: 1px solid #fff;

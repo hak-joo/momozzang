@@ -8,7 +8,7 @@
 
     .title {
       @mixin typo-heading2;
-      color: #512985;
+      color: var(--color-primary-text);
       text-align: center;
     }
 
@@ -16,7 +16,7 @@
       @mixin typo-body2;
       display: flex;
       flex-direction: column;
-      color: #512985;
+      color: var(--color-primary-text);
       text-align: center;
     }
   }
@@ -52,12 +52,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #512985;
+  color: var(--color-primary-text);
 }
 
 .triggerLabel {
   @mixin typo-heading4;
-  color: #512985;
+  color: var(--color-primary-text);
   text-align: center;
 }
 
@@ -71,17 +71,17 @@
 .accountRelation {
   @mixin typo-desc2;
   padding: 2px 6px;
-  color: #512985;
+  color: var(--color-primary-text);
 
   border-radius: 4px;
-  background: #ebe9ff;
+  background: var(--color-primary-bg-light);
   align-self: flex-start;
   margin-bottom: 12px;
 }
 
 .accountOwner {
   @mixin typo-heading3;
-  color: #512985;
+  color: var(--color-primary-text);
 }
 
 .accountDetails {
@@ -92,7 +92,7 @@
 
 .accountDetailValue {
   @mixin typo-desc2;
-  color: #512985;
+  color: var(--color-primary-text);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -100,7 +100,7 @@
 
 .footer {
   margin-top: 20vh;
-  color: #512985;
+  color: var(--color-primary-text);
   text-align: center;
   font-size: 12px;
   font-style: normal;

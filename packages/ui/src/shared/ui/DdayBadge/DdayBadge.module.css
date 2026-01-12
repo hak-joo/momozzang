@@ -14,7 +14,7 @@
   width: 180px;
 
   .heart {
-    color: var(--Purple-Purple02, #aca4ff);
+    color: var(--color-primary-border);
   }
   .day {
     position: relative;
@@ -32,7 +32,7 @@
     font-weight: 400;
     line-height: 24px;
     letter-spacing: -0.54px;
-    color: #a696ea;
+    color: var(--color-primary-base);
   }
 }
 

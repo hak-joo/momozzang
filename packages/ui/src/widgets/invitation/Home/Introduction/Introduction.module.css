@@ -1,5 +1,5 @@
 .wrapper {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   border-radius: 16px;
   border: 1px solid var(--basic-white-05, rgba(255, 255, 255, 0.5));
   background: var(--Blue-Blue02, #c2e4ff);
@@ -19,7 +19,7 @@
 }
 
 .title {
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   text-align: center;
   @mixin typo-heading3;
 }

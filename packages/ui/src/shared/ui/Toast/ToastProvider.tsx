@@ -83,11 +83,6 @@ export function ToastProvider({
                   </RadixToast.Description>
                 ) : null}
               </div>
-              {/* <RadixToast.Close className={styles.closeButton} aria-label="닫기">
-                <span className={styles.closeIcon} aria-hidden>
-                  x
-                </span>
-              </RadixToast.Close> */}
             </RadixToast.Root>
           );
         })}

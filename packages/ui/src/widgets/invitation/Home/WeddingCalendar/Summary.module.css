@@ -27,7 +27,7 @@
 }
 
 .summaryCellHighlight {
-  color: var(--Purple-Purple02, #a696ea);
+  color: var(--color-primary-base, #a696ea);
   opacity: 1;
 }
 

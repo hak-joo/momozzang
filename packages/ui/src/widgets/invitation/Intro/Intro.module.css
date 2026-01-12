@@ -30,18 +30,3 @@
     color: #faffde;
   }
 }
-
-.fallbackButton {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 28px;
-  border: none;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.85);
-  color: #2c205a;
-  font-weight: 600;
-  font-size: 15px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-}

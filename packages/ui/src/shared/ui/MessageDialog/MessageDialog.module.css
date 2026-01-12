@@ -28,13 +28,13 @@
 
 .title {
   @mixin typo-heading2;
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   margin: 0;
 }
 
 .message {
   @mixin typo-body2;
-  color: var(--Purple-Purple_text, #512985);
+  color: var(--color-primary-text, #512985);
   margin: 0;
   line-height: 1.5;
 }
