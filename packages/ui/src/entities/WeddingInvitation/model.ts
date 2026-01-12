@@ -130,9 +130,12 @@ export interface BgmSettings {
   selectedTrackId?: string;
 }
 
+
+export type ThemeColorOptions = 'PURPLE' | 'GREEN' | 'PINK' | 'BLUE';
+
 export interface Customization {
   enabled: boolean;
-  themeColor: string; // ex) "#F1FDF3"
+  themeColor: ThemeColorOptions; // ex) "PURPLE"
   mainImageUrl: string; // 메인 이미지(대표 대신 유지)
   showDDay: boolean;
   mood?: '설렘' | '기대' | '기쁨' | '즐거움' | '감사' | '행복';

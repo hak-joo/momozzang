@@ -3,9 +3,16 @@
   --color-primary-strong: #7f6dd9;
   --color-primary-soft: #c3b6f3;
   --color-primary-text: #512985;
+  --color-primary-desc: #967eb6;
   --color-primary-contrast: #ffffff;
+
   --color-primary-accent: #95aeff;
-  --color-surface: #f9f8ff;
+  --color-primary-border: #aca4ff;
+  --color-primary-medium: #7871c2;
+
+  --color-primary-bg-light: #ebe9ff;
+  --color-primary-bg-pale: #f0e6ff;
+
   --color-disabled: #d5d2f6;
 
   --button-radius: 8px;
