@@ -14,6 +14,9 @@ import { Account } from '@widgets/invitation/Account';
 import { Blur } from '@shared/ui/Blur';
 import MiniRoom from '@widgets/invitation/MiniRoom';
 import { MessageDialogProvider } from '@shared/ui/MessageDialog';
+import { getThemeVariables, getThemeHue } from '@shared/styles/utils';
+import { useImageHueShift } from '@shared/hooks/useImageHueShift';
+import bgBlue from '../../shared/assets/images/bg-blue.png';
 
 interface Props {
   metadata: WeddingInvitation;
@@ -47,9 +50,14 @@ export function WeddingInvitation({ metadata }: Props) {
     });
   };
 
+
+  const themeVars = getThemeVariables(metadata.customization?.themeColor);
+  const themeHue = getThemeHue(metadata.customization?.themeColor);
+  const bgImage = useImageHueShift(bgBlue, themeHue);
+
   return (
     <MessageDialogProvider>
-      <main className={styles.main}>
+      <main className={styles.main} style={{ ...themeVars, backgroundImage: `url(${bgImage})` }}>
         <div className={styles.decorator}></div>
         <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
         <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />

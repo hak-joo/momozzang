@@ -183,7 +183,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
 
   customization: {
     enabled: true,
-    themeColor: '#F0E6FF',
+    themeColor: 'GREEN',
     mainImageUrl: 'https://placehold.co/600x800/mock-custom.jpg',
     showDDay: true,
     mood: '기쁨',
