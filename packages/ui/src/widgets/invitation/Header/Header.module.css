@@ -30,7 +30,7 @@
 }
 .header button.active {
   color: var(--color-primary-text);
-  background: #cbe7fed6;
+  background: var(--color-sub-bg-transparent, #cbe7fed6);
   border-left: 1px solid #fff;
   border-top: 1px solid #fff;
   border-right: 1px solid #fff;
@@ -43,5 +43,5 @@
 }
 
 nav[data-at-top='false'] button.active {
-  background: linear-gradient(180deg, #cbe7fed6 0%, #fff 100%);
+  background: linear-gradient(180deg, var(--color-sub-bg-transparent, #cbe7fed6) 0%, #fff 100%);
 }

@@ -23,6 +23,7 @@ const PALETTES: Record<ThemeColorOptions, Record<string, string>> = {
     '--color-sub-border': '#a7d1ff',
     '--color-sub-text': '#76a3ff',
     '--color-sub-accent': '#95aeff',
+    '--color-sub-bg-transparent': '#cbe7fed6',
   },
   GREEN: {
     '--color-primary-base': '#81C784', // Base
@@ -44,6 +45,7 @@ const PALETTES: Record<ThemeColorOptions, Record<string, string>> = {
     '--color-sub-border': '#FFF176',
     '--color-sub-text': '#FBC02D',
     '--color-sub-accent': '#FFEB3B',
+    '--color-sub-bg-transparent': '#FFF59Dd6',
   },
   BLUE: {
     // Placeholder for future implementation
