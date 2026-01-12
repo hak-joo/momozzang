@@ -16,6 +16,13 @@ const PALETTES: Record<ThemeColorOptions, Record<string, string>> = {
     '--color-primary-bg-light': '#ebe9ff', // Bg Light
     '--color-primary-bg-pale': '#F0E6FF', // Bg Pale
     '--color-disabled': '#d5d2f6',
+    
+    // Sub Color (Blueish for Purple theme)
+    '--color-sub-bg': '#c2e4ff',
+    '--color-sub-bg-light': '#ebf6ff',
+    '--color-sub-border': '#a7d1ff',
+    '--color-sub-text': '#76a3ff',
+    '--color-sub-accent': '#95aeff',
   },
   GREEN: {
     '--color-primary-base': '#81C784', // Base
@@ -30,6 +37,13 @@ const PALETTES: Record<ThemeColorOptions, Record<string, string>> = {
     '--color-primary-bg-light': '#E8F5E9', // Bg Light
     '--color-primary-bg-pale': '#F1F8E9', // Bg Pale
     '--color-disabled': '#C8E6C9',
+
+    // Sub Color ( Yellowish/Lime for Green theme - Complementaryish)
+    '--color-sub-bg': '#FFF59D',
+    '--color-sub-bg-light': '#FFFDE7',
+    '--color-sub-border': '#FFF176',
+    '--color-sub-text': '#FBC02D',
+    '--color-sub-accent': '#FFEB3B',
   },
   BLUE: {
     // Placeholder for future implementation

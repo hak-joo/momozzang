@@ -15,6 +15,13 @@
 
   --color-disabled: #d5d2f6;
 
+  /* Sub Colors */
+  --color-sub-bg: #c2e4ff;
+  --color-sub-bg-light: #ebf6ff;
+  --color-sub-border: #a7d1ff;
+  --color-sub-text: #76a3ff;
+  --color-sub-accent: #95aeff;
+
   --button-radius: 8px;
   --button-font-weight: 700;
   --button-shadow: 0 8px 18px rgba(84, 64, 171, 0.25);

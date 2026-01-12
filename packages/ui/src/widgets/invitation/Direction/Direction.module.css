@@ -54,7 +54,7 @@
 .transportationList {
   display: flex;
   flex-direction: column;
-  border-top: 1px dashed var(--color-primary-border, #a7d1ff);
+  border-top: 1px dashed var(--color-sub-border, #a7d1ff);
 
   .transportation {
     padding: 32px;
@@ -62,7 +62,7 @@
     flex-direction: column;
 
     justify-content: center;
-    border-bottom: 1px dashed var(--color-primary-border, #a7d1ff);
+    border-bottom: 1px dashed var(--color-sub-border, #a7d1ff);
 
     .title {
       @mixin typo-heading2;
