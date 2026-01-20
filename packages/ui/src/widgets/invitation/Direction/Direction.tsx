@@ -17,23 +17,38 @@ import { useMessageDialog } from '@shared/ui/MessageDialog';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import { useMapNavigation } from './useMapNavigation';
 import { useParams } from 'react-router-dom';
+import { getThemeHue } from '@shared/styles/utils';
+import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 
 type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
 
 const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo'];
-const transportationIcon: Record<TransportationType, { src: string; label: string }> = {
-  busInfo: { src: busImg, label: '버스' },
-  carInfo: { src: carImg, label: '자차' },
-  metroInfo: { src: metroImg, label: '지하철' },
-};
+
+
 
 export function Direction() {
   const { invitationId } = useParams();
   const isMock = !invitationId;
   const {
-    weddingHallInfo: { latitude, longitude, hallName, hallDetail, address, tel },
+    weddingHallInfo: { latitude, longitude, hallName, address, tel },
     etcInfo,
+    customization,
   } = useInvitation();
+
+  const themeHue = getThemeHue(customization?.themeColor);
+
+  const busIcon = useImageHueShift(busImg, themeHue);
+  const carIcon = useImageHueShift(carImg, themeHue);
+  const metroIcon = useImageHueShift(metroImg, themeHue);
+
+  const transportationIcon = useMemo(() => {
+    return {
+      busInfo: { src: busIcon, label: '버스' },
+      carInfo: { src: carIcon, label: '자차' },
+      metroInfo: { src: metroIcon, label: '지하철' },
+    };
+  }, [busIcon, carIcon, metroIcon]);
+
   const { info } = useToast();
   const confirm = useMessageDialog();
 

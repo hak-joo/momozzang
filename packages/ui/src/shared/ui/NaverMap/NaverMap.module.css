@@ -8,10 +8,10 @@
 
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.7);
-  background: #c7dffe;
+  background: var(--color-sub-bg);
   box-shadow:
-    0 0 10px 0 rgba(130, 184, 243, 0.56) inset,
-    0 -2px 12px 2px rgba(130, 184, 243, 0.3) inset;
+    0 0 10px 0 rgba(var(--color-sub-border), 0.56) inset,
+    0 -2px 12px 2px rgba(var(--color-sub-border), 0.3) inset;
 }
 
 .mapCanvas {

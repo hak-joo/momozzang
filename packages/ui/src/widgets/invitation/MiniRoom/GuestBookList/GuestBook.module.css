@@ -36,7 +36,7 @@
 
   border-radius: 12px;
   border: 1px solid var(--Basic-white, #fff);
-  background: var(--Blue-Blue01, #ebf6ff);
+  background: var(--color-sub-bg-light);
   box-shadow:
     0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
     0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;
@@ -73,7 +73,7 @@
 
   border-radius: 12px;
   border: 1px solid var(--Basic-white, #fff);
-  background: var(--Blue-Blue01, #ebf6ff);
+  background: var(--color-sub-bg-light, #ebf6ff);
   box-shadow:
     0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
     0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;

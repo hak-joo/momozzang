@@ -8,6 +8,10 @@ import purpleSparkleCrossDashed from '../../assets/images/decorations/purple-spa
 
 import purplePixelHeart from '../../assets/images/decorations/purple-pixel-heart.png';
 
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { getThemeHue } from '@shared/styles/utils';
+import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
+
 type CssSize = number | string;
 
 type SparkleVariant = 'sparkle' | 'sparkleCross' | 'sparkleCrossDashed' | 'pixelHeart';
@@ -60,6 +64,7 @@ const getSparkleSrc = (variant: SparkleVariant, color: SparkleColor): string => 
   return sparkle;
 };
 
+
 export function Decoration({
   variant,
   color = 'white',
@@ -70,6 +75,8 @@ export function Decoration({
   bottom,
 }: PixelSparkleProps) {
   const src = getSparkleSrc(variant, color);
+  const { customization } = useInvitation();
+  const themeHue = getThemeHue(customization?.themeColor);
 
   const style: React.CSSProperties = {
     position: 'absolute',
@@ -81,6 +88,19 @@ export function Decoration({
     zIndex: 10,
     pointerEvents: 'none',
   };
+
+  if (color === 'purple') {
+    return (
+      <ThemedImage
+        aria-hidden="true"
+        src={src}
+        alt=""
+        style={style}
+        targetHue={themeHue}
+        originalHue={270} // Purple base
+      />
+    );
+  }
 
   return <img aria-hidden="true" src={src} alt="" style={style} />;
 }
