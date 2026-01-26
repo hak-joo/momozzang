@@ -1,14 +1,19 @@
+import { getInvitationRepository } from '@momozzang/ui/src/entities/WeddingInvitation/repositories/invitationRepositoryFactory';
 import { useQuery } from '@tanstack/react-query';
 import { Navigate, useParams } from 'react-router-dom';
 import { InvitationExperience } from './InvitationExperience';
-import { fetchInvitationById } from '../services/invitations';
 
 function InvitationByIdPage() {
   const { invitationId } = useParams();
 
   const invitationQuery = useQuery({
     queryKey: ['invitation', invitationId],
-    queryFn: () => fetchInvitationById(invitationId ?? ''),
+    queryFn: async () => {
+       const repo = getInvitationRepository();
+       const data = await repo.getInvitation(invitationId ?? '');
+       if (!data) throw new Error('Not found');
+       return data;
+    },
     enabled: Boolean(invitationId),
     retry: false,
   });
