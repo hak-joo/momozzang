@@ -9,7 +9,7 @@
   border-radius: var(--button-radius);
   font-weight: var(--button-font-weight);
   line-height: 1;
-  color: var(--color-primary-contrast);
+  color: var(--color-basic-white);
   cursor: pointer;
   white-space: nowrap;
   transition:
@@ -87,31 +87,58 @@
 }
 
 .variantPrimary {
-  background: linear-gradient(
-    180deg,
-    var(--color-primary-soft) 20%,
-    var(--color-primary-base) 80%,
-    var(--color-primary-strong) 100%
-  );
-  color: var(--color-primary-contrast);
+  background: var(--color-main-300);
+  color: var(--color-basic-white);
+  overflow: hidden;
+  /* Create stacking context for pseudo-elements */
+  isolation: isolate;
+}
+
+.variantPrimary::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-basic-white50);
+  filter: blur(4px);
+  z-index: -1;
+}
+
+.variantPrimary::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--color-main-500);
+  filter: blur(4px);
+  z-index: -1;
 }
 
 .variantPrimary.button:disabled {
-  background: var(--color-disabled);
+  background: var(--color-main-100);
   color: rgba(81, 41, 133, 0.5);
 }
 
+.variantPrimary.button:disabled::before,
+.variantPrimary.button:disabled::after {
+  display: none;
+}
+
 .variantSecondary {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    var(--color-primary-accent) 100%
-  );
-  color: var(--color-primary-text);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, var(--color-sub-500) 100%);
+  color: var(--color-main-600);
 }
 
 .variantSecondary.button:disabled {
-  background: var(--color-disabled);
+  background: var(--color-main-100);
   color: rgba(81, 41, 133, 0.45);
 }
 
@@ -121,7 +148,7 @@
 
 .variantGhost {
   background: transparent;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
   border: 1px solid rgba(149, 174, 255, 0.5);
   backdrop-filter: blur(4px);
 }
@@ -142,7 +169,7 @@
 
 .variantPlain {
   background: transparent;
-  color: var(--button-plain-color, var(--color-primary-text));
+  color: var(--button-plain-color, var(--color-main-600));
   text-shadow: none;
 }
 
