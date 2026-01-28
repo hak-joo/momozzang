@@ -20,7 +20,7 @@
   @mixin typo-heading4;
   color: #f9f9f9;
   border-radius: 12px 12px 0 0;
-  background: var(--color-primary-base);
+  background: var(--color-main-300);
   box-shadow: 0 0 18px 0 rgba(0, 0, 0, 0.25);
 
   width: 72px;
@@ -29,8 +29,8 @@
   transition: background-color 0.3s ease;
 }
 .header button.active {
-  color: var(--color-primary-text);
-  background: var(--color-sub-bg-transparent, #cbe7fed6);
+  color: var(--color-main-600);
+  background: var(--color-sub-300);
   border-left: 1px solid #fff;
   border-top: 1px solid #fff;
   border-right: 1px solid #fff;
@@ -43,5 +43,5 @@
 }
 
 nav[data-at-top='false'] button.active {
-  background: linear-gradient(180deg, var(--color-sub-bg-transparent, #cbe7fed6) 0%, #fff 100%);
+  background: linear-gradient(180deg, var(--color-sub-300) 0%, #fff 100%);
 }

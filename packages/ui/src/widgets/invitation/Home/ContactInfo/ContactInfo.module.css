@@ -1,7 +1,7 @@
 .content {
   width: 400px;
   height: 90vh;
-  background: #f4faff !important;
+  background: var(--color-sub-100) !important;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -17,13 +17,13 @@
 }
 
 .title {
-  color: var(--color-primary-text, #512985);
+  color: var(--color-main-600);
   @mixin typo-heading2;
   text-align: center;
 }
 
 .desc {
-  color: var(--color-primary-text, #512985);
+  color: var(--color-main-600);
   @mixin typo-body2;
   text-align: center;
 }
@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: 5.4px;
-  --button-plain-color: var(--Basic-Gray02, #d1cbe2);
+  --button-plain-color: var(--color-main-200);
   color: var(--button-plain-color);
 
   .name {
@@ -47,12 +47,12 @@
   }
 
   .icon {
-    color: var(--Basic-Gray02, #d1cbe2);
+    color: var(--color-main-200);
   }
   &.active {
-    --button-plain-color: var(--Basic-Gray_text, #484848);
+    --button-plain-color: var(--color-basic-black);
     .icon {
-      color: var(--color-primary-base, #512985);
+      color: var(--color-main-600);
     }
   }
 }
@@ -79,12 +79,12 @@
 
 .contactLabel {
   @mixin typo-desc1-single;
-  color: var(--Basic-Gray_text, #484848);
+  color: var(--color-basic-black);
   text-align: center;
 }
 
 .contactName {
-  color: var(--Basic-Gray_text, #484848);
+  color: var(--color-basic-black);
   @mixin typo-heading1;
   text-align: center;
 }
@@ -98,5 +98,4 @@
 
 .actionButton {
   flex: 1;
-  box-shadow: 0 6px 12px rgba(94, 76, 201, 0.2);
 }

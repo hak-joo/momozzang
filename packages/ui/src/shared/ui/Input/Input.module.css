@@ -1,5 +1,5 @@
 .field {
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
   font-family: var(--font-PyeongChang);
   font-size: 12px;
   font-style: normal;
@@ -10,13 +10,13 @@
   width: 100%;
   border: none;
   border-radius: 16px;
-  background: #f2f5ff;
+  background: var(--color-sub-100);
   padding: 14px 16px;
   box-sizing: border-box;
 }
 
 .field::placeholder {
-  color: var(--color-primary-base);
+  color: var(--color-main-300);
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

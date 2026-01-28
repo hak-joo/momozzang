@@ -8,7 +8,7 @@
 
     .title {
       @mixin typo-heading2;
-      color: var(--color-primary-text);
+      color: var(--color-main-600);
       text-align: center;
     }
 
@@ -16,7 +16,7 @@
       @mixin typo-body2;
       display: flex;
       flex-direction: column;
-      color: var(--color-primary-text);
+      color: var(--color-main-600);
       text-align: center;
     }
   }
@@ -31,10 +31,10 @@
 }
 
 .accordion {
-  border-top: 1px dashed #8fc5fffc;
+  border-top: 1px dashed var(--color-sub-400);
 
   .accordionItem {
-    border-bottom: 1px dashed #8fc5fffc;
+    border-bottom: 1px dashed var(--color-sub-400);
   }
 }
 .trigger {
@@ -52,7 +52,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
 }
 
 .triggerLabel {
@@ -71,17 +71,16 @@
 .accountRelation {
   @mixin typo-desc2;
   padding: 2px 6px;
-  color: var(--color-primary-text);
-
+  color: var(--color-main-600);
   border-radius: 4px;
-  background: var(--color-primary-bg-light);
+  background: var(--color-main-100, #f6d2f1);
   align-self: flex-start;
   margin-bottom: 12px;
 }
 
 .accountOwner {
   @mixin typo-heading3;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
 }
 
 .accountDetails {
@@ -92,7 +91,7 @@
 
 .accountDetailValue {
   @mixin typo-desc2;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -100,7 +99,7 @@
 
 .footer {
   margin-top: 20vh;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
   text-align: center;
   font-size: 12px;
   font-style: normal;

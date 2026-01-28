@@ -14,16 +14,16 @@
   width: 180px;
 
   .heart {
-    color: var(--color-primary-border);
+    color: var(--color-main-300);
   }
   .day {
     position: relative;
     width: 100%;
     padding: 6px 0px;
     border-radius: 4px;
-    border-top: 1px dashed var(--color-sub-border, #82b8f3);
-    border-bottom: 1px dashed var(--color-sub-border, #82b8f3);
-    background: var(--color-sub-bg, #d2e5ff);
+    border-top: 1px dashed var(--color-sub-400);
+    border-bottom: 1px dashed var(--color-sub-400);
+    background: var(--color-sub-300);
     box-shadow: 0 0 7px 0 #fff;
 
     font-family: var(--font-DepartureMono);
@@ -32,7 +32,7 @@
     font-weight: 400;
     line-height: 24px;
     letter-spacing: -0.54px;
-    color: var(--color-primary-base);
+    color: var(--color-main-300);
   }
 }
 

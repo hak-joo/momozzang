@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
   margin-bottom: 18px;
 }
 
@@ -28,7 +28,8 @@
     align-items: center;
     justify-content: center;
 
-    color: var(--color-primary-text);
+    color: var(--color-main-600);
+
     text-align: center;
   }
 
@@ -38,7 +39,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    color: var(--color-primary-text);
+    color: var(--color-main-600);
     text-align: center;
   }
 }
@@ -54,7 +55,7 @@
 .transportationList {
   display: flex;
   flex-direction: column;
-  border-top: 1px dashed var(--color-sub-border, #a7d1ff);
+  border-top: 1px dashed var(--color-sub-400);
 
   .transportation {
     padding: 32px;
@@ -62,7 +63,7 @@
     flex-direction: column;
 
     justify-content: center;
-    border-bottom: 1px dashed var(--color-sub-border, #a7d1ff);
+    border-bottom: 1px dashed var(--color-sub-400);
 
     .title {
       @mixin typo-heading2;
@@ -75,7 +76,7 @@
     .block {
       width: 6px;
       height: 6px;
-      background: var(--color-primary-text);
+      background: var(--color-main-600);
       margin-top: 6px;
       flex-shrink: 0;
     }
@@ -95,7 +96,7 @@
 
     .descriptionText {
       @mixin typo-body2;
-      color: var(--color-primary-text);
+      color: var(--color-main-600);
     }
 
     .subDescription {
@@ -107,14 +108,14 @@
 
     .subDescriptionBullet {
       @mixin typo-body2;
-      color: var(--color-primary-desc);
+      color: var(--color-main-400);
       flex-shrink: 0;
     }
 
     .subDescriptionText {
       @mixin typo-body2;
       font-family: var(--font-Wanted-Sans);
-      color: var(--color-primary-desc);
+      color: var(--color-main-400);
       flex: 1;
       white-space: pre-line;
     }

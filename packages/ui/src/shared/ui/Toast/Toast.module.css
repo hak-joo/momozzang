@@ -23,9 +23,13 @@
 .root {
   pointer-events: auto;
   padding: 20px 16px;
-  border-radius: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  background: var(--Grdient-Gradient01, linear-gradient(90deg, #aca4ff -1.18%, #6aa3ff 101.34%));
+  border-radius: 12px;
+  border: 2px solid var(--color-basic-white50, rgba(255, 255, 255, 0.5));
+  background: linear-gradient(
+    90deg,
+    var(--color-gradient-start, #aca4ff) -1.18%,
+    var(--color-gradient-end, #6aa3ff) 101.34%
+  );
   box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.15);
   color: #fff;
 

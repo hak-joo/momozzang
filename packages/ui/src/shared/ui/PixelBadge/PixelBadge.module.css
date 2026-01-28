@@ -3,8 +3,8 @@
   --pixel-outline: 2px;
   --pixel-text-gradient: linear-gradient(
     90deg,
-    var(--color-primary-border, #aca4ff) -1.18%,
-    var(--color-primary-accent, #6aa3ff) 101.34%
+    var(--color-gradient-start, #aca4ff) -1.18%,
+    var(--color-gradient-end, #6aa3ff) 101.34%
   );
   --pixel-border-color: #ffffff;
   position: relative;
