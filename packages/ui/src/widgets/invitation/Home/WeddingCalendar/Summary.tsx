@@ -38,7 +38,7 @@ export function WeddingCalendarSummary() {
 
   return (
     <div className={styles.summary}>
-      <RabbitEar />
+      <RabbitEar className={styles.rabbitEar} />
       <div className={styles.summaryTable}>
         {summaryEntries.map(({ key, label, dayNumber, note, isCurrent }) => (
           <div
