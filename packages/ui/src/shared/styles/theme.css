@@ -1,27 +1,32 @@
 :root {
-  --color-primary-base: #a696ea;
-  --color-primary-strong: #7f6dd9;
-  --color-primary-soft: #c3b6f3;
-  --color-primary-text: #512985;
-  --color-primary-desc: #967eb6;
-  --color-primary-contrast: #ffffff;
+  /* Basic */
+  --color-basic-white: #ffffff;
+  --color-basic-white50: rgba(255, 255, 255, 0.5);
+  --color-basic-black: #484848;
+  --color-basic-black50: rgba(0, 0, 0, 0.5);
 
-  --color-primary-accent: #95aeff;
-  --color-primary-border: #aca4ff;
-  --color-primary-medium: #7871c2;
+  /* Main (Default: Purple) */
+  --color-main-100: #d5d2f6;
+  --color-main-200: #d1cbe2;
+  --color-main-300: #aca4ff;
+  --color-main-400: #967eb6;
+  --color-main-500: #7871c2;
+  --color-main-600: #5129b5;
 
-  --color-primary-bg-light: #ebe9ff;
-  --color-primary-bg-pale: #f0e6ff;
+  /* Sub (Default: Purple) */
+  --color-sub-100: #f4faff;
+  --color-sub-200: #ebf6ff;
+  --color-sub-300: #c2e4ff;
+  --color-sub-400: #a1ceff;
+  --color-sub-500: #95aeff;
+  --color-sub-600: #76a3ff;
 
-  --color-disabled: #d5d2f6;
+  /* Gradient */
+  --color-gradient-start: #aca4ff;
+  --color-gradient-end: #6aa3ff;
 
-  /* Sub Colors */
-  --color-sub-bg: #c2e4ff;
-  --color-sub-bg-light: #ebf6ff;
-  --color-sub-border: #a7d1ff;
-  --color-sub-text: #76a3ff;
-  --color-sub-accent: #95aeff;
-  --color-sub-bg-transparent: #cbe7fed6;
+  /* Legacy to New Mapping (Optional: Keep for safer migration if needed, but instructed to replace) */
+  /* We will remove legacy vars to force migration errors if missed */
 
   --button-radius: 8px;
   --button-font-weight: 700;

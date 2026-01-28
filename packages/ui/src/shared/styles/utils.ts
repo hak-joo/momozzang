@@ -1,88 +1,60 @@
 import type { CSSProperties } from 'react';
 import type { ThemeColorOptions } from '@entities/WeddingInvitation/model';
 
-// Palette Definitions
-const PALETTES: Record<ThemeColorOptions, Record<string, string>> = {
+// New Palette Definitions
+const PALETTES: Record<'BASIC' | 'PURPLE' | 'PINK', Record<string, string>> = {
+  BASIC: {
+    '--color-basic-white': '#FFFFFF',
+    '--color-basic-white50': 'rgba(255, 255, 255, 0.5)',
+    '--color-basic-black': '#484848',
+    '--color-basic-black50': 'rgba(0, 0, 0, 0.5)',
+  },
   PURPLE: {
-    '--color-primary-base': '#a696ea',
-    '--color-primary-strong': '#7f6dd9',
-    '--color-primary-soft': '#c3b6f3',
-    '--color-primary-text': '#512985',
-    '--color-primary-desc': '#967eb6',
-    '--color-primary-contrast': '#ffffff',
-    '--color-primary-accent': '#95aeff',
-    '--color-primary-border': '#aca4ff', // Border
-    '--color-primary-medium': '#7871c2', // Medium
-    '--color-primary-bg-light': '#ebe9ff', // Bg Light
-    '--color-primary-bg-pale': '#F0E6FF', // Bg Pale
-    '--color-disabled': '#d5d2f6',
-    
-    // Sub Color (Blueish for Purple theme)
-    '--color-sub-bg': '#c2e4ff',
-    '--color-sub-bg-light': '#ebf6ff',
-    '--color-sub-border': '#a7d1ff',
-    '--color-sub-text': '#76a3ff',
-    '--color-sub-accent': '#95aeff',
-    '--color-sub-bg-transparent': '#cbe7fed6',
-  },
-  GREEN: {
-    '--color-primary-base': '#81C784', // Base
-    '--color-primary-strong': '#66BB6A', // Strong
-    '--color-primary-soft': '#A5D6A7', // Soft
-    '--color-primary-text': '#1B5E20', // Text
-    '--color-primary-desc': '#43A047', // Desc
-    '--color-primary-contrast': '#ffffff',
-    '--color-primary-accent': '#4CAF50', // Accent
-    '--color-primary-border': '#81C784', // Border
-    '--color-primary-medium': '#2E7D32', // Medium
-    '--color-primary-bg-light': '#E8F5E9', // Bg Light
-    '--color-primary-bg-pale': '#F1F8E9', // Bg Pale
-    '--color-disabled': '#C8E6C9',
-
-    // Sub Color ( Yellowish/Lime for Green theme - Complementaryish)
-    '--color-sub-bg': '#FFF59D',
-    '--color-sub-bg-light': '#FFFDE7',
-    '--color-sub-border': '#FFF176',
-    '--color-sub-text': '#FBC02D',
-    '--color-sub-accent': '#FFEB3B',
-    '--color-sub-bg-transparent': '#FFF59Dd6',
-  },
-  BLUE: {
-    // Placeholder for future implementation
-    '--color-primary-base': '#a696ea',
-    '--color-primary-strong': '#7f6dd9',
-    '--color-primary-soft': '#c3b6f3',
-    '--color-primary-text': '#512985',
-    '--color-primary-desc': '#967eb6',
-    '--color-primary-contrast': '#ffffff',
-    '--color-primary-accent': '#95aeff',
-    '--color-primary-border': '#aca4ff',
-    '--color-primary-medium': '#7871c2',
-    '--color-primary-bg-light': '#ebe9ff',
-    '--color-primary-bg-pale': '#F0E6FF',
-    '--color-disabled': '#d5d2f6',
+    // Main
+    '--color-main-100': '#D5D2F6',
+    '--color-main-200': '#D1CBE2',
+    '--color-main-300': '#ACA4FF',
+    '--color-main-400': '#967EB6',
+    '--color-main-500': '#7871C2',
+    '--color-main-600': '#5129B5',
+    // Sub
+    '--color-sub-100': '#F4FAFF',
+    '--color-sub-200': '#EBF6FF',
+    '--color-sub-300': '#C2E4FF',
+    '--color-sub-400': '#A1CEFF',
+    '--color-sub-500': '#95AEFF',
+    '--color-sub-600': '#76A3FF',
+    // Gradient
+    '--color-gradient-start': '#ACA4FF', // 100%
+    '--color-gradient-end': '#6AA3FF', // 100%
   },
   PINK: {
-    // Placeholder for future implementation
-    '--color-primary-base': '#a696ea',
-    '--color-primary-strong': '#7f6dd9',
-    '--color-primary-soft': '#c3b6f3',
-    '--color-primary-text': '#512985',
-    '--color-primary-desc': '#967eb6',
-    '--color-primary-contrast': '#ffffff',
-    '--color-primary-accent': '#95aeff',
-    '--color-primary-border': '#aca4ff',
-    '--color-primary-medium': '#7871c2',
-    '--color-primary-bg-light': '#ebe9ff',
-    '--color-primary-bg-pale': '#F0E6FF',
-    '--color-disabled': '#d5d2f6',
+    // Main
+    '--color-main-100': '#F6D2F1',
+    '--color-main-200': '#E0CBE2',
+    '--color-main-300': '#FF9FF1',
+    '--color-main-400': '#B57EB6',
+    '--color-main-500': '#B971C2',
+    '--color-main-600': '#AB3783',
+    // Sub
+    '--color-sub-100': '#F9F4FF',
+    '--color-sub-200': '#FDF1FF',
+    '--color-sub-300': '#F6E0FF',
+    '--color-sub-400': '#E3B2FF',
+    '--color-sub-500': '#FFA5F1',
+    '--color-sub-600': '#E77EFF',
+    // Gradient (Placeholder - using Main 300 to 600 or similar if not specified, but usually derived.
+    // For now, let's pick a pinkish gradient or leave same if generic.
+    // Wait, the user didn't specify gradient for pink. I will use a reasonable default based on Main colors for now to avoid breaking.)
+    '--color-gradient-start': '#FF9FF1',
+    '--color-gradient-end': '#E77EFF',
   },
 };
 
 const THEME_HUES: Record<ThemeColorOptions, number> = {
   PURPLE: 270,
-  GREEN: 120,
-  BLUE: 210,
+  GREEN: 120, // Deprecated but keeping for type safety if Enum exists
+  BLUE: 210, // Deprecated
   PINK: 330,
 };
 
@@ -92,8 +64,14 @@ const THEME_HUES: Record<ThemeColorOptions, number> = {
  * @returns CSSProperties 객체
  */
 export function getThemeVariables(themeColor?: ThemeColorOptions): CSSProperties {
-  const selectedTheme = themeColor ? PALETTES[themeColor] : PALETTES.PURPLE;
-  return (selectedTheme || PALETTES.PURPLE) as CSSProperties;
+  // Default to PURPLE if undefined or not found (though defined themes are PURPLE/PINK)
+  const safeTheme = themeColor === 'PINK' ? 'PINK' : 'PURPLE';
+  const themeVars = PALETTES[safeTheme];
+
+  return {
+    ...PALETTES.BASIC,
+    ...themeVars,
+  } as CSSProperties;
 }
 
 export function getThemeHue(themeColor?: ThemeColorOptions): number {
