@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from 'react';
+import { useRef, useEffect, type RefObject } from 'react';
 import { Header } from '@widgets/invitation/Header';
 import { Gallery } from '@widgets/invitation/Gallery';
 import type { Menu } from '@entities/WeddingInvitation/menu';
@@ -50,14 +50,26 @@ export function WeddingInvitation({ metadata }: Props) {
     });
   };
 
-
   const themeVars = getThemeVariables(metadata.customization?.themeColor);
   const themeHue = getThemeHue(metadata.customization?.themeColor);
   const bgImage = useImageHueShift(bgBlue, themeHue);
 
+  useEffect(() => {
+    const body = document.body;
+    Object.entries(themeVars).forEach(([key, value]) => {
+      body.style.setProperty(key, value);
+    });
+
+    return () => {
+      Object.keys(themeVars).forEach((key) => {
+        body.style.removeProperty(key);
+      });
+    };
+  }, [themeVars]);
+
   return (
     <MessageDialogProvider>
-      <main className={styles.main} style={{ ...themeVars, backgroundImage: `url(${bgImage})` }}>
+      <main className={styles.main} style={{ backgroundImage: `url(${bgImage})` }}>
         <div className={styles.decorator}></div>
         <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
         <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
