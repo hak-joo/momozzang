@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import miniRoomBackground from '@shared/assets/images/mini-room.png';
 import speechBubbleImg from '@shared/assets/images/speech-bubble.png';
-import speechBubbleSelectedImg from '@shared/assets/images/speech-bubble-selected.png';
+import speechBubbleSelected from '@shared/assets/images/speech-bubble-selected.png';
 import { MiniMe } from '@shared/ui/MiniMe';
 import { generateMiniMePositions } from './lib/generateMiniMePositions';
 import { DEFAULT_MINI_MESSAGES } from './constants';
@@ -11,6 +11,9 @@ import type { GuestBook } from './types';
 import type { RestrictedZone } from './lib/generateMiniMePositions';
 import { SpeechBubbleDot } from '@shared/ui/decorations/SpeechBubbleDot';
 import { AboutUs } from './AboutUs';
+import { getThemeHue } from '@shared/styles/utils';
+import { useImageHueShift } from '@shared/hooks/useImageHueShift';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
 
 export interface MainMiniMe {
   src: string;
@@ -29,6 +32,11 @@ interface MiniRoomSceneProps {
 }
 
 export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: MiniRoomSceneProps) {
+  const { customization } = useInvitation();
+  const themeHue = getThemeHue(customization?.themeColor);
+
+  const speechBubbleSelectedImg = useImageHueShift(speechBubbleSelected, themeHue);
+
   const seed = useMemo(
     () =>
       entries.reduce(
@@ -171,9 +179,9 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
               left: `${activeEntry.position.x > 55 ? activeEntry.position.x : activeEntry.position.x - 3}%`,
               top: `${activeEntry.position.y - 15}%`,
             }}
-            type="active"
             className={clsx(
               styles.speechBubbleDot,
+              styles.active,
               activeEntry.position.x > 55
                 ? styles.speechBubbleDotRight
                 : styles.speechBubbleDotLeft,
@@ -223,9 +231,9 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
               left: `${previewEntry.position.x > 55 ? previewEntry.position.x : previewEntry.position.x - 3}%`,
               top: `${previewEntry.position.y - 14}%`,
             }}
-            type="preview"
             className={clsx(
               styles.speechBubbleDot,
+              styles.preview,
               previewEntry.position.x > 55
                 ? styles.speechBubbleDotRight
                 : styles.speechBubbleDotLeft,

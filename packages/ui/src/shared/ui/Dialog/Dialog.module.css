@@ -15,7 +15,7 @@
   max-height: 90vh;
   overflow-y: auto;
   box-sizing: border-box;
-  border: 0.9px solid var(--basic-white-05, rgba(255, 255, 255, 0.5));
+  border: 0.9px solid var(--color-basic-white50, rgba(255, 255, 255, 0.5));
   padding: 24px;
 }
 

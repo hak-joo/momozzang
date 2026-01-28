@@ -1,6 +1,6 @@
 .chevron {
   transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
-  color: #512985;
+  color: var(--color-main-600);
 }
 .trigger[data-state='open'] > .chevron {
   transform: rotate(180deg);

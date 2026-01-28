@@ -18,13 +18,14 @@
 
 .title {
   @mixin typo-heading3;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
+
   text-align: center;
 }
 
 .description {
   @mixin typo-body2;
-  color: var(--color-primary-text);
+  color: var(--color-main-600);
   text-align: center;
 }
 
@@ -69,7 +70,7 @@
   top: 0px;
   left: 50%;
   transform: translate(-50%, -90%);
-  color: #aca4ff;
+  color: var(--color-main-300);
   opacity: 0;
   transition: opacity 200ms ease;
 }
@@ -154,8 +155,8 @@
   width: 60px;
   height: 80px;
   border-radius: 12px;
-  border: 0.9px solid var(--basic-white-05, rgba(255, 255, 255, 0.5));
-  background: var(--Basic-white, #fff);
+  border: 0.9px solid var(--color-basic-white50, rgba(255, 255, 255, 0.5));
+  background: var(--color-basic-white, #fff);
   box-shadow:
     0 3.6px 3.6px 0 rgba(176, 196, 255, 0.3) inset,
     0 -1.8px 10.8px 1.8px rgba(51, 48, 255, 0.1) inset;

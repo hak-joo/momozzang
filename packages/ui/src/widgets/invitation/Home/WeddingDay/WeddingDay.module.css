@@ -18,7 +18,7 @@
   width: 24px;
   height: 30px;
   border-radius: 5.4px;
-  background: var(--color-sub-accent, #95aeff);
+  background: var(--color-sub-500);
   box-shadow:
     2.7px 3.6px 3.6px 0 rgba(144, 186, 241, 0.25) inset,
     0 -1.8px 1.8px 0 rgba(255, 255, 255, 0.6) inset,
@@ -30,7 +30,7 @@
 }
 
 .separator {
-  color: var(--color-sub-text, #76a3ff);
+  color: var(--color-sub-600);
   text-align: center;
   font-family: var(--font-DungGeunMo);
   font-size: 18px;
@@ -42,52 +42,9 @@
 
 .timeText {
   margin-top: 16px;
-  color: var(--color-sub-text, #6aa3ff);
+  color: var(--color-sub-600);
   font-size: 16px;
   font-weight: 600;
   text-align: center;
   word-break: keep-all;
-}
-
-.dot {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--color-sub-border, #78a9ff);
-}
-
-.dotTop {
-  top: 16px;
-}
-
-.dotBottom {
-  bottom: 16px;
-}
-
-.dotLeft {
-  left: 16px;
-}
-
-.dotRight {
-  right: 16px;
-}
-
-.balloon {
-  position: absolute;
-  width: 20px;
-  height: auto;
-  filter: drop-shadow(0 4px 6px rgba(93, 117, 244, 0.25));
-  user-select: none;
-  pointer-events: none;
-  z-index: 1;
-}
-.balloonLeft {
-  top: -16px;
-  left: 10px;
-}
-
-.balloonRight {
-  top: -16px;
-  right: 10px;
-  transform: scaleX(-1);
 }

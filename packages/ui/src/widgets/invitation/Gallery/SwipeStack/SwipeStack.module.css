@@ -73,7 +73,7 @@
 .count {
   margin-top: 12px;
   font-family: var(--font-DepartureMono);
-  color: #512985;
+  color: var(--color-main-600);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -91,7 +91,7 @@
   padding-bottom: 8px;
   margin-bottom: 16px;
   @mixin typo-desc2;
-  color: var(--color-primary-text, #512985);
+  color: var(--color-main-600);
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;

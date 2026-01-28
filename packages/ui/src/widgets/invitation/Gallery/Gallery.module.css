@@ -1,11 +1,7 @@
 .title {
-  color: #512985;
+  color: var(--color-main-600);
   text-align: center;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -0.18px;
+  @mixin typo-heading2;
   margin-bottom: 48px;
 }
 

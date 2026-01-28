@@ -14,7 +14,7 @@
 }
 
 .header {
-  color: var(--color-primary-text, #512985);
+  color: var(--color-main-600);
   display: flex;
   align-items: center;
   flex-direction: column;

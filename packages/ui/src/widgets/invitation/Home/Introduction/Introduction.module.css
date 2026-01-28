@@ -1,8 +1,8 @@
 .wrapper {
-  color: var(--color-primary-text, #512985);
+  color: var(--color-main-600);
   border-radius: 16px;
-  border: 1px solid var(--basic-white-05, rgba(255, 255, 255, 0.5));
-  background: var(--Blue-Blue02, var(--color-sub-bg, #c2e4ff));
+  border: 1px solid var(--color-basic-white50);
+  background: var(--color-sub-300);
   box-shadow:
     0 4px 4px 0 rgba(176, 196, 255, 0.3) inset,
     0 -2px 12px 2px rgba(51, 48, 255, 0.1) inset;
@@ -19,7 +19,7 @@
 }
 
 .title {
-  color: var(--color-primary-text, #512985);
+  color: var(--color-main-600);
   text-align: center;
   @mixin typo-heading3;
 }
