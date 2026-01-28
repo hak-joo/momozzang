@@ -82,7 +82,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
   },
 
   weddingHallInfo: {
-    date: '2030-12-24',
+    date: '2030-1-24',
     ampm: 'PM',
     hour: 17,
     minute: 45,
@@ -122,7 +122,10 @@ export const exampleWeddingInvitation: WeddingInvitation = {
     },
     metroInfo: {
       info: ['데이터선 목업역 1번 출구 (도보 5분)', '픽셀선 캐릭터역 2번 출구 (도보 8분)'],
-      subInfo: ['출구에서 목업 표지판을 따라 200m 직진 후 좌회전', '테스트 분수대 지나 오른쪽 건물 3층'],
+      subInfo: [
+        '출구에서 목업 표지판을 따라 200m 직진 후 좌회전',
+        '테스트 분수대 지나 오른쪽 건물 3층',
+      ],
     },
   },
 
@@ -183,7 +186,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
 
   customization: {
     enabled: true,
-    themeColor: 'GREEN',
+    themeColor: 'PINK',
     mainImageUrl: 'https://placehold.co/600x800/mock-custom.jpg',
     showDDay: true,
     mood: '기쁨',
