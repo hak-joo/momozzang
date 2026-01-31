@@ -58,6 +58,7 @@ export function GuestBookDeleteDialog({ id }: Props) {
         />
       </Dialog.Trigger>
       <Dialog.Content className={styles.content}>
+        <Dialog.Close />
         <div className={styles.header}>
           <p className={styles.title}>방명록 삭제</p>
           <p className={styles.description}>관리자와 작성자만 글을 삭제할 수 있습니다.</p>
@@ -66,6 +67,7 @@ export function GuestBookDeleteDialog({ id }: Props) {
           value={password}
           placeholder="비밀번호를 입력해주세요"
           maxLength={4}
+          inputMode="numeric"
           onChange={(event) => setPassword(event.target.value)}
         />
 
@@ -74,6 +76,7 @@ export function GuestBookDeleteDialog({ id }: Props) {
           size="sm"
           className={styles.deleteButton}
           onClick={() => handleOnClickDelete()}
+          disabled={password.length < 4}
         >
           삭제하기
         </Button>
