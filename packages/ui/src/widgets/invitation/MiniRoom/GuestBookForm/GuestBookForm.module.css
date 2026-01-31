@@ -91,15 +91,12 @@
   height: 8px;
   border-radius: 999px;
   border: none;
-  background: var(--color-disabled);
-  transition:
-    width 200ms ease,
-    background 200ms ease;
+  background: var(--color-main-100);
 }
 
 .dotButton[data-active='true'] {
-  width: 28px;
-  background: var(--color-primary-medium);
+  width: 8px;
+  background: var(--color-main-500);
 }
 
 .actions {
@@ -109,7 +106,7 @@
 }
 
 .backButton {
-  color: var(--color-primary-medium);
+  color: var(--color-basic-black);
   font-weight: 600;
   margin-top: -4px;
 }
@@ -142,36 +139,6 @@
   bottom: 12px;
   right: 12px;
   @mixin typo-body2;
-}
-
-.pinInputs {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin: 12px 0;
-}
-
-.pinInput {
-  width: 60px;
-  height: 80px;
-  border-radius: 12px;
-  border: 0.9px solid var(--color-basic-white50, rgba(255, 255, 255, 0.5));
-  background: var(--color-basic-white, #fff);
-  box-shadow:
-    0 3.6px 3.6px 0 rgba(176, 196, 255, 0.3) inset,
-    0 -1.8px 10.8px 1.8px rgba(51, 48, 255, 0.1) inset;
-
-  color: var(--color-primary-text);
-  text-align: center;
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 153%; /* 42.84px */
-  letter-spacing: -0.28px;
-}
-
-.pinInput:focus {
-  outline: 2px solid rgba(128, 108, 201, 0.65);
 }
 
 .boxBody {

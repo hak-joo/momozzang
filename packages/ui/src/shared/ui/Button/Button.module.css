@@ -124,7 +124,7 @@
 
 .variantPrimary.button:disabled {
   background: var(--color-main-100);
-  color: rgba(81, 41, 133, 0.5);
+  color: var(--color-basic-white);
 }
 
 .variantPrimary.button:disabled::before,
@@ -139,7 +139,7 @@
 
 .variantSecondary.button:disabled {
   background: var(--color-main-100);
-  color: rgba(81, 41, 133, 0.45);
+  color: var(--color-basic-white);
 }
 
 .variantSecondary:hover:not(:disabled) {
@@ -162,7 +162,7 @@
 }
 
 .variantGhost.button:disabled {
-  color: rgba(81, 41, 133, 0.4);
+  color: var(--color-basic-white);
   border-color: rgba(209, 203, 226, 0.9);
   background: rgba(209, 203, 226, 0.25);
 }
@@ -188,7 +188,7 @@
 }
 
 .variantPlain:disabled {
-  color: rgba(81, 41, 133, 0.35);
+  color: var(--color-basic-white);
   background: transparent;
 }
 
