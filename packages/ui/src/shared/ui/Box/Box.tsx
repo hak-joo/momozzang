@@ -3,6 +3,9 @@ import { clsx } from 'clsx';
 import heartBalloon from '@shared/assets/images/heart-balloon.png';
 import weddingDayImg from '@shared/assets/images/wedding-day.png';
 import type { PropsWithChildren, CSSProperties } from 'react';
+import { getThemeHue } from '@shared/styles/utils';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { ThemedImage } from '../ThemedImage/ThemedImage';
 
 type Variant = 'primary' | 'secondary' | 'reversed' | 'plain';
 type Shape = 'rect' | 'rounded';
@@ -31,6 +34,10 @@ export function Box({
   variant = 'primary',
   dotOffset = 16,
 }: PropsWithChildren<Props>) {
+  const { customization } = useInvitation();
+
+  const themeHue = getThemeHue(customization?.themeColor);
+
   const boardStyle: CSSProperties = { ['--dot-offset' as string]: `${dotOffset}px` };
 
   const verticalPositions = ['top', 'bottom'] as const;
@@ -53,23 +60,31 @@ export function Box({
     <div className={clsx(styles.wrapper, wrapperClassName)}>
       {hasBalloon && (
         <>
-          <img
+          <ThemedImage
+            aria-hidden="true"
             src={heartBalloon}
             alt=""
             className={clsx(styles.balloon, styles.balloonLeft)}
-            aria-hidden="true"
+            targetHue={themeHue}
           />
-          <img
+          <ThemedImage
+            aria-hidden="true"
             src={heartBalloon}
             alt=""
             className={clsx(styles.balloon, styles.balloonRight)}
-            aria-hidden="true"
+            targetHue={themeHue}
           />
         </>
       )}
 
       {hasDecoration && (
-        <img src={weddingDayImg} alt="" className={clsx(styles.decoration)} aria-hidden="true" />
+        <ThemedImage
+          aria-hidden="true"
+          src={weddingDayImg}
+          alt=""
+          className={clsx(styles.decoration)}
+          targetHue={themeHue}
+        />
       )}
 
       <div

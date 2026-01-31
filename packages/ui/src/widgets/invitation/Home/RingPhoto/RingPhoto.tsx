@@ -2,6 +2,9 @@ import diamondImg from '@shared/assets/images/diamond.png';
 import weddingDayImg from '@shared/assets/images/wedding-day.png';
 
 import styles from './RingPhoto.module.css';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { getThemeHue } from '@shared/styles/utils';
+import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
 interface PhotoFrameProps {
   src?: string;
   alt?: string;
@@ -9,9 +12,19 @@ interface PhotoFrameProps {
 }
 
 export function RingPhoto({ src, alt, maxWidth }: PhotoFrameProps) {
+  const { customization } = useInvitation();
+
+  const themeHue = getThemeHue(customization?.themeColor);
+
   return (
     <div style={{ maxWidth }} className={styles.container}>
-      <img className={styles.diamondImg} src={diamondImg} alt="" aria-hidden="true" />
+      <ThemedImage
+        className={styles.diamondImg}
+        src={diamondImg}
+        alt=""
+        aria-hidden="true"
+        targetHue={themeHue}
+      />
       <svg
         viewBox="0 0 289 382"
         xmlns="http://www.w3.org/2000/svg"
@@ -194,8 +207,12 @@ export function RingPhoto({ src, alt, maxWidth }: PhotoFrameProps) {
           />
         </g>
       </svg>
-
-      <img className={styles.weddingDayImg} src={weddingDayImg} alt="웨딩데이" />
+      <ThemedImage
+        className={styles.weddingDayImg}
+        src={weddingDayImg}
+        alt="웨딩데이"
+        targetHue={themeHue}
+      />
     </div>
   );
 }

@@ -4,13 +4,18 @@ import clsx from 'clsx';
 import * as BottomSheet from '@shared/ui/BottomSheet';
 import photoBookCover from '@shared/assets/images/photo-book-cover.png';
 import heartBalloon from '@shared/assets/images/heart-balloon.png';
+import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
+import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
+import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 
 interface Props {
   className?: string;
 }
 export function AboutUs({ className }: Props) {
-  const { aboutUs, couple } = useInvitation();
+  const { aboutUs, couple, customization } = useInvitation();
 
+  const themeHue = getThemeHue(customization?.themeColor);
+  const themedPhotoBookCover = useImageHueShift(photoBookCover, themeHue);
   if (!aboutUs) return null;
 
   return (
@@ -40,10 +45,24 @@ export function AboutUs({ className }: Props) {
           <p className={styles.title}>{aboutUs.title}</p>
           <div
             className={styles.photoBookCover}
-            style={{ backgroundImage: `url(${photoBookCover})` }}
+            style={{ backgroundImage: `url(${themedPhotoBookCover})` }}
           >
-            <img src={heartBalloon} alt="" className={styles.balloonLeft} aria-hidden="true" />
-            <img src={heartBalloon} alt="" className={styles.balloonRight} aria-hidden="true" />
+            <ThemedImage
+              aria-hidden="true"
+              src={heartBalloon}
+              alt=""
+              className={styles.balloonLeft}
+              targetHue={themeHue}
+              originalHue={PURPLE_HUE}
+            />
+            <ThemedImage
+              aria-hidden="true"
+              src={heartBalloon}
+              alt=""
+              className={styles.balloonRight}
+              targetHue={themeHue}
+              originalHue={PURPLE_HUE}
+            />
             <div className={styles.photoGrid}>
               <figure className={styles.photoSlot}>
                 <img

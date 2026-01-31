@@ -75,5 +75,7 @@ export function getThemeVariables(themeColor?: ThemeColorOptions): CSSProperties
 }
 
 export function getThemeHue(themeColor?: ThemeColorOptions): number {
-  return themeColor ? THEME_HUES[themeColor] : 270;
+  return themeColor ? THEME_HUES[themeColor] : PURPLE_HUE;
 }
+
+export const PURPLE_HUE = 270;
