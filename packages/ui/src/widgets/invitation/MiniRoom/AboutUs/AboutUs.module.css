@@ -4,7 +4,7 @@
   align-items: center;
 
   span {
-    color: var(--Basic-Gray_text, #484848);
+    color: var(--color-basic-black);
     text-align: center;
     paint-order: stroke fill;
 
