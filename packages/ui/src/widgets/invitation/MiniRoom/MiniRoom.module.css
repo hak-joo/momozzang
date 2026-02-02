@@ -39,9 +39,7 @@
   width: 100%;
   display: block;
   border-radius: 12px;
-  box-shadow:
-    0 12px 32px rgba(30, 17, 61, 0.2),
-    0 4px 12px rgba(30, 17, 61, 0.16);
+  box-shadow: var(--box-shadow-main);
 }
 
 .miniMe {

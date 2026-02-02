@@ -6,8 +6,8 @@
   overflow: hidden;
   padding: 7px;
 
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--color-basic-white);
+  background: var(--color-sub-300);
 }
 
 .mapCanvas {

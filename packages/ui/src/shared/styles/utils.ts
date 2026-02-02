@@ -27,6 +27,12 @@ const PALETTES: Record<'BASIC' | 'PURPLE' | 'PINK', Record<string, string>> = {
     // Gradient
     '--color-gradient-start': '#ACA4FF', // 100%
     '--color-gradient-end': '#6AA3FF', // 100%
+    '--color-shadow-100': 'rgba(176, 196, 255, 0.30)',
+    '--color-shadow-200': 'rgba(51, 48, 255, 0.10)',
+    '--box-shadow-main':
+      '0 4px 4px 0 var(--color-shadow-100) inset, 0 -2px 12px 2px var(--color-shadow-200) inset',
+    '--box-shadow-sub':
+      '0 3.6px 3.6px 0 var(--color-shadow-100) inset, 0 -1.8px 10.8px 1.8px var(--color-shadow-200) inset',
   },
   PINK: {
     // Main
@@ -48,6 +54,12 @@ const PALETTES: Record<'BASIC' | 'PURPLE' | 'PINK', Record<string, string>> = {
     // Wait, the user didn't specify gradient for pink. I will use a reasonable default based on Main colors for now to avoid breaking.)
     '--color-gradient-start': '#FF9FF1',
     '--color-gradient-end': '#E77EFF',
+    '--color-shadow-100': 'rgba(250, 176, 255, 0.30)',
+    '--color-shadow-200': 'rgba(210, 48, 255, 0.10)',
+    '--box-shadow-main':
+      '0 4px 4px 0 var(--color-shadow-100) inset, 0 -2px 12px 2px var(--color-shadow-200) inset',
+    '--box-shadow-sub':
+      '0 3.6px 3.6px 0 var(--color-shadow-100) inset, 0 -1.8px 10.8px 1.8px var(--color-shadow-200) inset',
   },
 };
 

@@ -4,6 +4,8 @@ import introPng from '@shared/assets/images/intro.png';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
 import dayjs from 'dayjs';
+import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
+import { getThemeHue } from '@shared/styles/utils';
 
 type IntroProps = {
   next: () => void;
@@ -34,8 +36,10 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
 
   const {
     couple: { bride, groom },
+    customization,
     weddingHallInfo,
   } = useInvitation();
+  const themeHue = getThemeHue(customization?.themeColor);
 
   const weddingDate = useMemo(() => {
     if (!weddingHallInfo) return '';
@@ -51,7 +55,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
 
   return (
     <div className={styles.intro}>
-      <img src={introPng} alt={label} className={styles.video} />
+      <ThemedImage src={introPng} alt={label} className={styles.video} targetHue={themeHue} />
 
       {bride && groom && (
         <div className={styles.contents}>
