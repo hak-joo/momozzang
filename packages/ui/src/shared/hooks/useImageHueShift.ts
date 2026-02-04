@@ -8,7 +8,12 @@ import { rgbToHsl, hslToRgb } from '../lib/colorUtils';
  * @param targetHue 목표 Hue (0~360)
  * @returns 변환된 이미지 URL (Blob URL 또는 Data URL)
  */
-export function useImageHueShift(src: string, targetHue?: number, originalHue: number = 270) {
+export function useImageHueShift(
+  src: string,
+  targetHue?: number,
+  originalHue: number = 270,
+  options?: { strategy?: 'absolute' | 'relative'; preserveSkinTones?: boolean },
+) {
   const [displaySrc, setDisplaySrc] = useState<string>(src);
 
   useEffect(() => {
@@ -35,6 +40,8 @@ export function useImageHueShift(src: string, targetHue?: number, originalHue: n
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
+      const hueDiff = targetHue - originalHue;
+
       for (let i = 0; i < data.length; i += 4) {
         const r = data[i];
         const g = data[i + 1];
@@ -46,8 +53,24 @@ export function useImageHueShift(src: string, targetHue?: number, originalHue: n
 
         const [h, s, l] = rgbToHsl(r, g, b);
 
-        // Hue만 변경, 채도/명도는 유지
-        const [newR, newG, newB] = hslToRgb(targetHue, s, l);
+        let newR, newG, newB;
+
+        // 피부색 보호 로직 (대략 Hue 10~50 사이는 오렌지/살구색 계열)
+        const isSkinTone = options?.preserveSkinTones && h >= 10 && h <= 50;
+
+        if (isSkinTone) {
+          // 피부색이면 변경하지 않음
+          newR = r;
+          newG = g;
+          newB = b;
+        } else if (options?.strategy === 'relative') {
+          // 상대적 회전: 원본 픽셀의 Hue에 차이값을 더함
+          const newH = (h + hueDiff + 360) % 360;
+          [newR, newG, newB] = hslToRgb(newH, s, l);
+        } else {
+          // 절대적 변경 (기존 로직): 모든 픽셀을 targetHue로 고정
+          [newR, newG, newB] = hslToRgb(targetHue, s, l);
+        }
 
         data[i] = newR;
         data[i + 1] = newG;
@@ -57,7 +80,7 @@ export function useImageHueShift(src: string, targetHue?: number, originalHue: n
       ctx.putImageData(imageData, 0, 0);
       setDisplaySrc(canvas.toDataURL());
     };
-  }, [src, targetHue, originalHue]);
+  }, [src, targetHue, originalHue, options?.strategy, options?.preserveSkinTones]);
 
   return displaySrc;
 }
