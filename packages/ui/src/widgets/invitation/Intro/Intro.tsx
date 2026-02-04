@@ -55,7 +55,15 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
 
   return (
     <div className={styles.intro}>
-      <ThemedImage src={introPng} alt={label} className={styles.video} targetHue={themeHue} />
+      <ThemedImage
+        src={introPng}
+        alt={label}
+        className={styles.video}
+        targetHue={themeHue}
+        originalHue={215}
+        strategy="relative"
+        preserveSkinTones
+      />
 
       {bride && groom && (
         <div className={styles.contents}>
