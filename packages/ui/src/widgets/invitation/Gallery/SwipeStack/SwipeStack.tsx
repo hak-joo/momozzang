@@ -222,21 +222,21 @@ export function SwipeStack({
       // 하지만 스와이프 락이 걸린 상태였다면 스냅 처리 및 스크롤 잠금 해제 필요.
 
       if (isSwipeLockedRef.current) {
-         const startInt = Math.round(startActiveIndexRef.current);
-          let targetInt = Math.round(activeIndex);
+        const startInt = Math.round(startActiveIndexRef.current);
+        let targetInt = Math.round(activeIndex);
 
-          if (armedDirectionRef.current !== 0 && targetInt === startInt) {
-            targetInt = startInt + (armedDirectionRef.current > 0 ? +1 : -1);
-          }
+        if (armedDirectionRef.current !== 0 && targetInt === startInt) {
+          targetInt = startInt + (armedDirectionRef.current > 0 ? +1 : -1);
+        }
 
-          beginSnap(targetInt, { resetAutoClock: true });
+        beginSnap(targetInt, { resetAutoClock: true });
 
-          if (rootElRef.current) {
-            rootElRef.current.style.touchAction =
-              touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
-            touchActionRestoreRef.current = null;
-          }
-          unlockScroll();
+        if (rootElRef.current) {
+          rootElRef.current.style.touchAction =
+            touchActionRestoreRef.current !== null ? touchActionRestoreRef.current : 'pan-y';
+          touchActionRestoreRef.current = null;
+        }
+        unlockScroll();
       } else {
         // 스와이프가 아니었으므로 스냅 처리만 (혹은 원래 자리 유지)
         // 하지만 activeIndex가 변하지 않았으므로 beginSnap 호출 필요 없음.
@@ -244,7 +244,7 @@ export function SwipeStack({
         // 안전을 위해 스냅 타이머만 정리
         setIsSnapping(false);
       }
-      
+
       // Safety Unlock: 혹시 모를 잠금 고착 방지를 위해 일정 시간 후 잠금 해제 시도
       // 단, 새로운 드래그가 시작되지 않았을 때만 수행
       setTimeout(() => {
@@ -340,7 +340,13 @@ export function SwipeStack({
       </div>
 
       <div className={styles.purpleCat}>
-        <ThemedImage src={purpleCat} targetHue={themeHue} alt="" aria-hidden="true" />
+        <ThemedImage
+          src={purpleCat}
+          targetHue={themeHue}
+          strategy="relative"
+          alt=""
+          aria-hidden="true"
+        />
       </div>
     </>
   );
