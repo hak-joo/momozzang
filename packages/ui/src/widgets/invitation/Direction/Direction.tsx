@@ -17,14 +17,12 @@ import { useMessageDialog } from '@shared/ui/MessageDialog';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import { useMapNavigation } from './useMapNavigation';
 import { useParams } from 'react-router-dom';
-import { getThemeHue } from '@shared/styles/utils';
+import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 
 type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
 
 const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo'];
-
-
 
 export function Direction() {
   const { invitationId } = useParams();
@@ -37,9 +35,9 @@ export function Direction() {
 
   const themeHue = getThemeHue(customization?.themeColor);
 
-  const busIcon = useImageHueShift(busImg, themeHue);
-  const carIcon = useImageHueShift(carImg, themeHue);
-  const metroIcon = useImageHueShift(metroImg, themeHue);
+  const busIcon = useImageHueShift(busImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
+  const carIcon = useImageHueShift(carImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
+  const metroIcon = useImageHueShift(metroImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
 
   const transportationIcon = useMemo(() => {
     return {

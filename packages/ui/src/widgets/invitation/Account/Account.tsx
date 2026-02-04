@@ -12,6 +12,9 @@ import { Decoration } from '@shared/ui/Decoration/Decoration';
 import brideImg from '@shared/assets/images/bride.png';
 import groomImg from '@shared/assets/images/groom.png';
 import { DdayBadge } from '@shared/ui/DdayBadge';
+import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
+import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { getThemeHue } from '@shared/styles/utils';
 
 const SECTIONS: Array<{ side: Side; triggerLabel: string; imageSrc: string }> = [
   { side: 'groom', triggerLabel: '신랑측에게', imageSrc: groomImg },
@@ -25,6 +28,8 @@ export function Account() {
   const [openSections, setOpenSections] = useState<Side[]>([]);
   const pendingScrollSideRef = useRef<Side | null>(null);
   const scrollTimeoutRef = useRef<number | null>(null);
+  const { customization } = useInvitation();
+  const themeHue = getThemeHue(customization?.themeColor);
 
   const handleOpenValuesChange = useCallback((values: string[] | string) => {
     const nextValues = Array.isArray(values) ? (values as Side[]) : ([values] as Side[]);
@@ -126,7 +131,14 @@ export function Account() {
               <Accordion.Trigger className={styles.trigger}>
                 <div className={styles.triggerInner}>
                   <div className={styles.triggerContent}>
-                    <img src={imageSrc} width={28} height={28} alt={side} />
+                    <ThemedImage
+                      src={imageSrc}
+                      width={28}
+                      height={28}
+                      alt={side}
+                      targetHue={themeHue}
+                      preserveSkinTones
+                    />
                     <span className={styles.triggerLabel}>{triggerLabel}</span>
                   </div>
                 </div>
