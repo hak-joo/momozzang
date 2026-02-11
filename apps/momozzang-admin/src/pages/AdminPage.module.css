@@ -1,0 +1,76 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+.header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.slugInput {
+  flex: 1;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.sectionHeader {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #888;
+}
+
+.previewImage {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #333;
+}
+
+.previewMain {
+  aspect-ratio: 2/3;
+}
+
+.previewSquare {
+  aspect-ratio: 1/1;
+}
