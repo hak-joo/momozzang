@@ -73,7 +73,7 @@
   border: none;
   background: rgba(15, 8, 37, 0.45);
   z-index: 2;
-  border-radius: 24px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
