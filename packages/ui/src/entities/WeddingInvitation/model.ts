@@ -89,6 +89,7 @@ export interface EtcInfo {
   busInfo: EtcItem;
   carInfo: EtcItem;
   metroInfo: EtcItem;
+  shuttleInfo?: EtcItem;
 }
 export interface Account {
   id: string;
@@ -129,7 +130,6 @@ export interface BgmSettings {
   library: BgmTrack[];
   selectedTrackId?: string;
 }
-
 
 export type ThemeColorOptions = 'PURPLE' | 'GREEN' | 'PINK' | 'BLUE';
 

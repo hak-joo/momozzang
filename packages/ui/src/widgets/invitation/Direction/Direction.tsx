@@ -20,9 +20,9 @@ import { useParams } from 'react-router-dom';
 import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 
-type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo';
+type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo' | 'shuttleInfo';
 
-const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo'];
+const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo', 'shuttleInfo'];
 
 export function Direction() {
   const { invitationId } = useParams();
@@ -38,14 +38,16 @@ export function Direction() {
   const busIcon = useImageHueShift(busImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
   const carIcon = useImageHueShift(carImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
   const metroIcon = useImageHueShift(metroImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
+  const shuttleIcon = useImageHueShift(busImg, themeHue, PURPLE_HUE, { strategy: 'relative' });
 
   const transportationIcon = useMemo(() => {
     return {
       busInfo: { src: busIcon, label: '버스' },
       carInfo: { src: carIcon, label: '자차' },
       metroInfo: { src: metroIcon, label: '지하철' },
+      shuttleInfo: { src: shuttleIcon, label: '셔틀버스' },
     };
-  }, [busIcon, carIcon, metroIcon]);
+  }, [busIcon, carIcon, metroIcon, shuttleIcon]);
 
   const { info } = useToast();
   const confirm = useMessageDialog();
