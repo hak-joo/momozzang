@@ -12,6 +12,7 @@ import { useInvitationMutation } from '../features/invitation/api/useInvitationM
 import { useImageUploadMutation } from '../features/invitation/api/useImageUploadMutation';
 
 export default function AdminPage() {
+  const [inputSlug, setInputSlug] = useState('demo-captain-luna');
   const [slug, setSlug] = useState('demo-captain-luna');
 
   const {
@@ -33,6 +34,62 @@ export default function AdminPage() {
     }
   }, [fetchedInvitation, isError]);
 
+  const handleLoad = () => {
+    setSlug(inputSlug);
+  };
+
+  const handleImageResize = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const maxWidth = 1920;
+      const maxHeight = 1080;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const resizedFile = new File([blob], file.name, {
+                  type: file.type,
+                  lastModified: Date.now(),
+                });
+                resolve(resizedFile);
+              } else {
+                reject(new Error('Canvas to Blob failed'));
+              }
+            },
+            file.type,
+            0.8,
+          );
+        };
+        img.onerror = (error) => reject(error);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleSave = () => {
     if (!invitation) return;
     saveInvitation(
@@ -50,7 +107,8 @@ export default function AdminPage() {
   const handleSingleUpload = async (file: File, field: 'main' | 'share' | 'bride' | 'groom') => {
     if (!invitation) return;
     try {
-      const url = await uploadImage(file);
+      const resizedFile = await handleImageResize(file);
+      const url = await uploadImage(resizedFile);
       const newData = { ...invitation };
 
       if (field === 'main') {
@@ -79,11 +137,15 @@ export default function AdminPage() {
         <h1 className={styles.title}>Momozzang Admin</h1>
         <div className={styles.controls}>
           <Input
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
+            value={inputSlug}
+            onChange={(e) => setInputSlug(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
             placeholder="Invitation Slug"
             className={styles.slugInput}
           />
+          <Button onClick={handleLoad} variant="secondary">
+            Load
+          </Button>
         </div>
         {isLoadingQuery && <span style={{ marginLeft: 10 }}>Loading data...</span>}
         {isSaving && <span style={{ marginLeft: 10 }}>Saving...</span>}
@@ -107,6 +169,7 @@ export default function AdminPage() {
                       src={invitation.customization.mainImageUrl}
                       alt="Main"
                       className={clsx(styles.previewImage, styles.previewMain)}
+                      loading="lazy"
                     />
                   )}
                   <input
@@ -125,6 +188,7 @@ export default function AdminPage() {
                       src={invitation.invitationInfo.shareImageUrl}
                       alt="Share"
                       className={clsx(styles.previewImage, styles.previewSquare)}
+                      loading="lazy"
                     />
                   )}
                   <input
@@ -148,6 +212,7 @@ export default function AdminPage() {
                       src={invitation.aboutUs.groomImageUrl}
                       alt="Groom"
                       className={clsx(styles.previewImage, styles.previewSquare)}
+                      loading="lazy"
                     />
                   )}
                   <input
@@ -166,6 +231,7 @@ export default function AdminPage() {
                       src={invitation.aboutUs.brideImageUrl}
                       alt="Bride"
                       className={clsx(styles.previewImage, styles.previewSquare)}
+                      loading="lazy"
                     />
                   )}
                   <input
