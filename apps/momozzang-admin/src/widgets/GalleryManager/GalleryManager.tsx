@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -7,6 +7,9 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  MeasuringStrategy,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -18,7 +21,7 @@ import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { supabase } from '@momozzang/ui/src/shared/lib/supabase';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
-import { SortableImage } from './SortableImage';
+import { SortableImage, PhotoItem } from './SortableImage';
 import styles from './GalleryManager.module.css';
 
 interface GalleryManagerProps {
@@ -26,31 +29,111 @@ interface GalleryManagerProps {
   onChange: (newAlbum: AlbumPhoto[]) => void;
 }
 
+const getThumbnailUrl = (url: string) => {
+  if (url.includes('supabase')) {
+    return `${url}?width=200`;
+  }
+  return url;
+}; // Helper to get thumbnail URL
+
 export function GalleryManager({ album, onChange }: GalleryManagerProps) {
   const [uploading, setUploading] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  }, []);
 
-    if (over && active.id !== over.id) {
-      const oldIndex = album.findIndex((item) => item.id === active.id);
-      const newIndex = album.findIndex((item) => item.id === over.id);
+  const handleDragCancel = useCallback(() => {
+    setActiveId(null);
+  }, []);
 
-      onChange(arrayMove(album, oldIndex, newIndex));
-    }
-  };
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to remove this photo?')) {
-      onChange(album.filter((item) => item.id !== id));
-    }
+      if (over && active.id !== over.id) {
+        const oldIndex = album.findIndex((item) => item.id === active.id);
+        const newIndex = album.findIndex((item) => item.id === over.id);
+
+        onChange(arrayMove(album, oldIndex, newIndex));
+      }
+
+      setActiveId(null);
+    },
+    [album, onChange],
+  );
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (confirm('Are you sure you want to remove this photo?')) {
+        onChange(album.filter((item) => item.id !== id));
+      }
+    },
+    [album, onChange],
+  );
+
+  const handleImageResize = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const maxWidth = 1920;
+      const maxHeight = 1080;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const resizedFile = new File([blob], file.name, {
+                  type: file.type,
+                  lastModified: Date.now(),
+                });
+                resolve(resizedFile);
+              } else {
+                reject(new Error('Canvas to Blob failed'));
+              }
+            },
+            file.type,
+            0.8,
+          );
+        };
+        img.onerror = (error) => reject(error);
+      };
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,10 +153,19 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const fileExt = file.name.split('.').pop();
+        let fileToUpload = file;
+        try {
+          fileToUpload = await handleImageResize(file);
+        } catch (e) {
+          console.error('Resize failed for gallery image', e);
+        }
+
+        const fileExt = fileToUpload.name.split('.').pop();
         const fileName = `gallery-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-        const { error } = await supabase.storage.from('wedding-images').upload(fileName, file);
+        const { error } = await supabase.storage
+          .from('wedding-images')
+          .upload(fileName, fileToUpload);
 
         if (error) throw error;
 
@@ -120,14 +212,41 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
         </Button>
       </div>
 
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+        measuring={{
+          droppable: {
+            strategy: MeasuringStrategy.Always,
+          },
+        }}
+      >
         <SortableContext items={album.map((p) => p.id)} strategy={rectSortingStrategy}>
           <div className={styles.grid}>
             {album.map((photo) => (
-              <SortableImage key={photo.id} photo={photo} onRemove={() => handleDelete(photo.id)} />
+              <SortableImage
+                key={photo.id}
+                photo={photo}
+                onRemove={() => handleDelete(photo.id)}
+                thumbnailUrl={getThumbnailUrl(photo.url)}
+              />
             ))}
           </div>
         </SortableContext>
+        <DragOverlay>
+          {activeId ? (
+            <PhotoItem
+              photo={album.find((p) => p.id === activeId)!}
+              isDragging
+              isOverlay
+              style={{ cursor: 'grabbing' }}
+              thumbnailUrl={getThumbnailUrl(album.find((p) => p.id === activeId)!.url)}
+            />
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </Box>
   );

@@ -13,8 +13,9 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 16px;
+  width: 100%;
 }
 
 .sortableItem {
@@ -24,6 +25,8 @@
   overflow: hidden;
   background-color: #333;
   touch-action: none;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .image {
