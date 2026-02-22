@@ -105,7 +105,7 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-
+  gap: 12px;
   .item {
     display: flex;
     flex-direction: column;
