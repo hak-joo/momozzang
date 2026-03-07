@@ -90,7 +90,7 @@
 }
 
 .accountDetailValue {
-  @mixin typo-desc2;
+  @mixin typo-desc1-single;
   color: var(--color-main-600);
   display: flex;
   align-items: center;
