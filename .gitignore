@@ -28,3 +28,11 @@ dist-ssr
 .env*
 
 *.tsbuildinfo
+
+# 하네스 실행 산출물 (템플릿은 커밋, 실행 결과는 제외)
+.harness/runs/
+
+# 로컬 도구 상태 (oh-my-claudecode, Claude Code 로컬 설정, pnpm 스토어)
+.omc/
+.claude/settings.local.json
+.pnpm-store/
