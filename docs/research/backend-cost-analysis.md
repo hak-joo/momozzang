@@ -16,11 +16,11 @@
 
 ## 1. 요약 (TL;DR)
 
-1. **과거 비용의 가장 그럴듯한 원인은 "Free 플랜의 uncached egress 5GB / cached egress 5GB 한도 초과"이며, raw public URL을 그대로 `<img src>`로 쓰는 현재 구조 자체는 캐시 친화적이다.** 진짜 위험은 (a) 단일 업로드 경로의 **리사이즈 누락**으로 원본 대용량 파일이 그대로 전송되는 점, (b) Free 플랜에서 Smart CDN(높은 캐시 적중률)이 비활성이라 cache MISS가 곧장 **uncached egress 5GB**를 빠르게 소진하는 점이다. (근거: [§3.4 Q4])
+1. **과거 비용의 원인은 운영자 제공 증거(Supabase Fair Use 통지 메일)로 확정됐다: Free 플랜의 "cached egress" 한도(5GB) 초과다.** 캐시는 오히려 잘 동작했지만, Supabase는 **CDN 캐시 HIT로 나간 트래픽(cached egress)도 계량**하므로 하객 조회가 늘면 캐시 적중 여부와 무관하게 한도가 소진된다. 단일 업로드 경로의 **리사이즈 누락**(원본 대용량 전송)은 소진 속도를 키운 증폭 요인이다. (근거·메일 원문: [§3.4 Q4])
 2. **어드민 썸네일의 `?width=200` 변환은 Free 플랜에서는 애초에 동작하지 않는다.** 이미지 변환(Image Transformation)은 Pro 플랜 이상 전용이다. 따라서 변환이 과거 비용의 원인이었을 가능성은 낮다(Free였다면 변환 자체가 불가). (근거: [§3.3 Q3])
 3. **Supabase를 유지하면서 비용을 0에 수렴시키는 최선의 조합은 "긴 `cacheControl` + 커스텀 도메인 앞단에 Cloudflare(무료) 캐시"** 다. 코드 변경은 업로드 옵션 한 줄과 저장 URL의 도메인 치환 수준으로 작다. (근거: [§4 Q5·Q6·Q8])
 4. **트래픽이 커질 경우의 정답은 Cloudflare R2 (egress 전면 무료) 또는 Backblaze B2 + Cloudflare(파트너 CDN 경유 egress 무료)** 다. read-heavy 청첩장 패턴에서 egress 과금이 구조적으로 0이 된다. (근거: [§5 Q10·Q11])
-5. **권고 한 줄**: 현 규모 유지라면 "Supabase 업로드 `cacheControl` 상향 + 단일 업로드 경로 리사이즈 추가"만으로 무료 유지가 현실적이고, 트래픽 증가가 예상되면 **Cloudflare R2 + 커스텀 도메인**으로 이전해 egress 비용을 구조적으로 제거하라.
+5. **권고 한 줄**: cached egress 자체가 계량되는 이상 Supabase 단독으로는 트래픽이 늘면 무료가 다시 깨진다. **커스텀 도메인 + Cloudflare(무료) 앞단 캐시를 필수로 두고(+단일 업로드 리사이즈 보완), 트래픽 증가가 예상되면 Cloudflare R2 + 커스텀 도메인**으로 이전해 egress 비용을 구조적으로 제거하라.
 
 ---
 
@@ -102,18 +102,21 @@ const getThumbnailUrl = (url: string) => {
 ### 3.3 Q3 — 이미지 변환(Image Transformation) 별도 과금 및 어드민 썸네일 영향
 
 - **플랜 요구**: "Image Resizing is currently enabled for Pro Plan and above." → **Free 플랜에서는 변환 자체가 불가**. (출처: https://supabase.com/docs/guides/storage/serving/image-transformations , 확인일: 2026-06-10)
-- **과금**: Pro 이상에서 **변환된 원본 이미지(origin image) 단위로 월 과금**, Pro는 월 100건 무료, 초과분 **$0.001/1,000 images**. `?width=` 쿼리도 변환 요청으로 과금에 포함된다. (출처: https://supabase.com/docs/guides/storage/serving/image-transformations , 확인일: 2026-06-10)
+- **과금**: Pro 이상에서 **변환된 원본 이미지(origin image) 단위로 월 과금**, Pro는 월 100건 무료, 초과분 **$5 / 1,000 origin images**. `?width=` 쿼리도 변환 요청으로 과금에 포함된다. (출처: https://supabase.com/docs/guides/storage/serving/image-transformations , 확인일: 2026-06-10)
 - **어드민 썸네일 영향도**: 하객 경로는 변환을 쓰지 않으므로 변환 과금 영향이 없다. 어드민 `?width=200`은 **Pro 이상에서만 실제 변환**을 호출하며, 변환 건수는 origin 이미지 수 기준이라 어드민이 같은 썸네일을 반복 봐도 변환 건수가 폭증하진 않는다. **Free 플랜이었다면 이 코드는 변환을 일으키지 못하므로 과거 비용 원인일 가능성은 낮다.**
 
-### 3.4 Q4 — 과거 비용을 가장 잘 설명하는 원인 가설 (cached/uncached 구분)  [핵심출처 ①]
+### 3.4 Q4 — 과거 비용의 원인 (운영자 증거로 확정, cached/uncached 구분)  [핵심출처 ①]
 
-현재 구조(raw public URL + 쿼리스트링 없는 직접 로드)는 **그 자체로는 캐시 친화적**이다(고유 immutable URL, public 버킷 → 높은 적중률 잠재력). 따라서 "raw public URL이라서 비싸다"는 단순 가설은 약하다. 비용을 가장 잘 설명하는 가설은 다음 조합이다:
+> **확정 근거 (2026-06-11, 운영자 제공)**: 과거 Free 플랜 사용 중 트래픽 급증 후 서비스가 중지됐고, Supabase의 Fair Use Policy 통지 메일이 조치 항목으로 "**Reduce your cached egress bandwidth below 5.5 GB**"를 명시했다. 즉 초과한 쪽은 uncached가 아니라 **cached egress**다.
 
-1. **(주원인) Free 플랜의 uncached egress 5 GB 한도 소진.** Free는 Smart CDN이 비활성이라 캐시 적중률이 낮고, 첫 요청·TTL 만료(기본 3600초=1시간)·지역별 cold edge로 인한 **MISS가 곧 uncached egress(5GB)로 직행**한다. cached/uncached가 각 5GB로 분리 계상되므로, 적중률이 낮은 상태에서는 uncached 5GB가 먼저 터진다. (근거: cached/uncached 분리 한도·정의 — 출처: https://supabase.com/docs/guides/storage/serving/bandwidth , https://supabase.com/docs/guides/platform/manage-your-usage/egress , 확인일: 2026-06-10) **[핵심출처 ①]**
-2. **(증폭 요인) 단일 업로드 경로의 리사이즈 누락.** `useImageUploadMutation.ts`는 원본을 리사이즈 없이 올린다([§2.1]). 대표/공유/소개 이미지가 수 MB 원본이면 조회 1회당 전송량이 크고, 미스 시 uncached egress를 빠르게 잠식한다.
-3. **(반례 정리) 이미지 변환은 과거 비용 원인이 아닐 가능성이 높다.** Free에서는 변환이 비활성이므로([§3.3 Q3]) `?width=200`이 과금을 일으킬 수 없다.
+현재 구조(raw public URL + 쿼리스트링 없는 직접 로드)는 그 자체로 캐시 친화적이며, 실제로도 캐시는 잘 동작했다. 문제는 캐시 적중률이 아니라, **Supabase가 CDN 캐시 HIT로 서빙된 트래픽(cached egress)도 별도 한도(Free 5GB)로 계량한다는 구조**다. ("Cached egress is egress ... served from our CDN via cache hits" — 출처: https://supabase.com/docs/guides/platform/manage-your-usage/egress , 확인일: 2026-06-10) **[핵심출처 ①]**
 
-> **결론 가설**: "Free 플랜에서 Smart CDN 부재 + 단일 업로드 미리사이즈 원본 → cache MISS가 uncached egress 5GB 한도를 빠르게 소진"이 과거 비용을 가장 잘 설명한다.
+1. **(주원인 — 확정)** 동일 사진을 다수 하객이 반복 조회 → 대부분 CDN 캐시 HIT로 서빙됐지만, 그 전송량이 **cached egress 5GB 한도**를 초과했다 (메일의 5.5GB는 한도 5GB에 대한 공정사용 유예 기준선). 핵심 함의: **캐시 적중률을 높여도 Supabase가 계량하는 egress는 줄지 않는다.** 절감하려면 트래픽을 Supabase 밖(브라우저 캐시, 외부 CDN)에서 흡수하거나 전송 바이트 자체를 줄여야 한다.
+2. **(증폭 요인) 단일 업로드 경로의 리사이즈 누락.** `useImageUploadMutation.ts`는 원본을 리사이즈 없이 올린다([§2.1]). 대표/공유/소개 이미지가 수 MB 원본이면 조회 1회당 cached egress 소모가 그만큼 크다.
+3. **(반례 정리) 이미지 변환은 과거 비용 원인이 아니다.** Free에서는 변환이 비활성이므로([§3.3 Q3]) `?width=200`이 과금을 일으킬 수 없다.
+4. **(초안 가설 정정)** 본 보고서 초안은 "Free의 Smart CDN 부재 → cache MISS가 uncached egress를 소진"을 주원인으로 가설했으나, 운영자 증거로 **cached egress 초과가 실제 원인**임이 확인되어 본 절을 정정했다 (2026-06-11). Free 플랜에서도 Storage 공개 객체 조회가 CDN 캐시 HIT(=cached egress)로 계량됨이 실측으로 확인된 셈이다.
+
+> **결론(확정)**: "다수 하객의 반복 조회가 CDN 캐시 HIT로 서빙되며 cached egress 5GB 한도를 초과"한 것이 과거 비용/서비스 중지의 원인이다. 따라서 해법은 캐시 적중률 개선이 아니라 **(i) Supabase 앞단(Cloudflare 등 외부 CDN)에서 트래픽 흡수, (ii) 전송 바이트 축소(리사이즈), (iii) egress 무료 스토리지(R2 등)로 이전** 중 하나여야 한다.
 
 ---
 
@@ -127,7 +130,7 @@ const getThumbnailUrl = (url: string) => {
 
 | # | 절감안 (질문) | 구현 난이도 | 코드 변경 범위 | 예상 절감 (근거: [핵심출처 ②]) |
 |---|--------------|------------|----------------|---------|
-| Q5 | **캐시 친화 URL/헤더**: 업로드 시 `cacheControl`을 길게(예: `31536000, immutable`) 설정. 파일명이 이미 immutable이므로 안전. | 낮음 | `useImageUploadMutation.ts` L13, `GalleryManager.tsx` L168의 `upload(...)`에 3번째 인자 `{ cacheControl: '31536000' }` 추가. 추가로 단일 업로드 경로에 갤러리와 동일한 리사이즈 추가 권장. | 브라우저/edge 캐시 TTL 1시간→1년으로 재요청 자체를 격감. 재방문·다회 조회 egress 대폭 감소. 다만 Free는 Smart CDN 부재로 edge 효과 제한적 → 핵심은 Q6와 병행. |
+| Q5 | **캐시 친화 URL/헤더**: 업로드 시 `cacheControl`을 길게(예: `31536000, immutable`) 설정. 파일명이 이미 immutable이므로 안전. | 낮음 | `useImageUploadMutation.ts` L13, `GalleryManager.tsx` L168의 `upload(...)`에 3번째 인자 `{ cacheControl: '31536000' }` 추가. 추가로 단일 업로드 경로에 갤러리와 동일한 리사이즈 추가 권장. | 브라우저 캐시 TTL 1시간→1년으로 **같은 하객의 재방문/재요청 egress를 제거**. 단 **Supabase는 CDN 캐시 HIT(cached egress)도 계량하므로([§3.4 Q4]) 이것만으로는 신규 방문자 트래픽의 한도 소진을 못 막는다** → 핵심은 Q6와 병행. |
 | Q6 | **앞단 Cloudflare(무료) 캐시**: 커스텀 도메인을 Cloudflare로 프록시하고 Cache Rule로 이미지 경로를 캐시. 저장 URL의 도메인을 Supabase → 커스텀 도메인으로 치환. | 중간 | (1) Cloudflare에 도메인 추가·Cache Rule 설정(코드 무관). (2) 신규 저장 URL을 `https://img.example.com/...`로 만들기 위해 `getPublicUrl` 결과 도메인 치환 헬퍼 추가(`useImageUploadMutation.ts`, `GalleryManager.tsx`). (3) 기존 `data` JSON의 URL 일괄 치환 마이그레이션. | Cloudflare 캐시 HIT는 무료 대역폭으로 처리되어 **Supabase egress가 cache HIT 트래픽만큼 0으로 대체**. 반복 조회가 대부분인 청첩장에 최적. |
 | Q7 | **Vercel 경유 rewrite**: `vercel.json` rewrite로 이미지를 Vercel을 통해 서빙. | 낮음~중간 | `vercel.json`에 이미지 rewrite 추가, 저장 URL 경로 치환. | **권장하지 않음.** Supabase egress를 Vercel Hobby의 **100GB/월 대역폭**(출처: https://vercel.com/docs/limits , 확인일: 2026-06-10)으로 옮길 뿐이고, Hobby는 초과 시 과금 없이 **차단(다음 주기까지 정지)** + 상업적 사용 제한이 있어 청첩장 운영에 부적합. 비용을 줄이기보다 한도를 옮기는 효과. |
 | Q8 | **"코드 변경 최소 + 절감 최대" 조합** | — | — | **Q5(헤더 1줄 + 단일 경로 리사이즈) + Q6(Cloudflare 무료 앞단)**. Q5는 즉시 적용 가능한 최소 변경, Q6는 반복 조회 egress를 무료 캐시로 대체. 기존 URL 마이그레이션은 Q6에서 1회 필요(신규 업로드부터는 새 도메인). |
@@ -186,12 +189,13 @@ const getThumbnailUrl = (url: string) => {
 ### 시나리오 (a) — 현 규모 유지 (소수 청첩장, 간헐적 트래픽)
 
 - **권장 서비스**: **Supabase 유지.**
-- **권장 캐시 전략**: 업로드 시 `cacheControl: '31536000'`(1년, immutable) 적용으로 재요청 최소화. (선택) 커스텀 도메인 앞단에 Cloudflare 무료 캐시.
+- **권장 캐시 전략**: 업로드 시 `cacheControl: '31536000'`(1년, immutable)로 같은 하객의 재요청 제거 + **커스텀 도메인 앞단 Cloudflare 무료 캐시(필수)**. cached egress도 계량된다는 점이 실측 확정됐으므로([§3.4 Q4]) 신규 방문자 트래픽은 Cloudflare가 흡수해야 무료 유지가 성립한다 — cacheControl만으로는 과거와 동일하게 한도가 깨진다.
 - **필요한 코드 변경 목록**:
   1. `useImageUploadMutation.ts` L13 `upload(filePath, file)` → `upload(filePath, file, { cacheControl: '31536000' })`.
   2. `GalleryManager.tsx` L166~168 `upload(fileName, fileToUpload)` → `{ cacheControl: '31536000' }` 추가.
   3. `useImageUploadMutation.ts`에 **갤러리와 동일한 리사이즈 로직 추가**(단일 업로드 원본 대용량 전송 차단) — `GalleryManager.tsx`의 `handleImageResize`를 공용 util로 추출해 재사용 권장.
-- **마이그레이션 단계**: 코드 변경 후 신규 업로드부터 즉시 효과. 기존 파일은 그대로 둬도 무방(점진 적용). Free 1GB 저장·egress 한도 내 운영 목표.
+  4. **[§4 Q6] Cloudflare 앞단 구성**: 커스텀 도메인 프록시 + 이미지 경로 Cache Rule, 저장 URL 도메인 치환 헬퍼, 기존 `data` JSON URL 1회 마이그레이션.
+- **마이그레이션 단계**: 1~3은 코드 변경 후 신규 업로드부터 즉시 효과(기존 파일 점진 적용 무방). 4는 도메인 준비 후 적용하며, 완료 전까지는 cached egress 한도 재초과 위험이 남는다. Free 1GB 저장·egress 한도 내 운영 목표.
 
 ### 시나리오 (b) — 트래픽 증가 (다수 청첩장, 바이럴 조회)
 
@@ -209,6 +213,27 @@ const getThumbnailUrl = (url: string) => {
   3. `momozzang` 테이블 JSON `data`의 이미지 URL을 새 도메인으로 일괄 치환(1회성 마이그레이션 스크립트).
   4. 신규 업로드 경로를 R2로 전환 후 Supabase Storage는 검증 기간 뒤 정리.
 
+### 6.3 확정 로드맵 — 셀프서비스 신청 폼 계획 반영 (2026-06-11 추가)
+
+> **전제 변경**: 운영자가 추후 **신청 폼**(정보 입력 → 사진 첨부 → 업로드 → 청첩장 발급) 프로세스를 도입할 계획을 확정했다. 이는 멀티테넌트 성장(청첩장 수 × 하객 수에 비례하는 저장량·트래픽)을 의미하므로, **시나리오 (a)/(b) 선택지는 (b) 기반으로 확정**된다. 단 Supabase를 완전히 떠나는 것이 아니라 다음 하이브리드를 목표 아키텍처로 한다.
+
+**목표 아키텍처 (하이브리드)**
+
+| 역할 | 서비스 | 근거 |
+|------|--------|------|
+| DB(`momozzang`, `guestbooks`) + 추후 신청자 인증 | **Supabase 유지** | JSON 텍스트 위주라 egress 미미. Repository 패턴이라 코드 변경 없음 |
+| 이미지 저장·서빙 | **Cloudflare R2 + 커스텀 도메인** | egress 무료([§5 Q10]). 뷰어의 `<img src=url>` 패턴 유지 가능 |
+| 업로드 통제(사전서명 URL 발급, 검증, 쿼터) | Cloudflare Worker 또는 기존 Render 백엔드(`/api/*` 프록시 활용) | 불특정 사용자 업로드를 받는 신청 폼의 전제조건 |
+
+**단계별 계획**
+
+1. **[1단계] 본 보고서 확정** — 보정분 커밋 + PR. (완료 시점: 본 섹션 추가와 함께)
+2. **[2단계] 즉시 코드 보완 (도메인 불필요)** — 시나리오 (a) 변경 목록 1~3: 업로드 2곳 `cacheControl: '31536000'` + 단일 업로드 경로 리사이즈(공용 util 추출). R2 전환 후에도 그대로 유효하며, **리사이즈 util은 신청 폼의 핵심 부품으로 재사용**된다. R2 전환 완료 전까지의 임시 방어를 겸한다.
+3. **[3단계] R2 전환 (신청 폼 개발 전 선행)** — 시나리오 (b) 마이그레이션 1~4 + 사전서명 업로드 엔드포인트 구축. 어드민 업로드를 새 경로로 먼저 전환해 검증한다. **신청 폼을 위해 어차피 업로드 파이프라인을 재설계해야 하므로, 이 시점에 R2로 가면 마이그레이션을 두 번 하지 않는다.**
+4. **[4단계] 신청 폼 개발** — 3단계의 통제된 업로드 파이프라인 위에 폼 프로세스(정보 입력 → 사진 첨부 → 발급)를 순수 제품 기능으로 구현. 폼 업로드에는 2단계의 리사이즈 util + 파일 크기/타입 검증 + 사용자별 쿼터를 적용한다.
+
+> **순서의 핵심**: 3단계가 4단계의 전제다. 폼부터 만들면 통제되지 않은 업로드 경로(현 anon key 직접 업로드) 위에 짓게 되어 비용·보안 양쪽이 깨진다.
+
 ---
 
 ## 7. 부록
@@ -221,7 +246,7 @@ const getThumbnailUrl = (url: string) => {
 
 ### 부록 B. 미확인 항목 (출처를 확정하지 못해 본문에서 단정하지 않음)
 
-- **Supabase 유료 플랜 egress 초과 요율($0.03/$0.09)의 공식 가격 페이지 표 셀 수치**: 공식 docs 페이지에서 표 셀이 플레이스홀더로 렌더되어 직접 확인 불가했고, Supabase 공식 블로그(storage-500gb-uploads-cheaper-egress-pricing) 본문에서만 확인했다. 본문에서는 블로그를 출처로 명시하고 "참고"로만 사용.
+- ~~**Supabase 유료 플랜 egress 초과 요율($0.03/$0.09)의 공식 가격 페이지 표 셀 수치**~~: (QA 검증에서 해소) 공식 docs `manage-your-usage/egress` 페이지 본문에서 cached $0.03/GB, uncached $0.09/GB 요율이 정상 확인됨 (확인일: 2026-06-10). Supabase 공식 블로그(storage-500gb-uploads-cheaper-egress-pricing)와도 일치.
 - **Cloudflare 무료 플랜으로 Supabase 앞단 캐시 시 대용량 미디어의 "무제한 무료" 보장 여부**: Cloudflare 무료 플랜은 캐시된 정적 콘텐츠 대역폭에 과금하지 않으나, 대용량 비-HTML 미디어의 과도한 사용은 서비스 약관(공정 사용) 대상이 될 수 있다. 명시적 GB 한도를 공식 페이지에서 수치로 확정하지 못해 "무제한"을 단정하지 않음.
 - **Firebase 신규 버킷 "기존 버킷 접근 유지 Blaze 의무화"의 최종 발효일**: 공지 페이지의 날짜가 갱신되어 본문에서는 "신규 버킷=Blaze 필수"만 단정하고, 기존 버킷 접근 의무화 시점은 공지 페이지 참조로 위임.
 
