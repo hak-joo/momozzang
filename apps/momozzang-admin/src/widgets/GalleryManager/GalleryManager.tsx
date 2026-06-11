@@ -20,6 +20,7 @@ import {
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { supabase } from '@momozzang/ui/src/shared/lib/supabase';
+import { buildThumbnailUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { SortableImage, PhotoItem } from './SortableImage';
 import { resizeImage } from '../../shared/lib/resizeImage';
@@ -29,13 +30,6 @@ interface GalleryManagerProps {
   album: AlbumPhoto[];
   onChange: (newAlbum: AlbumPhoto[]) => void;
 }
-
-const getThumbnailUrl = (url: string) => {
-  if (url.includes('supabase')) {
-    return `${url}?width=200`;
-  }
-  return url;
-}; // Helper to get thumbnail URL
 
 export function GalleryManager({ album, onChange }: GalleryManagerProps) {
   const [uploading, setUploading] = useState(false);
@@ -118,11 +112,10 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
 
         if (error) throw error;
 
-        const { data } = supabase.storage.from('wedding-images').getPublicUrl(fileName);
-
+        // 절대 URL이 아닌 객체 키만 저장한다. id 와 url 은 동일 키를 유지.
         newPhotos.push({
           id: fileName, // Using filename as ID for simplicity
-          url: data.publicUrl,
+          url: fileName,
         });
       }
 
@@ -180,7 +173,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
                 key={photo.id}
                 photo={photo}
                 onRemove={() => handleDelete(photo.id)}
-                thumbnailUrl={getThumbnailUrl(photo.url)}
+                thumbnailUrl={buildThumbnailUrl(photo.url, { width: 200 })}
               />
             ))}
           </div>
@@ -192,7 +185,9 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
               isDragging
               isOverlay
               style={{ cursor: 'grabbing' }}
-              thumbnailUrl={getThumbnailUrl(album.find((p) => p.id === activeId)!.url)}
+              thumbnailUrl={buildThumbnailUrl(album.find((p) => p.id === activeId)!.url, {
+                width: 200,
+              })}
             />
           ) : null}
         </DragOverlay>
