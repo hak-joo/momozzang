@@ -27,6 +27,26 @@ export default function ApplyPage() {
     setWeddingHall,
     setTheme,
     setThemeColor,
+    setOrder,
+    setOrderPhone,
+    setCouplePerson,
+    setCouplePhone,
+    setParentsEnabled,
+    setParentPerson,
+    setParentPhone,
+    addAccount,
+    removeAccount,
+    updateAccount,
+    setGiftMoney,
+    setEtcEnabled,
+    addEtcLine,
+    updateEtcLine,
+    removeEtcLine,
+    setRsvp,
+    setRsvpInclude,
+    setRsvpPerSide,
+    setRsvpPerSideInclude,
+    setAboutUs,
   } = useApplyForm();
 
   return (
@@ -100,6 +120,26 @@ export default function ApplyPage() {
               onWeddingHallChange={setWeddingHall}
               onThemeChange={setTheme}
               onThemeColorChange={setThemeColor}
+              onOrderChange={setOrder}
+              onOrderPhoneChange={setOrderPhone}
+              onCouplePersonChange={setCouplePerson}
+              onCouplePhoneChange={setCouplePhone}
+              onParentsEnabledChange={setParentsEnabled}
+              onParentPersonChange={setParentPerson}
+              onParentPhoneChange={setParentPhone}
+              onAddAccount={addAccount}
+              onRemoveAccount={removeAccount}
+              onUpdateAccount={updateAccount}
+              onGiftMoneyChange={setGiftMoney}
+              onEtcEnabledChange={setEtcEnabled}
+              onAddEtcLine={addEtcLine}
+              onUpdateEtcLine={updateEtcLine}
+              onRemoveEtcLine={removeEtcLine}
+              onRsvpChange={setRsvp}
+              onRsvpIncludeChange={setRsvpInclude}
+              onRsvpPerSideChange={setRsvpPerSide}
+              onRsvpPerSideIncludeChange={setRsvpPerSideInclude}
+              onAboutUsChange={setAboutUs}
             />
           )}
           {step === 2 && (

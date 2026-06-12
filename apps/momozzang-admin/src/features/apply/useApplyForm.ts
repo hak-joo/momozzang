@@ -5,7 +5,74 @@ import {
   type ThemeKind,
   type ThemeColorOptions,
   type AmPm,
+  type Person,
+  type Account,
+  type Side,
+  type EtcInfo,
+  type EtcItem,
+  type Parents,
+  type RsvpSettings,
+  type AboutUs,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+
+/** 혼주 4인 슬롯 키 (Parents의 Person 필드) */
+export type ParentSlot = 'groomFather' | 'groomMother' | 'brideFather' | 'brideMother';
+
+/** 계좌가 붙는 소유자 — 신랑/신부 본인 또는 혼주 4인 */
+export type AccountOwner = { kind: 'couple'; side: Side } | { kind: 'parent'; slot: ParentSlot };
+
+/** 교통 안내 종류 (셔틀 포함) */
+export type EtcKey = 'busInfo' | 'carInfo' | 'metroInfo' | 'shuttleInfo';
+
+/** 교통 안내 배열 종류 — info(본문) / subInfo(보조) */
+export type EtcField = 'info' | 'subInfo';
+
+let accountIdSeq = 0;
+function createAccountId(): string {
+  accountIdSeq += 1;
+  return `acct-form-${Date.now().toString(36)}-${accountIdSeq}`;
+}
+
+function emptyAccount(): Account {
+  return {
+    id: createAccountId(),
+    target: 'self',
+    bank: '',
+    accountNumber: '',
+    accountHolder: '',
+    kakaoPayEnabled: false,
+  };
+}
+
+function emptyPerson(): Person {
+  return {
+    name: '',
+    phone: { number: '', isInternational: false, countryCode: '+82' },
+  };
+}
+
+const DEFAULT_RSVP: RsvpSettings = {
+  enabled: false,
+  title: '',
+  content: '',
+  include: {
+    attendeeCount: false,
+    mealOption: false,
+    contact: false,
+    companionName: false,
+    charterBus: false,
+  },
+  separateForBrideGroom: false,
+  popupOnAccess: false,
+};
+
+const DEFAULT_ABOUT_US: AboutUs = {
+  title: '',
+  groomDesc: '',
+  groomImageUrl: '',
+  brideDesc: '',
+  brideImageUrl: '',
+};
 
 /**
  * 신청 폼 단일 진실원천.
@@ -18,15 +85,13 @@ export function useApplyForm() {
     structuredClone(exampleWeddingInvitation),
   );
 
-  const setInvitationInfo = useCallback(
-    (patch: Partial<WeddingInvitation['invitationInfo']>) => {
-      setInvitation((prev) => ({
-        ...prev,
-        invitationInfo: { ...prev.invitationInfo, ...patch },
-      }));
-    },
-    [],
-  );
+  // ── 기본 정보 / 신랑·신부 이름 / 예식 / 테마 (S1) ───────────────────────────
+  const setInvitationInfo = useCallback((patch: Partial<WeddingInvitation['invitationInfo']>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      invitationInfo: { ...prev.invitationInfo, ...patch },
+    }));
+  }, []);
 
   const setGroomName = useCallback((name: string) => {
     setInvitation((prev) => ({
@@ -42,15 +107,12 @@ export function useApplyForm() {
     }));
   }, []);
 
-  const setWeddingHall = useCallback(
-    (patch: Partial<WeddingInvitation['weddingHallInfo']>) => {
-      setInvitation((prev) => ({
-        ...prev,
-        weddingHallInfo: { ...prev.weddingHallInfo, ...patch },
-      }));
-    },
-    [],
-  );
+  const setWeddingHall = useCallback((patch: Partial<WeddingInvitation['weddingHallInfo']>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      weddingHallInfo: { ...prev.weddingHallInfo, ...patch },
+    }));
+  }, []);
 
   const setTheme = useCallback((theme: ThemeKind) => {
     setInvitation((prev) => ({ ...prev, theme }));
@@ -60,7 +122,6 @@ export function useApplyForm() {
     setInvitation((prev) => ({
       ...prev,
       customization: {
-        // customization이 선택 필드이므로 안전하게 보강
         enabled: prev.customization?.enabled ?? true,
         mainImageUrl: prev.customization?.mainImageUrl ?? '',
         showDDay: prev.customization?.showDDay ?? true,
@@ -70,15 +131,289 @@ export function useApplyForm() {
     }));
   }, []);
 
+  // ── F3: 주문자 정보 (invitationInfo.order) ─────────────────────────────────
+  const setOrder = useCallback((patch: Partial<Person>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      invitationInfo: {
+        ...prev.invitationInfo,
+        order: { ...prev.invitationInfo.order, ...patch },
+      },
+    }));
+  }, []);
+
+  const setOrderPhone = useCallback((patch: Partial<Person['phone']>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      invitationInfo: {
+        ...prev.invitationInfo,
+        order: {
+          ...prev.invitationInfo.order,
+          phone: { ...prev.invitationInfo.order.phone, ...patch },
+        },
+      },
+    }));
+  }, []);
+
+  // ── F4: 신랑·신부 연락처 (phone/email) ─────────────────────────────────────
+  const setCouplePerson = useCallback((side: Side, patch: Partial<Person>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      couple: { ...prev.couple, [side]: { ...prev.couple[side], ...patch } },
+    }));
+  }, []);
+
+  const setCouplePhone = useCallback((side: Side, patch: Partial<Person['phone']>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      couple: {
+        ...prev.couple,
+        [side]: { ...prev.couple[side], phone: { ...prev.couple[side].phone, ...patch } },
+      },
+    }));
+  }, []);
+
+  // ── F5: 혼주 (parents) ─────────────────────────────────────────────────────
+  const setParentsEnabled = useCallback((enabled: boolean) => {
+    setInvitation((prev) => ({ ...prev, parents: { ...prev.parents, enabled } }));
+  }, []);
+
+  const setParentPerson = useCallback((slot: ParentSlot, patch: Partial<Person>) => {
+    setInvitation((prev) => {
+      const current = prev.parents[slot] ?? emptyPerson();
+      return {
+        ...prev,
+        parents: { ...prev.parents, [slot]: { ...current, ...patch } },
+      };
+    });
+  }, []);
+
+  const setParentPhone = useCallback((slot: ParentSlot, patch: Partial<Person['phone']>) => {
+    setInvitation((prev) => {
+      const current = prev.parents[slot] ?? emptyPerson();
+      return {
+        ...prev,
+        parents: {
+          ...prev.parents,
+          [slot]: { ...current, phone: { ...current.phone, ...patch } },
+        },
+      };
+    });
+  }, []);
+
+  // ── 계좌 CRUD (F4 신랑/신부 · F5 혼주 공통) ────────────────────────────────
+  const updateOwnerAccounts = useCallback(
+    (owner: AccountOwner, updater: (accounts: Account[]) => Account[]) => {
+      setInvitation((prev) => {
+        if (owner.kind === 'couple') {
+          const person = prev.couple[owner.side];
+          return {
+            ...prev,
+            couple: {
+              ...prev.couple,
+              [owner.side]: { ...person, accounts: updater(person.accounts ?? []) },
+            },
+          };
+        }
+        const person = prev.parents[owner.slot] ?? emptyPerson();
+        return {
+          ...prev,
+          parents: {
+            ...prev.parents,
+            [owner.slot]: { ...person, accounts: updater(person.accounts ?? []) },
+          },
+        };
+      });
+    },
+    [],
+  );
+
+  const addAccount = useCallback(
+    (owner: AccountOwner) => {
+      updateOwnerAccounts(owner, (accounts) => [...accounts, emptyAccount()]);
+    },
+    [updateOwnerAccounts],
+  );
+
+  const removeAccount = useCallback(
+    (owner: AccountOwner, accountId: string) => {
+      updateOwnerAccounts(owner, (accounts) => accounts.filter((a) => a.id !== accountId));
+    },
+    [updateOwnerAccounts],
+  );
+
+  const updateAccount = useCallback(
+    (owner: AccountOwner, accountId: string, patch: Partial<Account>) => {
+      updateOwnerAccounts(owner, (accounts) =>
+        accounts.map((a) => (a.id === accountId ? { ...a, ...patch } : a)),
+      );
+    },
+    [updateOwnerAccounts],
+  );
+
+  // ── F9: 축의금 옵션 (congratulatoryMoneyInfo) ──────────────────────────────
+  const setGiftMoney = useCallback((patch: Partial<WeddingInvitation['congratulatoryMoneyInfo']>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      congratulatoryMoneyInfo: { ...prev.congratulatoryMoneyInfo, ...patch },
+    }));
+  }, []);
+
+  // ── F8: 교통/기타 안내 (etcInfo) ───────────────────────────────────────────
+  const setEtcEnabled = useCallback((enabled: boolean) => {
+    setInvitation((prev) => ({ ...prev, etcInfo: { ...prev.etcInfo, enabled } }));
+  }, []);
+
+  const updateEtcItem = useCallback(
+    (key: EtcKey, updater: (item: EtcItem) => EtcItem) => {
+      setInvitation((prev) => {
+        const current: EtcItem = prev.etcInfo[key] ?? { info: [], subInfo: [] };
+        return {
+          ...prev,
+          etcInfo: { ...prev.etcInfo, [key]: updater(current) },
+        };
+      });
+    },
+    [],
+  );
+
+  const addEtcLine = useCallback(
+    (key: EtcKey, field: EtcField) => {
+      updateEtcItem(key, (item) => ({
+        ...item,
+        [field]: [...(item[field] ?? []), ''],
+      }));
+    },
+    [updateEtcItem],
+  );
+
+  const updateEtcLine = useCallback(
+    (key: EtcKey, field: EtcField, index: number, value: string) => {
+      updateEtcItem(key, (item) => {
+        const arr = [...(item[field] ?? [])];
+        arr[index] = value;
+        return { ...item, [field]: arr };
+      });
+    },
+    [updateEtcItem],
+  );
+
+  const removeEtcLine = useCallback(
+    (key: EtcKey, field: EtcField, index: number) => {
+      updateEtcItem(key, (item) => ({
+        ...item,
+        [field]: (item[field] ?? []).filter((_, i) => i !== index),
+      }));
+    },
+    [updateEtcItem],
+  );
+
+  // ── F7: RSVP (rsvpRequest) ─────────────────────────────────────────────────
+  const setRsvp = useCallback((patch: Partial<RsvpSettings>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      rsvpRequest: { ...(prev.rsvpRequest ?? DEFAULT_RSVP), ...patch },
+    }));
+  }, []);
+
+  const setRsvpInclude = useCallback(
+    (patch: Partial<RsvpSettings['include']>) => {
+      setInvitation((prev) => {
+        const base = prev.rsvpRequest ?? DEFAULT_RSVP;
+        return {
+          ...prev,
+          rsvpRequest: { ...base, include: { ...base.include, ...patch } },
+        };
+      });
+    },
+    [],
+  );
+
+  const setRsvpPerSide = useCallback(
+    (side: Side, patch: Partial<NonNullable<RsvpSettings['perSide']>[Side]>) => {
+      setInvitation((prev) => {
+        const base = prev.rsvpRequest ?? DEFAULT_RSVP;
+        const perSide = base.perSide ?? {};
+        const current = perSide[side] ?? {};
+        return {
+          ...prev,
+          rsvpRequest: {
+            ...base,
+            perSide: { ...perSide, [side]: { ...current, ...patch } },
+          },
+        };
+      });
+    },
+    [],
+  );
+
+  const setRsvpPerSideInclude = useCallback(
+    (side: Side, patch: Partial<RsvpSettings['include']>) => {
+      setInvitation((prev) => {
+        const base = prev.rsvpRequest ?? DEFAULT_RSVP;
+        const perSide = base.perSide ?? {};
+        const current = perSide[side] ?? {};
+        return {
+          ...prev,
+          rsvpRequest: {
+            ...base,
+            perSide: {
+              ...perSide,
+              [side]: { ...current, include: { ...current.include, ...patch } },
+            },
+          },
+        };
+      });
+    },
+    [],
+  );
+
+  // ── F13: 소개 (aboutUs) ────────────────────────────────────────────────────
+  const setAboutUs = useCallback((patch: Partial<AboutUs>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), ...patch },
+    }));
+  }, []);
+
   return {
     invitation,
+    // 기본/이름/예식/테마
     setInvitationInfo,
     setGroomName,
     setBrideName,
     setWeddingHall,
     setTheme,
     setThemeColor,
+    // 주문자
+    setOrder,
+    setOrderPhone,
+    // 신랑·신부 연락처
+    setCouplePerson,
+    setCouplePhone,
+    // 혼주
+    setParentsEnabled,
+    setParentPerson,
+    setParentPhone,
+    // 계좌
+    addAccount,
+    removeAccount,
+    updateAccount,
+    // 축의금
+    setGiftMoney,
+    // 교통
+    setEtcEnabled,
+    addEtcLine,
+    updateEtcLine,
+    removeEtcLine,
+    // RSVP
+    setRsvp,
+    setRsvpInclude,
+    setRsvpPerSide,
+    setRsvpPerSideInclude,
+    // 소개
+    setAboutUs,
   };
 }
 
-export type { WeddingInvitation, ThemeKind, ThemeColorOptions, AmPm };
+export type { WeddingInvitation, ThemeKind, ThemeColorOptions, AmPm, Parents, EtcInfo };
