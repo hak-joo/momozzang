@@ -22,9 +22,8 @@ export function useImageUploadMutation() {
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage.from('wedding-images').getPublicUrl(filePath);
-
-      return data.publicUrl;
+      // 절대 URL이 아닌 객체 키(버킷 제외)만 저장한다. 렌더 시점에 buildImageUrl 로 조립.
+      return filePath;
     },
   });
 }

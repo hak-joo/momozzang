@@ -26,6 +26,7 @@ dist-ssr
 .vite
 
 .env*
+!.env.example
 
 *.tsbuildinfo
 

@@ -52,7 +52,19 @@ flowchart TD
 - **청첩장 조회**: `getInvitationRepository().getInvitation(slug)` → `momozzang` 테이블(`slug` 컬럼)에서 JSON `data` 컬럼을 읽어 `WeddingInvitation` 객체로 반환.
 - **청첩장 저장(어드민)**: `updateInvitation(slug, data)` → 같은 행의 `data` 컬럼을 갱신.
 - **방명록**: `guestbooks` 테이블에서 `wedding_invitation_id`로 조회/작성/삭제.
-- **이미지 업로드(어드민)**: Supabase Storage `wedding-images` 버킷에 업로드 후 public URL 사용.
+- **이미지 업로드(어드민)**: Supabase Storage `wedding-images` 버킷에 업로드하고 **객체 키만** `data` JSON에 저장합니다(절대 URL 아님). 렌더 시점에 `buildImageUrl`(`packages/ui/src/shared/lib/imageUrl.ts`)이 키와 베이스 URL을 조합해 최종 URL을 만듭니다. 절대 URL로 저장된 기존 데이터는 그대로 통과시켜 하위 호환됩니다.
+
+## 환경변수
+
+`VITE_*` 접두사 변수는 각 앱 빌드 시 `import.meta.env`로 정적 치환됩니다. 실제 값은 각 `.env`에 두고 커밋하지 않으며, 키 목록은 `.env.example`(루트/각 앱)에 둡니다.
+
+| 키 | 용도 |
+|----|------|
+| `VITE_DATA_SOURCE` | Repository 구현체 분기 (`local` \| `supabase`) |
+| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Supabase 접속 정보 |
+| `VITE_NAVER_MAP_CLIENT_ID` | 네이버 지도 |
+| `VITE_IMAGE_BASE_URL` | 업로드 이미지 **객체 키**를 최종 URL로 조립할 때 쓰는 베이스. 현재 값 형식은 `{VITE_SUPABASE_URL}/storage/v1/object/public/wedding-images`. R2 등 스토리지/도메인 이전 시 이 값만 교체하면 DB 마이그레이션 없이 전환됩니다. |
+| `VITE_KAKAO_APP_KEY` / `VITE_KAKAO_TEMPLATE_ID` | (어드민) 카카오 공유 |
 - **배포 프록시**: 운영 환경에서는 `vercel.json`의 rewrite로 `/api/*` 요청이 외부 백엔드(`momozzang.onrender.com`)로 전달됩니다.
 
 자세한 분기 동작과 테이블 스키마는 [`data-model.md`](./data-model.md)와 [`shared-ui.md`](./shared-ui.md)를 참조하세요.

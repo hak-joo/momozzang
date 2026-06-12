@@ -7,6 +7,7 @@ import heartBalloon from '@shared/assets/images/heart-balloon.png';
 import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
 import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
+import { buildImageUrl } from '@shared/lib/imageUrl';
 
 interface Props {
   className?: string;
@@ -66,7 +67,7 @@ export function AboutUs({ className }: Props) {
             <div className={styles.photoGrid}>
               <figure className={styles.photoSlot}>
                 <img
-                  src={aboutUs.groomImageUrl}
+                  src={buildImageUrl(aboutUs.groomImageUrl)}
                   alt={couple.groom.name}
                   className={styles.photoImage}
                 />
@@ -74,7 +75,7 @@ export function AboutUs({ className }: Props) {
 
               <figure className={styles.photoSlot}>
                 <img
-                  src={aboutUs.brideImageUrl}
+                  src={buildImageUrl(aboutUs.brideImageUrl)}
                   alt={couple.bride.name}
                   className={styles.photoImage}
                 />

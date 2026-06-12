@@ -11,6 +11,7 @@ import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import { getThemeHue } from '@shared/styles/utils';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
+import { buildImageUrl } from '@shared/lib/imageUrl';
 
 export type SwipeStackProps = {
   images: GalleryImage[];
@@ -317,7 +318,7 @@ export function SwipeStack({
             >
               <img
                 className={styles.media}
-                src={image.url}
+                src={buildImageUrl(image.url)}
                 alt={image.alt ?? ''}
                 draggable={false}
               />
