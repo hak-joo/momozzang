@@ -22,6 +22,7 @@ import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { supabase } from '@momozzang/ui/src/shared/lib/supabase';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { SortableImage, PhotoItem } from './SortableImage';
+import { resizeImage } from '../../shared/lib/resizeImage';
 import styles from './GalleryManager.module.css';
 
 interface GalleryManagerProps {
@@ -84,58 +85,6 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
     [album, onChange],
   );
 
-  const handleImageResize = (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const maxWidth = 1920;
-      const maxHeight = 1080;
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxWidth) {
-              height *= maxWidth / width;
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width *= maxHeight / height;
-              height = maxHeight;
-            }
-          }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const resizedFile = new File([blob], file.name, {
-                  type: file.type,
-                  lastModified: Date.now(),
-                });
-                resolve(resizedFile);
-              } else {
-                reject(new Error('Canvas to Blob failed'));
-              }
-            },
-            file.type,
-            0.8,
-          );
-        };
-        img.onerror = (error) => reject(error);
-      };
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -155,7 +104,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
         const file = files[i];
         let fileToUpload = file;
         try {
-          fileToUpload = await handleImageResize(file);
+          fileToUpload = await resizeImage(file);
         } catch (e) {
           console.error('Resize failed for gallery image', e);
         }
@@ -165,7 +114,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
 
         const { error } = await supabase.storage
           .from('wedding-images')
-          .upload(fileName, fileToUpload);
+          .upload(fileName, fileToUpload, { cacheControl: '31536000' });
 
         if (error) throw error;
 
