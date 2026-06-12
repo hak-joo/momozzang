@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
+import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
 import { Stepper, type StepItem } from '../../widgets/Stepper/Stepper';
 import { PhonePreview } from '../../widgets/PhonePreview/PhonePreview';
 import { ApplyForm } from '../../widgets/ApplyForm/ApplyForm';
 import { ImageStep } from '../../widgets/ImageStep/ImageStep';
 import { PublishStep } from '../../widgets/PublishStep/PublishStep';
+import { ErrorBoundary } from '../../widgets/ErrorBoundary/ErrorBoundary';
 import { useApplyForm } from '../../features/apply/useApplyForm';
 import styles from './ApplyPage.module.css';
 import '@momozzang/ui/src/index.css';
@@ -112,7 +114,9 @@ export default function ApplyPage() {
             mobileTab === 'preview' ? styles.mobileShow : styles.mobileHide,
           )}
         >
-          <PhonePreview invitation={invitation} />
+          <ErrorBoundary label="미리보기">
+            <PhonePreview invitation={invitation} />
+          </ErrorBoundary>
         </aside>
 
         <main
@@ -121,8 +125,17 @@ export default function ApplyPage() {
             mobileTab === 'form' ? styles.mobileShow : styles.mobileHide,
           )}
         >
-          {step === 1 && (
-            <ApplyForm
+          {/*
+            폼 패널을 InvitationProvider로 감싸 GalleryManager(Box) 등 provider 의존
+            공유 컴포넌트가 폼 패널에서도 안전 동작하게 한다(C1 수정 A안). 좌측 PhonePreview의
+            provider와는 별개 인스턴스이나 동일한 invitation 참조를 공유한다.
+            previewMode를 부여해 폼 패널 provider가 document.title을 덮어쓰지 않게 한다.
+            ErrorBoundary로 단일 위젯 예외가 앱 전체를 화이트스크린하지 않도록 격리한다.
+          */}
+          <ErrorBoundary label="입력 폼">
+            <InvitationProvider data={invitation} previewMode>
+              {step === 1 && (
+                <ApplyForm
               invitation={invitation}
               onInvitationInfoChange={setInvitationInfo}
               onGroomNameChange={setGroomName}
@@ -164,7 +177,9 @@ export default function ApplyPage() {
               onMiniRoomChange={setMiniRoom}
             />
           )}
-          {step === 3 && <PublishStep invitation={invitation} onLoad={loadInvitation} />}
+              {step === 3 && <PublishStep invitation={invitation} onLoad={loadInvitation} />}
+            </InvitationProvider>
+          </ErrorBoundary>
         </main>
       </div>
     </div>
