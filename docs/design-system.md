@@ -125,15 +125,7 @@ momozzang의 픽셀/싸이월드 감성을 떠받치는 **디자인 토큰**(색
 
 - `html, body`와 `button`은 둘 다 `font-family: var(--font-PyeongChang)`을 사용합니다(기본 본문/버튼 폰트).
 - 각 폰트는 `@font-face`로 jsDelivr CDN에서 로드되며 `font-display: swap`을 사용합니다.
-
-### ⚠️ 알려진 불일치 — PyeongChang 케이스
-
-`global.css`에는 PyeongChang 관련해 **대소문자가 어긋난 두 문자열**이 있습니다.
-
-- `@font-face`의 선언: `font-family: 'Pyeongchang'` — **소문자 c** (global.css 10행).
-- CSS 변수의 참조: `--font-PyeongChang: 'PyeongChang', ...` — **대문자 C** (global.css 43행).
-
-CSS의 `font-family` 매칭은 대소문자를 구분하지 않는 경우가 많지만, 선언명(`'Pyeongchang'`)과 변수 참조명(`'PyeongChang'`)이 케이스로 어긋나 있어 폰트가 `@font-face`에 매칭되지 않고 폴백(`'Noto Sans KR', sans-serif`)으로 떨어질 위험이 있습니다. **이 문서는 문서화 작업이므로 코드를 수정하지 않으며**, 위 사실을 "알려진 불일치"로 기록만 합니다. 코드 수정은 별도 `dev`/`fix` 작업 대상입니다.
+- `@font-face` 선언명과 CSS 변수 참조명, 로드하는 woff2 파일명이 모두 `PyeongChang`(대문자 C)으로 일치합니다.
 
 ## 5. 모바일 프레임 / 반응형 (출처: `apps/momozzang-invitation/src/styles/global.css`)
 
