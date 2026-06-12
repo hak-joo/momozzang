@@ -1,0 +1,134 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e6e8ee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2b2f38;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5b606b;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: #9aa0ab;
+}
+
+.error {
+  margin: 0;
+  font-size: 12px;
+  color: #d83a3a;
+}
+
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d8dae0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #5129b5;
+}
+
+.select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d8dae0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #5129b5;
+}
+
+.slugRow {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #d8dae0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.slugPrefix {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  background: #f1f2f5;
+  color: #8a8f99;
+  font-size: 13px;
+  white-space: nowrap;
+  border-right: 1px solid #d8dae0;
+}
+
+.slugInput {
+  flex: 1;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #5b606b;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .grid2,
+  .grid3 {
+    grid-template-columns: 1fr;
+  }
+}
