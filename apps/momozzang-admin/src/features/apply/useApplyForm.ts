@@ -13,6 +13,11 @@ import {
   type Parents,
   type RsvpSettings,
   type AboutUs,
+  type AlbumPhoto,
+  type BgmSettings,
+  type BgmTrack,
+  type Customization,
+  type ImageAsset,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 
 /** 혼주 4인 슬롯 키 (Parents의 Person 필드) */
@@ -73,6 +78,28 @@ const DEFAULT_ABOUT_US: AboutUs = {
   brideDesc: '',
   brideImageUrl: '',
 };
+
+function defaultCustomization(prev: Customization | undefined): Customization {
+  return {
+    enabled: prev?.enabled ?? true,
+    themeColor: prev?.themeColor ?? 'PURPLE',
+    mainImageUrl: prev?.mainImageUrl ?? '',
+    showDDay: prev?.showDDay ?? true,
+    ...prev,
+  };
+}
+
+const DEFAULT_BGM: BgmSettings = {
+  enabled: false,
+  library: [],
+};
+
+/** 무드 선택지 (F12) */
+export const MOOD_OPTIONS = ['설렘', '기대', '기쁨', '즐거움', '감사', '행복'] as const;
+export type Mood = (typeof MOOD_OPTIONS)[number];
+
+/** 단일 이미지 슬롯 종류 */
+export type SingleImageSlot = 'main' | 'share' | 'representative' | 'aboutGroom' | 'aboutBride';
 
 /**
  * 신청 폼 단일 진실원천.
@@ -376,6 +403,102 @@ export function useApplyForm() {
     }));
   }, []);
 
+  // ── F10: 단일 이미지 슬롯 (대표/공유/메인/소개) ─────────────────────────────
+  const setSingleImage = useCallback((slot: SingleImageSlot, url: string) => {
+    setInvitation((prev) => {
+      switch (slot) {
+        case 'main':
+          return { ...prev, customization: { ...defaultCustomization(prev.customization), mainImageUrl: url } };
+        case 'share':
+          return { ...prev, invitationInfo: { ...prev.invitationInfo, shareImageUrl: url } };
+        case 'aboutGroom':
+          return { ...prev, aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), groomImageUrl: url } };
+        case 'aboutBride':
+          return { ...prev, aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), brideImageUrl: url } };
+        case 'representative': {
+          // images[]에서 isRepresentative 자산을 갱신/추가한다.
+          const existing = prev.images ?? [];
+          const repIndex = existing.findIndex((img) => img.isRepresentative);
+          let nextImages: ImageAsset[];
+          if (repIndex >= 0) {
+            nextImages = existing.map((img, i) =>
+              i === repIndex ? { ...img, url } : img,
+            );
+          } else {
+            const newAsset: ImageAsset = {
+              id: `rep-${Date.now().toString(36)}`,
+              url,
+              isRepresentative: true,
+            };
+            nextImages = [...existing, newAsset];
+          }
+          return { ...prev, images: nextImages };
+        }
+        default:
+          return prev;
+      }
+    });
+  }, []);
+
+  // ── F10: 갤러리 album ───────────────────────────────────────────────────────
+  const setAlbum = useCallback((newAlbum: AlbumPhoto[]) => {
+    setInvitation((prev) => ({ ...prev, album: newAlbum }));
+  }, []);
+
+  // ── F11: BGM (bgm) ──────────────────────────────────────────────────────────
+  const setBgm = useCallback((patch: Partial<BgmSettings>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      bgm: { ...(prev.bgm ?? DEFAULT_BGM), ...patch },
+    }));
+  }, []);
+
+  const selectTrack = useCallback((trackId: string) => {
+    setInvitation((prev) => ({
+      ...prev,
+      bgm: { ...(prev.bgm ?? DEFAULT_BGM), selectedTrackId: trackId },
+    }));
+  }, []);
+
+  const updateTrack = useCallback((trackId: string, patch: Partial<BgmTrack>) => {
+    setInvitation((prev) => {
+      const base = prev.bgm ?? DEFAULT_BGM;
+      return {
+        ...prev,
+        bgm: {
+          ...base,
+          library: base.library.map((t) => (t.id === trackId ? { ...t, ...patch } : t)),
+        },
+      };
+    });
+  }, []);
+
+  // ── F12: 커스터마이즈 잔여 (enabled/showDDay/mood) + 미니룸 ─────────────────
+  const setCustomization = useCallback((patch: Partial<Customization>) => {
+    setInvitation((prev) => ({
+      ...prev,
+      customization: { ...defaultCustomization(prev.customization), ...patch },
+    }));
+  }, []);
+
+  const setMiniRoom = useCallback(
+    (patch: Partial<NonNullable<Customization['miniRoom']>>) => {
+      setInvitation((prev) => {
+        const base = defaultCustomization(prev.customization);
+        return {
+          ...prev,
+          customization: { ...base, miniRoom: { ...base.miniRoom, ...patch } },
+        };
+      });
+    },
+    [],
+  );
+
+  // ── F14: 불러오기 — 폼 전체를 불러온 데이터로 교체 ──────────────────────────
+  const loadInvitation = useCallback((data: WeddingInvitation) => {
+    setInvitation(structuredClone(data));
+  }, []);
+
   return {
     invitation,
     // 기본/이름/예식/테마
@@ -413,6 +536,18 @@ export function useApplyForm() {
     setRsvpPerSideInclude,
     // 소개
     setAboutUs,
+    // 이미지 (F10)
+    setSingleImage,
+    setAlbum,
+    // BGM (F11)
+    setBgm,
+    selectTrack,
+    updateTrack,
+    // 커스터마이즈 잔여 / 미니룸 (F12)
+    setCustomization,
+    setMiniRoom,
+    // 불러오기 (F14)
+    loadInvitation,
   };
 }
 

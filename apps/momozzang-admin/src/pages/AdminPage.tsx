@@ -10,6 +10,7 @@ import { clsx } from 'clsx';
 import { useInvitationQuery } from '../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
 import { useImageUploadMutation } from '../features/invitation/api/useImageUploadMutation';
+import { resizeImage } from '../features/invitation/imageUpload';
 
 export default function AdminPage() {
   const [inputSlug, setInputSlug] = useState('demo-captain-luna');
@@ -38,58 +39,6 @@ export default function AdminPage() {
     setSlug(inputSlug);
   };
 
-  const handleImageResize = (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const maxWidth = 1920;
-      const maxHeight = 1080;
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxWidth) {
-              height *= maxWidth / width;
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width *= maxHeight / height;
-              height = maxHeight;
-            }
-          }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const resizedFile = new File([blob], file.name, {
-                  type: file.type,
-                  lastModified: Date.now(),
-                });
-                resolve(resizedFile);
-              } else {
-                reject(new Error('Canvas to Blob failed'));
-              }
-            },
-            file.type,
-            0.8,
-          );
-        };
-        img.onerror = (error) => reject(error);
-      };
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const handleSave = () => {
     if (!invitation) return;
     saveInvitation(
@@ -107,22 +56,18 @@ export default function AdminPage() {
   const handleSingleUpload = async (file: File, field: 'main' | 'share' | 'bride' | 'groom') => {
     if (!invitation) return;
     try {
-      const resizedFile = await handleImageResize(file);
+      const resizedFile = await resizeImage(file);
       const url = await uploadImage(resizedFile);
-      const newData = { ...invitation };
+      const newData: WeddingInvitation = { ...invitation };
 
       if (field === 'main') {
-        if (!newData.customization) newData.customization = {} as any;
-        newData.customization!.mainImageUrl = url;
+        newData.customization = { ...(newData.customization ?? {}), mainImageUrl: url } as WeddingInvitation['customization'];
       } else if (field === 'share') {
-        if (!newData.invitationInfo) newData.invitationInfo = {} as any;
-        newData.invitationInfo.shareImageUrl = url;
+        newData.invitationInfo = { ...newData.invitationInfo, shareImageUrl: url };
       } else if (field === 'bride') {
-        if (!newData.aboutUs) newData.aboutUs = {} as any;
-        newData.aboutUs!.brideImageUrl = url;
+        newData.aboutUs = { ...(newData.aboutUs ?? {}), brideImageUrl: url } as WeddingInvitation['aboutUs'];
       } else if (field === 'groom') {
-        if (!newData.aboutUs) newData.aboutUs = {} as any;
-        newData.aboutUs!.groomImageUrl = url;
+        newData.aboutUs = { ...(newData.aboutUs ?? {}), groomImageUrl: url } as WeddingInvitation['aboutUs'];
       }
       setInvitation(newData);
     } catch (e) {

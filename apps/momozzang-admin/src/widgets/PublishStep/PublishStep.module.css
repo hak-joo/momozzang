@@ -1,0 +1,110 @@
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e6e8ee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2b2f38;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: #9aa0ab;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5b606b;
+}
+
+.loadRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.loadInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 안내 메시지 */
+.banner {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.bannerSuccess {
+  background: #eef9f0;
+  border: 1px solid #b6e4c1;
+  color: #1f7a3d;
+}
+
+.bannerError {
+  background: #fdf2f2;
+  border: 1px solid #e6c4c4;
+  color: #c0392b;
+}
+
+.bannerInfo {
+  background: #f6f3fd;
+  border: 1px solid #d6c9f4;
+  color: #5129b5;
+}
+
+.issueList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+
+.completeLink {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linkRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.linkText {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5129b5;
+  word-break: break-all;
+}

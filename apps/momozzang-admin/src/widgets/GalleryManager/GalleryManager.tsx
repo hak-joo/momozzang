@@ -19,8 +19,8 @@ import {
 } from '@dnd-kit/sortable';
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
-import { supabase } from '@momozzang/ui/src/shared/lib/supabase';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+import { resizeAndUploadImage } from '../../features/invitation/imageUpload';
 import { SortableImage, PhotoItem } from './SortableImage';
 import styles from './GalleryManager.module.css';
 
@@ -84,58 +84,6 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
     [album, onChange],
   );
 
-  const handleImageResize = (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const maxWidth = 1920;
-      const maxHeight = 1080;
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxWidth) {
-              height *= maxWidth / width;
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width *= maxHeight / height;
-              height = maxHeight;
-            }
-          }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const resizedFile = new File([blob], file.name, {
-                  type: file.type,
-                  lastModified: Date.now(),
-                });
-                resolve(resizedFile);
-              } else {
-                reject(new Error('Canvas to Blob failed'));
-              }
-            },
-            file.type,
-            0.8,
-          );
-        };
-        img.onerror = (error) => reject(error);
-      };
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -153,27 +101,11 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        let fileToUpload = file;
-        try {
-          fileToUpload = await handleImageResize(file);
-        } catch (e) {
-          console.error('Resize failed for gallery image', e);
-        }
-
-        const fileExt = fileToUpload.name.split('.').pop();
-        const fileName = `gallery-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-        const { error } = await supabase.storage
-          .from('wedding-images')
-          .upload(fileName, fileToUpload);
-
-        if (error) throw error;
-
-        const { data } = supabase.storage.from('wedding-images').getPublicUrl(fileName);
-
+        // 리사이즈(1920×1080·0.8) + 업로드. 비-supabase 환경에서는 blob URL 반환([G3]).
+        const url = await resizeAndUploadImage(file, 'gallery');
         newPhotos.push({
-          id: fileName, // Using filename as ID for simplicity
-          url: data.publicUrl,
+          id: `gallery-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+          url,
         });
       }
 

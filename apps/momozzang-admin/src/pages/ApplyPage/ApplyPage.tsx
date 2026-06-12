@@ -3,6 +3,8 @@ import { clsx } from 'clsx';
 import { Stepper, type StepItem } from '../../widgets/Stepper/Stepper';
 import { PhonePreview } from '../../widgets/PhonePreview/PhonePreview';
 import { ApplyForm } from '../../widgets/ApplyForm/ApplyForm';
+import { ImageStep } from '../../widgets/ImageStep/ImageStep';
+import { PublishStep } from '../../widgets/PublishStep/PublishStep';
 import { useApplyForm } from '../../features/apply/useApplyForm';
 import styles from './ApplyPage.module.css';
 import '@momozzang/ui/src/index.css';
@@ -47,6 +49,14 @@ export default function ApplyPage() {
     setRsvpPerSide,
     setRsvpPerSideInclude,
     setAboutUs,
+    setSingleImage,
+    setAlbum,
+    setBgm,
+    selectTrack,
+    updateTrack,
+    setCustomization,
+    setMiniRoom,
+    loadInvitation,
   } = useApplyForm();
 
   return (
@@ -143,17 +153,18 @@ export default function ApplyPage() {
             />
           )}
           {step === 2 && (
-            <div className={styles.placeholder}>
-              <h3>영상 · 이미지 등록</h3>
-              <p>이 단계는 다음 스프린트에서 제공됩니다. (대표/공유/갤러리 이미지 업로드)</p>
-            </div>
+            <ImageStep
+              invitation={invitation}
+              onSingleImage={setSingleImage}
+              onAlbumChange={setAlbum}
+              onBgmChange={setBgm}
+              onSelectTrack={selectTrack}
+              onUpdateTrack={updateTrack}
+              onCustomizationChange={setCustomization}
+              onMiniRoomChange={setMiniRoom}
+            />
           )}
-          {step === 3 && (
-            <div className={styles.placeholder}>
-              <h3>제작 완료</h3>
-              <p>이 단계는 다음 스프린트에서 제공됩니다. (저장 및 청첩장 링크 안내)</p>
-            </div>
-          )}
+          {step === 3 && <PublishStep invitation={invitation} onLoad={loadInvitation} />}
         </main>
       </div>
     </div>
