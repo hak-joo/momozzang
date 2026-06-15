@@ -36,6 +36,7 @@ import { config as loadEnv } from 'dotenv';
 import { resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 import { AwsClient } from 'aws4fetch';
+import sharp from 'sharp';
 
 // 루트 .env 를 로드 (이 파일 기준 ../../../../../.env = 모노레포 루트)
 loadEnv({ path: resolve(import.meta.dirname, '../../../../../.env') });
@@ -310,37 +311,79 @@ async function main() {
   });
 
   let copied = 0;
+  const skipped: Array<{ label: string; url: string; reason: string }> = [];
   for (const t of tasks) {
-    // (a) 원본 다운로드
-    const res = await fetch(t.sourceUrl);
-    if (!res.ok) {
-      throw new Error(`다운로드 실패 [${t.label}] ${t.sourceUrl} → HTTP ${res.status}`);
-    }
-    const contentType = res.headers.get('content-type');
-    const ext = extFromContentType(contentType, t.sourceUrl);
-    const body = new Uint8Array(await res.arrayBuffer());
+    try {
+      // (a) 원본 다운로드 (일시적 네트워크 오류 대비 재시도)
+      const res = await withRetry(() => fetch(t.sourceUrl), `다운로드 [${t.label}]`);
+      if (!res.ok) {
+        throw new Error(`다운로드 HTTP ${res.status}`);
+      }
+      const contentType = res.headers.get('content-type');
+      const rawBody = new Uint8Array(await res.arrayBuffer());
 
-    // (b) 새 키 생성 + R2 PUT (새 키만 → 기존 객체 비파괴)
-    const key = buildObjectKey(t.prefix, ext);
-    const putUrl = `${endpoint}/${bucket}/${key}`;
-    const putRes = await r2.fetch(putUrl, {
-      method: 'PUT',
-      body,
-      headers: {
-        'Content-Type': contentType ?? 'application/octet-stream',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      },
-    });
-    if (!putRes.ok) {
-      const detail = await putRes.text().catch(() => '');
-      throw new Error(`R2 업로드 실패 [${t.label}] key=${key} → HTTP ${putRes.status} ${detail.slice(0, 200)}`);
-    }
+      // (b-1) sharp 다운스케일: 긴 변 최대 1920px, JPEG quality 80 변환.
+      //       변환 실패 시 원본 바이트·content-type 으로 폴백(투명 PNG 등 예외 방어).
+      let body: Uint8Array;
+      let uploadContentType: string;
+      let ext: string;
+      try {
+        const resized = await sharp(rawBody)
+          .resize({ width: 1920, height: 1920, fit: 'inside', withoutEnlargement: true })
+          .jpeg({ quality: 80 })
+          .toBuffer();
+        body = new Uint8Array(resized);
+        uploadContentType = 'image/jpeg';
+        ext = 'jpg';
+        console.log(
+          `  ↓ [${t.label}] sharp 변환: ${rawBody.length} → ${body.length} bytes (jpeg q80, ≤1920px)`,
+        );
+      } catch (sharpErr) {
+        console.warn(
+          `  ⚠ [${t.label}] sharp 변환 실패, 원본 바이트로 폴백: ${sharpErr instanceof Error ? sharpErr.message : String(sharpErr)}`,
+        );
+        body = rawBody;
+        uploadContentType = contentType ?? 'application/octet-stream';
+        ext = extFromContentType(contentType, t.sourceUrl);
+      }
 
-    // (c) JSON 치환
-    t.apply(key);
-    t.applyId?.(key);
-    copied += 1;
-    console.log(`  ✓ [${t.label}] → ${key}`);
+      // (b-2) 새 키 생성 + R2 PUT (새 키만 → 기존 객체 비파괴)
+      const key = buildObjectKey(t.prefix, ext);
+      const putUrl = `${endpoint}/${bucket}/${key}`;
+      const putRes = await withRetry(
+        () =>
+          r2.fetch(putUrl, {
+            method: 'PUT',
+            body,
+            headers: {
+              'Content-Type': uploadContentType,
+              'Cache-Control': 'public, max-age=31536000, immutable',
+            },
+          }),
+        `R2 PUT [${t.label}]`,
+      );
+      if (!putRes.ok) {
+        const detail = await putRes.text().catch(() => '');
+        throw new Error(`R2 업로드 HTTP ${putRes.status} ${detail.slice(0, 200)}`);
+      }
+
+      // (c) JSON 치환
+      t.apply(key);
+      t.applyId?.(key);
+      copied += 1;
+      console.log(`  ✓ [${t.label}] → ${key}`);
+    } catch (e) {
+      // 실패 이미지는 원본 URL 유지(치환 안 함)하고 계속. buildImageUrl passthrough 로 안 깨짐.
+      // (예: shareImageUrl 이 Supabase 아닌 외부/mock 호스트 → ENOTFOUND)
+      const reason = e instanceof Error ? e.message : String(e);
+      skipped.push({ label: t.label, url: t.sourceUrl, reason });
+      console.warn(`  ⊘ [${t.label}] 스킵(원본 URL 유지): ${reason}`);
+    }
+  }
+
+  if (skipped.length) {
+    console.warn(`\n⚠ ${skipped.length}개 이미지 스킵(원본 URL 유지 — 마이그레이션 대상 아님/실패):`);
+    for (const s of skipped) console.warn(`   - [${s.label}] ${s.url} (${s.reason})`);
   }
 
   // ── target slug 로 새 row INSERT (source 불변; --force 시 upsert) ──
@@ -359,6 +402,25 @@ async function main() {
 
   console.log(`\n[EXECUTE] 완료. 이미지 ${copied}/${tasks.length}개 R2 복사, target slug '${target}' 로 새 row ${targetRow && force ? 'UPDATE(force)' : 'INSERT'} 완료.`);
   console.log(`[EXECUTE] source slug '${source}' 는 변경되지 않았습니다(비파괴).`);
+}
+
+/** fetch 등 일시적 실패에 대비한 재시도 래퍼. 실패 시 err.cause(ECONNRESET 등)까지 노출. */
+async function withRetry<T>(fn: () => Promise<T>, label: string, attempts = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+      const cause = (e as { cause?: { code?: string; message?: string } })?.cause;
+      const causeStr = cause ? ` (cause: ${cause.code ?? cause.message ?? String(cause)})` : '';
+      console.warn(
+        `  ⚠ ${label} 시도 ${i}/${attempts} 실패: ${e instanceof Error ? e.message : String(e)}${causeStr}`,
+      );
+      if (i < attempts) await new Promise((r) => setTimeout(r, 800 * i));
+    }
+  }
+  throw lastErr;
 }
 
 main().catch((err) => {
