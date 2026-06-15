@@ -5,12 +5,12 @@ import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { GalleryManager } from '../widgets/GalleryManager/GalleryManager';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
+import { buildImageUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
 import styles from './AdminPage.module.css';
 import { clsx } from 'clsx';
 import { useInvitationQuery } from '../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
 import { useImageUploadMutation } from '../features/invitation/api/useImageUploadMutation';
-import { resizeImage } from '../features/invitation/imageUpload';
 
 export default function AdminPage() {
   const [inputSlug, setInputSlug] = useState('demo-captain-luna');
@@ -56,9 +56,8 @@ export default function AdminPage() {
   const handleSingleUpload = async (file: File, field: 'main' | 'share' | 'bride' | 'groom') => {
     if (!invitation) return;
     try {
-      const resizedFile = await resizeImage(file);
-      const url = await uploadImage(resizedFile);
-      const newData: WeddingInvitation = { ...invitation };
+      const url = await uploadImage(file);
+      const newData = { ...invitation };
 
       if (field === 'main') {
         newData.customization = { ...(newData.customization ?? {}), mainImageUrl: url } as WeddingInvitation['customization'];
@@ -111,7 +110,7 @@ export default function AdminPage() {
                   <label className={styles.label}>Main Image</label>
                   {invitation.customization?.mainImageUrl && (
                     <img
-                      src={invitation.customization.mainImageUrl}
+                      src={buildImageUrl(invitation.customization.mainImageUrl)}
                       alt="Main"
                       className={clsx(styles.previewImage, styles.previewMain)}
                       loading="lazy"
@@ -130,7 +129,7 @@ export default function AdminPage() {
                   <label className={styles.label}>Share Thumbnail (Kakao)</label>
                   {invitation.invitationInfo?.shareImageUrl && (
                     <img
-                      src={invitation.invitationInfo.shareImageUrl}
+                      src={buildImageUrl(invitation.invitationInfo.shareImageUrl)}
                       alt="Share"
                       className={clsx(styles.previewImage, styles.previewSquare)}
                       loading="lazy"
@@ -154,7 +153,7 @@ export default function AdminPage() {
                   <label className={styles.label}>Groom</label>
                   {invitation.aboutUs?.groomImageUrl && (
                     <img
-                      src={invitation.aboutUs.groomImageUrl}
+                      src={buildImageUrl(invitation.aboutUs.groomImageUrl)}
                       alt="Groom"
                       className={clsx(styles.previewImage, styles.previewSquare)}
                       loading="lazy"
@@ -173,7 +172,7 @@ export default function AdminPage() {
                   <label className={styles.label}>Bride</label>
                   {invitation.aboutUs?.brideImageUrl && (
                     <img
-                      src={invitation.aboutUs.brideImageUrl}
+                      src={buildImageUrl(invitation.aboutUs.brideImageUrl)}
                       alt="Bride"
                       className={clsx(styles.previewImage, styles.previewSquare)}
                       loading="lazy"

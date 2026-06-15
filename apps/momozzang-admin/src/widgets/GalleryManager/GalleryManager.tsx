@@ -19,6 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
+import { buildImageUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { resizeAndUploadImage } from '../../features/invitation/imageUpload';
 import { SortableImage, PhotoItem } from './SortableImage';
@@ -28,13 +29,6 @@ interface GalleryManagerProps {
   album: AlbumPhoto[];
   onChange: (newAlbum: AlbumPhoto[]) => void;
 }
-
-const getThumbnailUrl = (url: string) => {
-  if (url.includes('supabase')) {
-    return `${url}?width=200`;
-  }
-  return url;
-}; // Helper to get thumbnail URL
 
 export function GalleryManager({ album, onChange }: GalleryManagerProps) {
   const [uploading, setUploading] = useState(false);
@@ -101,11 +95,14 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        // 리사이즈(1920×1080·0.8) + 업로드. 비-supabase 환경에서는 blob URL 반환([G3]).
-        const url = await resizeAndUploadImage(file, 'gallery');
+        // 리사이즈(1920×1080·0.8) + 업로드.
+        // R2 환경: 객체 키 반환 → buildImageUrl(key)로 렌더. 로컬/QA: blob URL 반환([G3]).
+        const key = await resizeAndUploadImage(file, 'gallery');
+
+        // 절대 URL이 아닌 객체 키(또는 blob URL)를 저장. id와 url은 동일 값 유지.
         newPhotos.push({
-          id: `gallery-${Date.now()}-${Math.random().toString(36).substring(7)}`,
-          url,
+          id: key,
+          url: key,
         });
       }
 
@@ -163,7 +160,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
                 key={photo.id}
                 photo={photo}
                 onRemove={() => handleDelete(photo.id)}
-                thumbnailUrl={getThumbnailUrl(photo.url)}
+                thumbnailUrl={buildImageUrl(photo.url)}
               />
             ))}
           </div>
@@ -175,7 +172,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
               isDragging
               isOverlay
               style={{ cursor: 'grabbing' }}
-              thumbnailUrl={getThumbnailUrl(album.find((p) => p.id === activeId)!.url)}
+              thumbnailUrl={buildImageUrl(album.find((p) => p.id === activeId)!.url)}
             />
           ) : null}
         </DragOverlay>

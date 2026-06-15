@@ -26,6 +26,11 @@ dist-ssr
 .vite
 
 .env*
+!.env.example
+
+# Cloudflare Worker 로컬 시크릿 (UPLOAD_TOKEN 등). 예시 파일만 커밋.
+.dev.vars
+!.dev.vars.example
 
 *.tsbuildinfo
 
