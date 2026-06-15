@@ -6,6 +6,7 @@ import { WeddingDay } from './WeddingDay';
 import { WeddingCalendar } from './WeddingCalendar';
 import { Introduction } from './Introduction';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
+import { buildImageUrl } from '@shared/lib/imageUrl';
 import { RingPhoto } from './RingPhoto';
 
 interface Props {
@@ -19,7 +20,7 @@ export function Home({ data }: Props) {
 
   return (
     <div className={styles.homeWrapper}>
-      <RingPhoto src={customization?.mainImageUrl} />
+      <RingPhoto src={buildImageUrl(customization?.mainImageUrl)} />
 
       <div className={styles.weddingDayContainer}>
         <PixelBadge text="Save the Date" />

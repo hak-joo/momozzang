@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from './Gallery.module.css';
 
 import * as Dialog from '@shared/ui/Dialog';
+import { buildImageUrl } from '@shared/lib/imageUrl';
 import type { GalleryImage } from './types';
 
 type CarouselProps = {
@@ -25,7 +26,7 @@ export function Carousel({ images, startIndex, onClose }: CarouselProps) {
           </button>
           <img
             className={styles.carouselImage}
-            src={images[index].url}
+            src={buildImageUrl(images[index].url)}
             alt={images[index].alt ?? ''}
           />
           <button
