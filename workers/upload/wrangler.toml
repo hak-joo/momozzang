@@ -1,0 +1,26 @@
+# Cloudflare Worker — 이미지 업로드 중개 (어드민 → Worker → R2 바인딩)
+#
+# ⚠️ R2 Access Key/Secret 은 이 파일·코드·VITE_ 어디에도 두지 않는다.
+#    R2 는 아래 [[r2_buckets]] **바인딩**으로 접근한다(env.BUCKET).
+# ⚠️ 공유비밀 UPLOAD_TOKEN 은 여기 평문으로 적지 않는다 → `wrangler secret put UPLOAD_TOKEN` 으로 주입.
+
+name = "momozzang-upload"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# R2 바인딩: 코드에서 env.BUCKET 으로 접근. bucket_name 은 실제 R2 버킷명.
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "momozzang-images"
+
+# ── 도메인/라우트 (사용자 계정 종속 — 배포 시 주석 해제·수정) ─────────────────
+# 엔드포인트는 vercel.json 의 `/api/:path*` → onrender 프록시와 **충돌하지 않는 별도 도메인**을 쓴다.
+# momozzang.com/api/* 는 금지(Vercel 프록시에 가려짐). 아래 둘 중 하나를 사용:
+#
+#   (a) 기본 *.workers.dev (배포만 하면 자동) — 예: momozzang-upload.<account>.workers.dev
+#   (b) 커스텀 도메인 api.momozzang.com (Cloudflare DNS 에 zone 이 있어야 함):
+# routes = [
+#   { pattern = "api.momozzang.com/upload", custom_domain = true }
+# ]
+#
+# 어드민은 Vercel rewrite 를 거치지 않고 VITE_UPLOAD_ENDPOINT 절대 URL 로 이 Worker 를 직접 호출한다(CORS).

@@ -1,0 +1,18 @@
+{
+  "name": "momozzang-upload-worker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cloudflare Worker — momozzang 이미지 업로드 중개 (어드민 → Worker → R2 바인딩)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "dry-run": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "typescript": "^5.8.0",
+    "wrangler": "^3.86.0"
+  }
+}

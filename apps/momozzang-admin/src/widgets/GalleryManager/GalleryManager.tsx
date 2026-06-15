@@ -19,11 +19,11 @@ import {
 } from '@dnd-kit/sortable';
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
-import { supabase } from '@momozzang/ui/src/shared/lib/supabase';
-import { buildThumbnailUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
+import { buildImageUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { SortableImage, PhotoItem } from './SortableImage';
 import { resizeImage } from '../../shared/lib/resizeImage';
+import { uploadToR2 } from '../../shared/lib/uploadToR2';
 import styles from './GalleryManager.module.css';
 
 interface GalleryManagerProps {
@@ -103,19 +103,13 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
           console.error('Resize failed for gallery image', e);
         }
 
-        const fileExt = fileToUpload.name.split('.').pop();
-        const fileName = `gallery-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-        const { error } = await supabase.storage
-          .from('wedding-images')
-          .upload(fileName, fileToUpload, { cacheControl: '31536000' });
-
-        if (error) throw error;
+        // Cloudflare Worker(R2 바인딩)로 업로드. 확장자는 Worker 가 검증된 content-type 으로 결정.
+        const { key } = await uploadToR2(fileToUpload, 'gallery');
 
         // 절대 URL이 아닌 객체 키만 저장한다. id 와 url 은 동일 키를 유지.
         newPhotos.push({
-          id: fileName, // Using filename as ID for simplicity
-          url: fileName,
+          id: key, // Using R2 key as ID for simplicity
+          url: key,
         });
       }
 
@@ -173,7 +167,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
                 key={photo.id}
                 photo={photo}
                 onRemove={() => handleDelete(photo.id)}
-                thumbnailUrl={buildThumbnailUrl(photo.url, { width: 200 })}
+                thumbnailUrl={buildImageUrl(photo.url)}
               />
             ))}
           </div>
@@ -185,9 +179,7 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
               isDragging
               isOverlay
               style={{ cursor: 'grabbing' }}
-              thumbnailUrl={buildThumbnailUrl(album.find((p) => p.id === activeId)!.url, {
-                width: 200,
-              })}
+              thumbnailUrl={buildImageUrl(album.find((p) => p.id === activeId)!.url)}
             />
           ) : null}
         </DragOverlay>

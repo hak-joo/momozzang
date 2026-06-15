@@ -1,0 +1,8 @@
+# wrangler dev 로컬 시크릿 예시. 실제 값은 .dev.vars 에 넣고 커밋하지 않는다.
+# (배포 환경에서는 `wrangler secret put UPLOAD_TOKEN` 로 주입한다.)
+
+# Worker 가 검증하는 공유비밀. 어드민의 VITE_UPLOAD_TOKEN 과 동일한 값이어야 한다.
+UPLOAD_TOKEN=
+
+# (선택) 쉼표 구분 추가 허용 Origin. 미설정 시 src/index.ts 의 DEFAULT_ALLOWED_ORIGINS 만 사용.
+# ALLOWED_ORIGINS=https://admin.momozzang.com,http://localhost:3002

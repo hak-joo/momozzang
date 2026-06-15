@@ -28,6 +28,10 @@ dist-ssr
 .env*
 !.env.example
 
+# Cloudflare Worker 로컬 시크릿 (UPLOAD_TOKEN 등). 예시 파일만 커밋.
+.dev.vars
+!.dev.vars.example
+
 *.tsbuildinfo
 
 # 하네스 실행 산출물 (템플릿은 커밋, 실행 결과는 제외)
