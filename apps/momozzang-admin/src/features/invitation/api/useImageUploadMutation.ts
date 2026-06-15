@@ -1,7 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@momozzang/ui/src/shared/lib/supabase';
 import { resizeImage } from '../../../shared/lib/resizeImage';
+import { uploadToR2 } from '../../../shared/lib/uploadToR2';
 
+/**
+ * 단일 이미지 업로드 mutation (대표/공유/신랑/신부).
+ *
+ * Supabase Storage 대신 **Cloudflare Worker(R2 바인딩)** 로 업로드한다.
+ * - 전송 전 클라이언트 리사이즈(전송량 절감) 유지.
+ * - Worker 가 응답한 **객체 키**(절대 URL 아님)를 반환 → 호출부가 데이터 필드에 저장.
+ * - 렌더 시점에 buildImageUrl(key) 로 img.momozzang.com URL 을 조립한다.
+ */
 export function useImageUploadMutation() {
   return useMutation({
     mutationFn: async (file: File) => {
@@ -12,18 +20,9 @@ export function useImageUploadMutation() {
         console.error('Resize failed for image upload', e);
       }
 
-      const fileExt = fileToUpload.name.split('.').pop();
-      const fileName = `admin-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('wedding-images')
-        .upload(filePath, fileToUpload, { cacheControl: '31536000' });
-
-      if (uploadError) throw uploadError;
-
-      // 절대 URL이 아닌 객체 키(버킷 제외)만 저장한다. 렌더 시점에 buildImageUrl 로 조립.
-      return filePath;
+      // prefix 'admin' → 키: admin-<ts>-<rand>.<검증된ext> (Worker 가 생성)
+      const { key } = await uploadToR2(fileToUpload, 'admin');
+      return key;
     },
   });
 }
