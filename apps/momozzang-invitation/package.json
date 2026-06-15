@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "migrate": "tsx src/features/migration/migrateData.ts"
+    "migrate": "tsx src/features/migration/migrateData.ts",
+    "cleanup-orphans": "tsx src/features/migration/cleanupOrphans.ts"
   },
   "dependencies": {
     "@momozzang/ui": "workspace:*",
