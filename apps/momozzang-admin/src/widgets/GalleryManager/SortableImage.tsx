@@ -18,7 +18,7 @@ interface PhotoItemProps {
   isDragging?: boolean;
   isOverlay?: boolean;
   thumbnailUrl?: string;
-  dragOverlayParams?: any;
+  dragOverlayParams?: Record<string, unknown>;
 }
 
 export const PhotoItem = memo(

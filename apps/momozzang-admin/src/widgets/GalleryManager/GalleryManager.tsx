@@ -21,9 +21,8 @@ import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { buildImageUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+import { resizeAndUploadImage } from '../../features/invitation/imageUpload';
 import { SortableImage, PhotoItem } from './SortableImage';
-import { resizeImage } from '../../shared/lib/resizeImage';
-import { uploadToR2 } from '../../shared/lib/uploadToR2';
 import styles from './GalleryManager.module.css';
 
 interface GalleryManagerProps {
@@ -96,19 +95,13 @@ export function GalleryManager({ album, onChange }: GalleryManagerProps) {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        let fileToUpload = file;
-        try {
-          fileToUpload = await resizeImage(file);
-        } catch (e) {
-          console.error('Resize failed for gallery image', e);
-        }
+        // 리사이즈(1920×1080·0.8) + 업로드.
+        // R2 환경: 객체 키 반환 → buildImageUrl(key)로 렌더. 로컬/QA: blob URL 반환([G3]).
+        const key = await resizeAndUploadImage(file, 'gallery');
 
-        // Cloudflare Worker(R2 바인딩)로 업로드. 확장자는 Worker 가 검증된 content-type 으로 결정.
-        const { key } = await uploadToR2(fileToUpload, 'gallery');
-
-        // 절대 URL이 아닌 객체 키만 저장한다. id 와 url 은 동일 키를 유지.
+        // 절대 URL이 아닌 객체 키(또는 blob URL)를 저장. id와 url은 동일 값 유지.
         newPhotos.push({
-          id: key, // Using R2 key as ID for simplicity
+          id: key,
           url: key,
         });
       }

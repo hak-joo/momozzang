@@ -60,17 +60,13 @@ export default function AdminPage() {
       const newData = { ...invitation };
 
       if (field === 'main') {
-        if (!newData.customization) newData.customization = {} as any;
-        newData.customization!.mainImageUrl = url;
+        newData.customization = { ...(newData.customization ?? {}), mainImageUrl: url } as WeddingInvitation['customization'];
       } else if (field === 'share') {
-        if (!newData.invitationInfo) newData.invitationInfo = {} as any;
-        newData.invitationInfo.shareImageUrl = url;
+        newData.invitationInfo = { ...newData.invitationInfo, shareImageUrl: url };
       } else if (field === 'bride') {
-        if (!newData.aboutUs) newData.aboutUs = {} as any;
-        newData.aboutUs!.brideImageUrl = url;
+        newData.aboutUs = { ...(newData.aboutUs ?? {}), brideImageUrl: url } as WeddingInvitation['aboutUs'];
       } else if (field === 'groom') {
-        if (!newData.aboutUs) newData.aboutUs = {} as any;
-        newData.aboutUs!.groomImageUrl = url;
+        newData.aboutUs = { ...(newData.aboutUs ?? {}), groomImageUrl: url } as WeddingInvitation['aboutUs'];
       }
       setInvitation(newData);
     } catch (e) {

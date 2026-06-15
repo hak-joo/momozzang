@@ -5,6 +5,19 @@
   /* background removed -> dynamic style */
 }
 
+/* 신청 폼 미리보기: 프레임 컨테이너 기준 100% 높이로 스코프 (뷰포트 100vh 사용 금지) */
+.main.scoped {
+  height: 100%;
+}
+
+.main.scoped .decorator {
+  height: 100%;
+}
+
+.main.scoped .mainWrapper {
+  max-height: 100%;
+}
+
 .decorator {
   width: 12px;
   background-color: #fff;
