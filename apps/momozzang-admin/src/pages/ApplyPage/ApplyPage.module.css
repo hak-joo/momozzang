@@ -1,0 +1,131 @@
+.page {
+  min-height: 100vh;
+  background: #f5f6f8;
+  color: #2b2f38;
+  font-family: system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e6e8ee;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex-wrap: wrap;
+}
+
+.stepNav {
+  display: flex;
+  gap: 8px;
+}
+
+.navButton {
+  padding: 8px 18px;
+  border: 1px solid #d8dae0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b2f38;
+  cursor: pointer;
+}
+
+.navButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mobileTabs {
+  display: none;
+}
+
+.body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(360px, 420px) 1fr;
+  gap: 32px;
+  padding: 32px 24px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: start;
+}
+
+.previewPane {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 96px;
+}
+
+.formPane {
+  min-width: 0;
+}
+
+.placeholder {
+  padding: 40px 20px;
+  border: 1px dashed #c9cdd6;
+  border-radius: 12px;
+  background: #fff;
+  text-align: center;
+  color: #8a8f99;
+}
+
+.placeholder h3 {
+  margin: 0 0 8px;
+  color: #2b2f38;
+}
+
+/* ── 반응형: ≤768px에서 2단 → 세로 스택 + 탭 토글 ── */
+@media (max-width: 768px) {
+  .mobileTabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px 0;
+    background: #f5f6f8;
+  }
+
+  .mobileTab {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #d8dae0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    color: #8a8f99;
+    cursor: pointer;
+  }
+
+  .mobileTabActive {
+    background: #5129b5;
+    border-color: #5129b5;
+    color: #fff;
+  }
+
+  .body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .previewPane {
+    position: static;
+  }
+
+  .mobileHide {
+    display: none;
+  }
+
+  .mobileShow {
+    display: flex;
+  }
+}

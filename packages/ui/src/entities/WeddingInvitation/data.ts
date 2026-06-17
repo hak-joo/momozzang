@@ -84,7 +84,7 @@ export const exampleWeddingInvitation: WeddingInvitation = {
   weddingHallInfo: {
     date: '2030-1-24',
     ampm: 'PM',
-    hour: 17,
+    hour: 5,
     minute: 45,
     hallName: '샘플 유니버스 웨딩홀',
     hallDetail: '테스트룸',

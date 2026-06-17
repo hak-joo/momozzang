@@ -4,12 +4,14 @@ import { PixelBadge } from '@shared/ui/PixelBadge';
 import { MOCK_GALLERY_LIST } from './constants';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import { useParams } from 'react-router-dom';
-import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { useInvitation, useIsPreviewMode } from '@entities/WeddingInvitation/Context';
 
 export function Gallery() {
   const { invitationId } = useParams();
   const { album } = useInvitation();
-  const isMock = !invitationId;
+  const isPreview = useIsPreviewMode();
+  // 미리보기 모드(신청 폼)에서는 라우트 파라미터가 없어도 실제 폼 album을 렌더한다(G1).
+  const isMock = !invitationId && !isPreview;
   const images = isMock ? MOCK_GALLERY_LIST : album;
   return (
     <>

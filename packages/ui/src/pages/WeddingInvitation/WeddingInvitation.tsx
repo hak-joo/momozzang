@@ -1,4 +1,5 @@
 import { useRef, useEffect, type RefObject } from 'react';
+import { clsx } from 'clsx';
 import { Header } from '@widgets/invitation/Header';
 import { Gallery } from '@widgets/invitation/Gallery';
 import type { Menu } from '@entities/WeddingInvitation/menu';
@@ -20,8 +21,13 @@ import bgBlue from '../../shared/assets/images/bg-blue.png';
 
 interface Props {
   metadata: WeddingInvitation;
+  /**
+   * 테마 CSS 변수를 주입할 대상 엘리먼트. 미지정 시 `document.body`(기본 청첩장 뷰어 동작).
+   * 신청 폼 미리보기처럼 전역 오염 없이 프레임 컨테이너에만 테마를 스코프할 때 사용한다.
+   */
+  themeScopeRef?: RefObject<HTMLElement | null>;
 }
-export function WeddingInvitation({ metadata }: Props) {
+export function WeddingInvitation({ metadata, themeScopeRef }: Props) {
   const homeRef = useRef<HTMLDivElement>(null);
   const miniRoomRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -55,21 +61,26 @@ export function WeddingInvitation({ metadata }: Props) {
   const bgImage = useImageHueShift(bgBlue, themeHue);
 
   useEffect(() => {
-    const body = document.body;
+    const target = themeScopeRef?.current ?? document.body;
     Object.entries(themeVars).forEach(([key, value]) => {
-      body.style.setProperty(key, value);
+      target.style.setProperty(key, value as string);
     });
 
     return () => {
       Object.keys(themeVars).forEach((key) => {
-        body.style.removeProperty(key);
+        target.style.removeProperty(key);
       });
     };
-  }, [themeVars]);
+  }, [themeVars, themeScopeRef]);
+
+  const scoped = Boolean(themeScopeRef);
 
   return (
     <MessageDialogProvider>
-      <main className={styles.main} style={{ backgroundImage: `url(${bgImage})` }}>
+      <main
+        className={clsx(styles.main, scoped && styles.scoped)}
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
         <div className={styles.decorator}></div>
         <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
         <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />

@@ -17,6 +17,7 @@ import { useMessageDialog } from '@shared/ui/MessageDialog';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
 import { useMapNavigation } from './useMapNavigation';
 import { useParams } from 'react-router-dom';
+import { useIsPreviewMode } from '@entities/WeddingInvitation/Context';
 import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 
@@ -26,7 +27,9 @@ const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroIn
 
 export function Direction() {
   const { invitationId } = useParams();
-  const isMock = !invitationId;
+  const isPreview = useIsPreviewMode();
+  // 미리보기 모드에서는 tel:/외부 지도 앱 이동 등 부작용을 차단한다(D1).
+  const isMock = !invitationId || isPreview;
   const {
     weddingHallInfo: { latitude, longitude, hallName, address, tel },
     etcInfo,

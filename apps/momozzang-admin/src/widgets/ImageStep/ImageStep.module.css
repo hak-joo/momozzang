@@ -1,0 +1,154 @@
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e6e8ee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2b2f38;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: #9aa0ab;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.imageField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px dashed #d8dae0;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+
+.imageLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5b606b;
+}
+
+.thumb {
+  width: 100%;
+  max-width: 160px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e6e8ee;
+  background: #f1f2f5;
+}
+
+.uploading {
+  font-size: 12px;
+  color: #5129b5;
+}
+
+.trackList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trackItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e6e8ee;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.trackItemSelected {
+  border-color: #5129b5;
+  background: #f6f3fd;
+}
+
+.trackMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trackTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b2f38;
+}
+
+.trackArtist {
+  font-size: 12px;
+  color: #8a8f99;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5b606b;
+}
+
+.select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d8dae0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  cursor: pointer;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #5b606b;
+  cursor: pointer;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .imageGrid,
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+}
