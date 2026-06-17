@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { exampleWeddingInvitation } from '@momozzang/ui/src/entities/WeddingInvitation/data';
 import {
   type WeddingInvitation,
@@ -19,6 +19,11 @@ import {
   type Customization,
   type ImageAsset,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+import {
+  usePendingImages,
+  type ApplyUploadedKey,
+} from '../invitation/usePendingImages';
+import { createPhotoId } from '../invitation/galleryHelpers';
 
 /** 혼주 4인 슬롯 키 (Parents의 Person 필드) */
 export type ParentSlot = 'groomFather' | 'groomMother' | 'brideFather' | 'brideMother';
@@ -101,6 +106,107 @@ export type Mood = (typeof MOOD_OPTIONS)[number];
 /** 단일 이미지 슬롯 종류 */
 export type SingleImageSlot = 'main' | 'share' | 'representative' | 'aboutGroom' | 'aboutBride';
 
+/** 신청 폼 단일 5슬롯 집합. 이 5개에 속하지 않는 slotKey 는 갤러리 항목 id(UUID)로 본다. */
+const SINGLE_IMAGE_SLOT_SET = new Set<SingleImageSlot>([
+  'main',
+  'share',
+  'representative',
+  'aboutGroom',
+  'aboutBride',
+]);
+
+/**
+ * 신청 폼 전용 applyKey([E4]). 어드민 `applyUploadedKey`(main/share/groom/bride)와 슬롯 키가 다르므로
+ * 별도로 작성한다. `setSingleImage`(아래) switch 매핑과 동일하게 업로드 결과 키를 invitation 에 꽂는다.
+ * - main → customization.mainImageUrl
+ * - share → invitationInfo.shareImageUrl
+ * - aboutGroom → aboutUs.groomImageUrl
+ * - aboutBride → aboutUs.brideImageUrl
+ * - representative → images[]의 isRepresentative 자산 url 치환/추가
+ * - 그 외(갤러리 항목 id) → album 에서 같은 id 항목의 url 만 치환(id 유지).
+ * blob 이 아니라 업로드된 "키"만 들어간다(불변식 1).
+ */
+const applyFormUploadedKey: ApplyUploadedKey = (invitation, slotKey, key) => {
+  if (!SINGLE_IMAGE_SLOT_SET.has(slotKey as SingleImageSlot)) {
+    // 갤러리 항목: album 에서 slotKey(=항목 id)를 찾아 url 만 치환, id 유지.
+    const album = invitation.album ?? [];
+    return {
+      ...invitation,
+      album: album.map((item) => (item.id === slotKey ? { ...item, url: key } : item)),
+    };
+  }
+  // 단일 슬롯: setSingleImage 와 동일 매핑을 키 치환에 재사용.
+  return applySingleImage(invitation, slotKey as SingleImageSlot, key);
+};
+
+/** 신청 폼 prefix 분기: 단일 5슬롯=admin, 그 외(갤러리 항목 id)=gallery. */
+const applyFormUploadPrefix = (slotKey: string): 'admin' | 'gallery' =>
+  SINGLE_IMAGE_SLOT_SET.has(slotKey as SingleImageSlot) ? 'admin' : 'gallery';
+
+/** 단일 슬롯의 현재 저장값(키/URL)을 invitation 에서 꺼낸다. 썸네일/미리보기 src 조립용. */
+function singleSlotSavedValue(
+  invitation: WeddingInvitation,
+  slot: SingleImageSlot,
+): string | undefined {
+  switch (slot) {
+    case 'main':
+      return invitation.customization?.mainImageUrl || undefined;
+    case 'share':
+      return invitation.invitationInfo.shareImageUrl || undefined;
+    case 'aboutGroom':
+      return invitation.aboutUs?.groomImageUrl || undefined;
+    case 'aboutBride':
+      return invitation.aboutUs?.brideImageUrl || undefined;
+    case 'representative':
+      return invitation.images?.find((img) => img.isRepresentative)?.url || undefined;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * 단일 슬롯에 url(=즉시 입력 또는 commit 후 업로드 키)을 불변 갱신해 반환한다.
+ * `setSingleImage`(state setter)와 `applyFormUploadedKey`(commit 키 치환)가 공유하는 단일 매핑.
+ */
+function applySingleImage(
+  prev: WeddingInvitation,
+  slot: SingleImageSlot,
+  url: string,
+): WeddingInvitation {
+  switch (slot) {
+    case 'main':
+      return {
+        ...prev,
+        customization: { ...defaultCustomization(prev.customization), mainImageUrl: url },
+      };
+    case 'share':
+      return { ...prev, invitationInfo: { ...prev.invitationInfo, shareImageUrl: url } };
+    case 'aboutGroom':
+      return { ...prev, aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), groomImageUrl: url } };
+    case 'aboutBride':
+      return { ...prev, aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), brideImageUrl: url } };
+    case 'representative': {
+      // images[]에서 isRepresentative 자산을 갱신/추가한다.
+      const existing = prev.images ?? [];
+      const repIndex = existing.findIndex((img) => img.isRepresentative);
+      let nextImages: ImageAsset[];
+      if (repIndex >= 0) {
+        nextImages = existing.map((img, i) => (i === repIndex ? { ...img, url } : img));
+      } else {
+        const newAsset: ImageAsset = {
+          id: `rep-${Date.now().toString(36)}`,
+          url,
+          isRepresentative: true,
+        };
+        nextImages = [...existing, newAsset];
+      }
+      return { ...prev, images: nextImages };
+    }
+    default:
+      return prev;
+  }
+}
+
 /**
  * 신청 폼 단일 진실원천.
  * 폼 상태는 `WeddingInvitation` 객체 1개이며, 모든 setter는 새 객체 참조를 반환하는
@@ -111,6 +217,20 @@ export function useApplyForm() {
   const [invitation, setInvitation] = useState<WeddingInvitation>(() =>
     structuredClone(exampleWeddingInvitation),
   );
+
+  // ── 지연 업로드 pending 레이어(F1·F2·F5·F7·F8) ──────────────────────────────
+  // 신청 폼 전체에서 단 1개의 인스턴스를 보유한다(F8). ImageStep(스텝②)·PublishStep(스텝③)이
+  // 이 동일 인스턴스의 콜백을 주입받으므로, 스텝을 오가며 ImageStep 이 언마운트돼도 pending 은
+  // ApplyPage 최상위(useApplyForm)에 살아남는다 → 고른 사진이 유지된다(F8).
+  const {
+    setPending,
+    clearPending,
+    getPreviewUrl,
+    hasPending,
+    pendingCount,
+    commitPendingUploads: commitPending,
+    clearAfterCommit,
+  } = usePendingImages();
 
   // ── 기본 정보 / 신랑·신부 이름 / 예식 / 테마 (S1) ───────────────────────────
   const setInvitationInfo = useCallback((patch: Partial<WeddingInvitation['invitationInfo']>) => {
@@ -404,40 +524,9 @@ export function useApplyForm() {
   }, []);
 
   // ── F10: 단일 이미지 슬롯 (대표/공유/메인/소개) ─────────────────────────────
+  // (즉시 url 치환 setter — 키 매핑은 모듈 함수 applySingleImage 와 공유한다.)
   const setSingleImage = useCallback((slot: SingleImageSlot, url: string) => {
-    setInvitation((prev) => {
-      switch (slot) {
-        case 'main':
-          return { ...prev, customization: { ...defaultCustomization(prev.customization), mainImageUrl: url } };
-        case 'share':
-          return { ...prev, invitationInfo: { ...prev.invitationInfo, shareImageUrl: url } };
-        case 'aboutGroom':
-          return { ...prev, aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), groomImageUrl: url } };
-        case 'aboutBride':
-          return { ...prev, aboutUs: { ...(prev.aboutUs ?? DEFAULT_ABOUT_US), brideImageUrl: url } };
-        case 'representative': {
-          // images[]에서 isRepresentative 자산을 갱신/추가한다.
-          const existing = prev.images ?? [];
-          const repIndex = existing.findIndex((img) => img.isRepresentative);
-          let nextImages: ImageAsset[];
-          if (repIndex >= 0) {
-            nextImages = existing.map((img, i) =>
-              i === repIndex ? { ...img, url } : img,
-            );
-          } else {
-            const newAsset: ImageAsset = {
-              id: `rep-${Date.now().toString(36)}`,
-              url,
-              isRepresentative: true,
-            };
-            nextImages = [...existing, newAsset];
-          }
-          return { ...prev, images: nextImages };
-        }
-        default:
-          return prev;
-      }
-    });
+    setInvitation((prev) => applySingleImage(prev, slot, url));
   }, []);
 
   // ── F10: 갤러리 album ───────────────────────────────────────────────────────
@@ -499,8 +588,109 @@ export function useApplyForm() {
     setInvitation(structuredClone(data));
   }, []);
 
+  // ── 단일 5슬롯 지연 선택(F1·F2·F5) — 업로드 없이 pending 에 보관만 ─────────────
+  // ImageStep 의 즉시 업로드(resizeAndUploadImage)를 대체한다. invitation state 는 건드리지 않는다
+  // (불변식 1: state·저장값에 blob 없음). blob 은 pending 레이어에만 존재.
+  const setSingleImagePending = useCallback(
+    (slot: SingleImageSlot, file: File) => {
+      setPending(slot, file); // (revoke 지점 a) 재선택 시 이전 previewUrl 해제는 setPending 내부.
+    },
+    [setPending],
+  );
+
+  /** 단일 슬롯 썸네일 src(F2): pending blob 우선, 없으면 저장값 키를 buildImageUrl 로 조립. */
+  const getSinglePreviewUrl = useCallback(
+    (slot: SingleImageSlot) => getPreviewUrl(slot, singleSlotSavedValue(invitation, slot)),
+    [getPreviewUrl, invitation],
+  );
+
+  // ── 갤러리 지연 배선(F1·F2·F4) — AdminPage handleGalleryAddFiles/Remove 와 동형 ──
+  // 추가: 업로드 없이 각 File 을 pending(slotKey=UUID)에 보관 + album 에 url='' placeholder 추가.
+  const handleGalleryAddFiles = useCallback(
+    (files: File[]) => {
+      const placeholders: AlbumPhoto[] = files.map((file) => {
+        const id = createPhotoId();
+        setPending(id, file); // blob previewUrl 생성 + File 보관(업로드 X).
+        return { id, url: '' }; // sentinel: Save commit 에서 키로 치환.
+      });
+      setInvitation((prev) => ({ ...prev, album: [...(prev.album ?? []), ...placeholders] }));
+    },
+    [setPending],
+  );
+
+  // 삭제(①, 삭제=revoke 단일 책임): pending 이면 clearPending(revoke+제거), 기존이면 album 필터.
+  const handleGalleryRemove = useCallback(
+    (id: string) => {
+      if (hasPending(id)) {
+        clearPending(id); // (revoke 지점 a)
+      }
+      setInvitation((prev) => ({
+        ...prev,
+        album: (prev.album ?? []).filter((item) => item.id !== id),
+      }));
+    },
+    [hasPending, clearPending],
+  );
+
+  /** 갤러리 썸네일 src(F2): pending blob 우선, 없으면 저장 키. GalleryManager.getThumbnailUrl 에 주입. */
+  const getGalleryThumbnailUrl = useCallback(
+    (item: AlbumPhoto) => getPreviewUrl(item.id, item.url),
+    [getPreviewUrl],
+  );
+
+  // 직전 commit 에 포함된 slot 목록. 저장 성공 후 정확히 이 slot 들의 blob 만 revoke 하기 위함(F7-b).
+  const committedSlotsRef = useRef<string[]>([]);
+
+  // ── 저장 commit(F3·F4·F6·완료정의7) — 단일+갤러리 pending 일괄 업로드 후 키 치환 invitation 반환 ──
+  // PublishStep 이 호출한다. 원자성(F6): 한 장이라도 실패하면 throw → 호출부가 저장 미수행 + pending 유지.
+  const commitPendingUploads = useCallback((): Promise<WeddingInvitation> => {
+    // 이번 commit 대상 slot(단일 5슬롯 중 pending + 갤러리 album 항목 중 pending) 기록.
+    const singleSlots = (['main', 'share', 'representative', 'aboutGroom', 'aboutBride'] as const)
+      .filter((s) => hasPending(s));
+    const gallerySlots = (invitation.album ?? [])
+      .map((item) => item.id)
+      .filter((id) => hasPending(id));
+    committedSlotsRef.current = [...singleSlots, ...gallerySlots];
+    return commitPending(invitation, applyFormUploadedKey, applyFormUploadPrefix);
+  }, [commitPending, invitation, hasPending]);
+
+  // 저장 성공 후 호출(F7-b): 직전 commit 에 포함된 slot 들의 previewUrl 만 revoke+clear 한다.
+  const clearCommittedPending = useCallback(() => {
+    clearAfterCommit(committedSlotsRef.current);
+    committedSlotsRef.current = [];
+  }, [clearAfterCommit]);
+
+  // ── 표시 전용 파생본 displayInvitation(F2 미리보기) ───────────────────────────
+  // invitation state 엔 키만(불변식 1). pending blob 은 viewer 가 읽는 필드에만 덮어 미리보기에 반영한다.
+  // pending 0개면 invitation 동일 참조 반환(InvitationProvider useMemo([data]) 재렌더 최소화, [E6]).
+  const displayInvitation = useMemo<WeddingInvitation>(() => {
+    if (pendingCount === 0) return invitation; // 동일 참조 → 불필요한 재렌더 방지.
+
+    let next = invitation;
+    // 단일 viewer-read 슬롯(main/aboutGroom/aboutBride)에 pending blob 덮기.
+    // share/representative 는 viewer 가 읽지 않으므로 덮지 않는다(썸네일은 getSinglePreviewUrl 로 별도 표시).
+    for (const slot of ['main', 'aboutGroom', 'aboutBride'] as const) {
+      if (hasPending(slot)) {
+        next = applySingleImage(next, slot, getPreviewUrl(slot, undefined));
+      }
+    }
+    // 갤러리: pending 항목(album 에 있고 pending 인 id)의 url 만 blob 으로 덮기.
+    const album = next.album ?? [];
+    const hasGalleryPending = album.some((item) => hasPending(item.id));
+    if (hasGalleryPending) {
+      next = {
+        ...next,
+        album: album.map((item) =>
+          hasPending(item.id) ? { ...item, url: getPreviewUrl(item.id, item.url) } : item,
+        ),
+      };
+    }
+    return next;
+  }, [invitation, pendingCount, hasPending, getPreviewUrl]);
+
   return {
     invitation,
+    displayInvitation,
     // 기본/이름/예식/테마
     setInvitationInfo,
     setGroomName,
@@ -536,9 +726,20 @@ export function useApplyForm() {
     setRsvpPerSideInclude,
     // 소개
     setAboutUs,
-    // 이미지 (F10)
+    // 이미지 (F10) — 즉시 url 치환 setter(불러오기 라운드트립/검증용 유지)
     setSingleImage,
     setAlbum,
+    // 이미지 지연 업로드 (F1·F2·F5·F8) — ImageStep 이 주입받음
+    setSingleImagePending,
+    getSinglePreviewUrl,
+    onGalleryAddFiles: handleGalleryAddFiles,
+    onGalleryRemoveItem: handleGalleryRemove,
+    getGalleryThumbnailUrl,
+    // 저장 commit (F3·F4·F6·완료정의7) — PublishStep 이 주입받음
+    commitPendingUploads,
+    clearCommittedPending,
+    hasPending,
+    pendingCount,
     // BGM (F11)
     setBgm,
     selectTrack,
