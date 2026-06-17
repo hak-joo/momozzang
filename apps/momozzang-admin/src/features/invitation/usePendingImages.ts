@@ -1,26 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type WeddingInvitation } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { buildImageUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
-import { resizeImage } from '../../shared/lib/resizeImage';
-import { uploadToR2 } from '../../shared/lib/uploadToR2';
+import { resizeAndUploadImage } from './imageUpload';
 
 /**
- * 리사이즈 + 업로드(한 장). `useImageUploadMutation`과 동일한 조합(resize → uploadToR2)을 재사용한다.
+ * 리사이즈 + 업로드(한 장). 공용 헬퍼 `imageUpload.ts`의 `resizeAndUploadImage` 에 위임한다.
  *
- * 주의(base 정합): 본 스프린트 base 인 main(18959f0)에는 `imageUpload.ts`/`resizeAndUploadImage`/
- * `isLocalDataSource` 가 존재하지 않는다(그 모듈들은 후속 apply-form 브랜치 소산). 따라서 계약 C3 의
- * "resizeAndUploadImage 재사용" 의도를, main 에 실제로 존재하는 동일 책임의 두 함수(`resizeImage` +
- * `uploadToR2`)를 같은 순서로 묶어 충족한다. 업로드/리사이즈 로직 자체는 재구현하지 않는다.
+ * 정합(S3 머지 후): origin/main 머지로 `imageUpload.ts`(`resizeAndUploadImage`/`isLocalDataSource`)가
+ * 합류했다. 이를 단일 진실원천으로 재사용해 어드민(경로 A·B)·신청 폼(경로 C)의 commit 업로드 경로를 통일한다.
+ * - supabase 환경: 기존과 동일하게 resize → uploadToR2 후 객체 키 반환(어드민 동작 회귀 없음).
+ * - 비-supabase(F9 로컬): `isLocalDataSource()` blob passthrough → blob URL 반환(저장값도 buildImageUrl
+ *   passthrough 로 미리보기/뷰어가 깨지지 않는다). S1 한계였던 로컬 commit passthrough 가 실제 동작한다.
  */
 async function resizeAndUpload(file: File, prefix: 'admin' | 'gallery'): Promise<string> {
-  let fileToUpload = file;
-  try {
-    fileToUpload = await resizeImage(file);
-  } catch (e) {
-    console.error('Resize failed, uploading original', e);
-  }
-  const { key } = await uploadToR2(fileToUpload, prefix);
-  return key;
+  return resizeAndUploadImage(file, prefix);
 }
 
 /**

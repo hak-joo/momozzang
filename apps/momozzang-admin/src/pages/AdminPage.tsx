@@ -13,6 +13,7 @@ import { clsx } from 'clsx';
 import { useInvitationQuery } from '../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
 import { usePendingImages, type ApplyUploadedKey } from '../features/invitation/usePendingImages';
+import { createPhotoId, normalizeAlbumIds } from '../features/invitation/galleryHelpers';
 
 /** 어드민 단일 4필드 slotKey. usePendingImages 는 임의 문자열을 받지만 여기선 이 4개만 쓴다. */
 type SingleSlot = 'main' | 'share' | 'groom' | 'bride';
@@ -20,38 +21,6 @@ type SingleSlot = 'main' | 'share' | 'groom' | 'bride';
 const SINGLE_SLOTS: SingleSlot[] = ['main', 'share', 'groom', 'bride'];
 
 const SINGLE_SLOT_SET = new Set<string>(SINGLE_SLOTS);
-
-/**
- * 안정적 임시 id 생성(⑥). ToastProvider.createToastId 선례와 동형으로
- * crypto.randomUUID 미지원 환경 폴백을 둔다. 갤러리 pending 항목의 dnd-kit 식별자 겸 slotKey.
- */
-function createPhotoId(): string {
-  return typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
-}
-
-/**
- * album 항목 id 보정(④, §3-1 마이그레이션 안전장치). **로드 시 1회만** 호출한다.
- * - id 가 비었으면: 키(url)가 있으면 그 키를, 없으면 randomUUID 를 부여.
- * - id 가 이미 본 값과 중복이면: 새 randomUUID 로 교체(dnd-kit 식별자 고유성 보장).
- * 그 외(고유·비어있지 않음)는 그대로 둔다 → 렌더마다 재부여하지 않으므로 dnd-kit 안정.
- */
-function normalizeAlbumIds(album: AlbumPhoto[]): AlbumPhoto[] {
-  const seen = new Set<string>();
-  return album.map((item) => {
-    let id = item.id;
-    if (!id || seen.has(id)) {
-      id = item.url || createPhotoId();
-      // 키조차 비었거나 그 키마저 이미 본 값이면 randomUUID 로 강제 고유화.
-      while (!id || seen.has(id)) {
-        id = createPhotoId();
-      }
-    }
-    seen.add(id);
-    return id === item.id ? item : { ...item, id };
-  });
-}
 
 /**
  * slotKey 업로드 결과 키를 invitation 에 반영한다(불변 갱신, ③).
