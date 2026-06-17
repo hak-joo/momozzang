@@ -56,6 +56,17 @@ export type ApplyUploadedKey = (
   uploadedKey: string,
 ) => WeddingInvitation;
 
+/** R2 객체 키 prefix. 단일 4슬롯은 `admin`, 갤러리 항목은 `gallery`. */
+export type UploadPrefix = 'admin' | 'gallery';
+
+/**
+ * commit 시 각 slotKey 가 어떤 prefix 로 업로드될지 결정한다.
+ * - 단일 값(`'admin'`/`'gallery'`): 모든 slot 에 동일 prefix(S1 호환).
+ * - 콜백: slotKey 별로 prefix 분기(S2: 단일 4슬롯=admin, 갤러리 UUID=gallery).
+ *   이 방식이면 단일+갤러리를 **한 번의 commit 호출**로 묶어 원자성을 유지할 수 있다(②-i).
+ */
+export type UploadPrefixResolver = UploadPrefix | ((slotKey: string) => UploadPrefix);
+
 export interface UsePendingImagesResult {
   /** slotKey 에 File 을 보관한다. 같은 slot 에 이미 pending 이 있으면 이전 previewUrl 을 revoke 후 교체한다. (revoke 지점 a) */
   setPending: (slotKey: string, file: File) => void;
@@ -78,7 +89,7 @@ export interface UsePendingImagesResult {
   commitPendingUploads: (
     invitation: WeddingInvitation,
     applyKey: ApplyUploadedKey,
-    prefix?: 'admin' | 'gallery',
+    prefix?: UploadPrefixResolver,
   ) => Promise<WeddingInvitation>;
   /** Save 성공(저장 완료) 후, 커밋에 포함됐던 slot 들의 previewUrl 을 revoke+clear 한다. (revoke 지점 b) */
   clearAfterCommit: (slotKeys: string[]) => void;
@@ -133,12 +144,17 @@ export function usePendingImages(): UsePendingImagesResult {
     async (
       invitation: WeddingInvitation,
       applyKey: ApplyUploadedKey,
-      prefix: 'admin' | 'gallery' = 'admin',
+      prefix: UploadPrefixResolver = 'admin',
     ): Promise<WeddingInvitation> => {
       // 호출 시점의 최신 pending 스냅샷(렌더 시 동기화된 state 클로저).
       const snapshot = pending;
       const slots = Object.keys(snapshot);
       if (slots.length === 0) return invitation;
+
+      // ②-i: slotKey 기반 prefix 분기. 단일/갤러리를 한 commit 으로 묶어도
+      // 각 slot 이 자기 prefix(admin/gallery)로 업로드된다 → 단일 호출 원자성 유지.
+      const resolvePrefix = (slotKey: string): UploadPrefix =>
+        typeof prefix === 'function' ? prefix(slotKey) : prefix;
 
       // 원자성(F6): 모든 업로드를 먼저 끝낸다. 하나라도 실패하면 Promise.all 이 reject 되고
       // 아래 invitation 치환에 도달하지 않으므로, state(invitation)에 부분 결과가 반영되지 않는다.
@@ -149,7 +165,7 @@ export function usePendingImages(): UsePendingImagesResult {
       // 생기며(키에 타임스탬프/난수 포함), 이전 고아 객체는 별도 정리 대상이다(추후 스프린트 범위).
       const uploaded = await Promise.all(
         slots.map(async (slotKey) => {
-          const key = await resizeAndUpload(snapshot[slotKey].file, prefix);
+          const key = await resizeAndUpload(snapshot[slotKey].file, resolvePrefix(slotKey));
           return { slotKey, key };
         }),
       );
