@@ -1,0 +1,19 @@
+{
+  "//": "tsx 로 실행되는 Node 전용 마이그레이션 스크립트(src/features/migration)의 독립 타입체크 설정. 브라우저 앱 빌드(tsc -b)와 분리한다. 사용: tsc -p tsconfig.migrate.json --noEmit",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": false,
+    "erasableSyntaxOnly": false
+  },
+  "include": ["src/features/migration"]
+}

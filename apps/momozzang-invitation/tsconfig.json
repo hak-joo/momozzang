@@ -11,5 +11,7 @@
     },
     "plugins": [{ "name": "typescript-plugin-paths" }]
   },
-  "include": ["src", "vite-env.d.ts"]
+  "include": ["src", "vite-env.d.ts"],
+  "comment-exclude": "src/features/migration 은 tsx 로 실행되는 Node 전용 1회성 마이그레이션 스크립트라 브라우저 앱 빌드(tsc -b)/번들에서 제외한다. 타입체크는 tsconfig.migrate.json 으로 별도 수행.",
+  "exclude": ["src/features/migration"]
 }
