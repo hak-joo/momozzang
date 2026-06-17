@@ -17,6 +17,10 @@ type Form = ReturnType<typeof useApplyForm>;
 interface Props {
   invitation: WeddingInvitation;
   onLoad: Form['loadInvitation'];
+  /** 저장 시 단일+갤러리 pending 을 일괄 업로드하고 키 치환 invitation 반환(F3·완료정의7). */
+  commitPendingUploads: Form['commitPendingUploads'];
+  /** 저장 성공 후 commit 에 포함된 pending blob revoke+clear(F7-b). */
+  clearCommittedPending: Form['clearCommittedPending'];
 }
 
 /**
@@ -26,7 +30,12 @@ interface Props {
  * - 불러오기는 `useInvitationQuery`(=`getInvitation`) 경유. 검증 전용 슬러그 사용 권장([G2]).
  * - 필수값/형식 검증은 `validateInvitation`로 저장 전 차단(F14·F15).
  */
-export function PublishStep({ invitation, onLoad }: Props) {
+export function PublishStep({
+  invitation,
+  onLoad,
+  commitPendingUploads,
+  clearCommittedPending,
+}: Props) {
   // ── 불러오기 슬러그(폼의 url과 별개 입력) ──
   const [loadSlug, setLoadSlug] = useState('');
   // useInvitationQuery로 트리거하기 위한 활성 슬러그
@@ -71,22 +80,47 @@ export function PublishStep({ invitation, onLoad }: Props) {
     { kind: 'success' | 'error'; text: string } | null
   >(null);
   const [savedSlug, setSavedSlug] = useState<string | null>(null);
+  // F3: commit(업로드) 단계 진행 상태. mutation.isPending(저장 단계)와 합쳐 버튼/라벨을 제어한다.
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
+    if (isUploading || mutation.isPending) return;
     setSaveMessage(null);
     const found = validateInvitation(invitation);
     setIssues(found);
     if (found.length > 0) {
-      // F14 필수값 누락 안내 — 저장 mutation 호출하지 않음.
+      // F14 필수값 누락 안내 — commit/저장 모두 호출하지 않음.
       return;
     }
+
+    // F3·완료정의7: 저장 시점에 비로소 단일 5슬롯 + 갤러리 pending 을 일괄 업로드한다.
+    // F6(원자성): 한 장이라도 실패하면 throw → mutation 미호출 + pending 유지(재시도 가능).
+    let toSave: WeddingInvitation;
+    try {
+      setIsUploading(true);
+      toSave = await commitPendingUploads();
+    } catch (err) {
+      setSaveMessage({
+        kind: 'error',
+        text: `이미지 업로드에 실패했습니다: ${
+          err instanceof Error ? err.message : '알 수 없는 오류'
+        }. 다시 시도해 주세요.`,
+      });
+      return; // pending 유지(clearCommittedPending 미호출).
+    } finally {
+      setIsUploading(false);
+    }
+
     const slug = invitation.invitationInfo.url.trim();
     mutation.mutate(
-      { slug, data: invitation },
+      { slug, data: toSave },
       {
         onSuccess: () => {
           setSavedSlug(slug);
           setSaveMessage({ kind: 'success', text: '청첩장이 저장(제작)되었습니다.' });
+          // 키 치환된 결과로 폼 state 갱신(blob→키, 미리보기 깨짐 방지) + commit blob revoke+clear(F7-b).
+          onLoad(toSave);
+          clearCommittedPending();
         },
         onError: (err) => {
           setSaveMessage({
@@ -96,7 +130,11 @@ export function PublishStep({ invitation, onLoad }: Props) {
         },
       },
     );
-  }, [invitation, mutation]);
+  }, [invitation, mutation, isUploading, commitPendingUploads, clearCommittedPending, onLoad]);
+
+  // F3: 저장 버튼 라벨/비활성 — 업로드 중 → 저장 중 → 평시.
+  const isBusy = isUploading || mutation.isPending;
+  const saveLabel = isUploading ? '업로드 중...' : mutation.isPending ? '저장 중...' : '저장(제작)';
 
   const completeLink = savedSlug ? `/m/${savedSlug}` : null;
   const [copied, setCopied] = useState(false);
@@ -168,8 +206,8 @@ export function PublishStep({ invitation, onLoad }: Props) {
         )}
 
         <div className={styles.actions}>
-          <Button onClick={handleSave} disabled={mutation.isPending} data-testid="publish-save">
-            {mutation.isPending ? '저장 중...' : '저장(제작)'}
+          <Button onClick={handleSave} disabled={isBusy} data-testid="publish-save">
+            {saveLabel}
           </Button>
         </div>
 
