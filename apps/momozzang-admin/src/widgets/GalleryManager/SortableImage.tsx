@@ -3,7 +3,6 @@ import { useSortable } from '@dnd-kit/sortable';
 import { clsx } from 'clsx';
 import { CSS } from '@dnd-kit/utilities';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
-import { buildImageUrl } from '@momozzang/ui/src/shared/lib/imageUrl';
 import styles from './GalleryManager.module.css';
 
 interface SortableImageProps {
@@ -36,7 +35,7 @@ export const PhotoItem = memo(
           {...dragOverlayParams}
         >
           <img
-            src={thumbnailUrl || buildImageUrl(photo.url)}
+            src={thumbnailUrl ?? ''}
             alt="Gallery"
             className={styles.image}
             loading={isOverlay ? 'eager' : 'lazy'}
