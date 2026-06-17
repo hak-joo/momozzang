@@ -25,6 +25,7 @@ export default function ApplyPage() {
   const [mobileTab, setMobileTab] = useState<MobileTab>('form');
   const {
     invitation,
+    displayInvitation,
     setInvitationInfo,
     setGroomName,
     setBrideName,
@@ -51,8 +52,14 @@ export default function ApplyPage() {
     setRsvpPerSide,
     setRsvpPerSideInclude,
     setAboutUs,
-    setSingleImage,
     setAlbum,
+    setSingleImagePending,
+    getSinglePreviewUrl,
+    onGalleryAddFiles,
+    onGalleryRemoveItem,
+    getGalleryThumbnailUrl,
+    commitPendingUploads,
+    clearCommittedPending,
     setBgm,
     selectTrack,
     updateTrack,
@@ -115,7 +122,7 @@ export default function ApplyPage() {
           )}
         >
           <ErrorBoundary label="미리보기">
-            <PhonePreview invitation={invitation} />
+            <PhonePreview invitation={displayInvitation} />
           </ErrorBoundary>
         </aside>
 
@@ -133,7 +140,7 @@ export default function ApplyPage() {
             ErrorBoundary로 단일 위젯 예외가 앱 전체를 화이트스크린하지 않도록 격리한다.
           */}
           <ErrorBoundary label="입력 폼">
-            <InvitationProvider data={invitation} previewMode>
+            <InvitationProvider data={displayInvitation} previewMode>
               {step === 1 && (
                 <ApplyForm
               invitation={invitation}
@@ -168,7 +175,11 @@ export default function ApplyPage() {
           {step === 2 && (
             <ImageStep
               invitation={invitation}
-              onSingleImage={setSingleImage}
+              onSingleImagePending={setSingleImagePending}
+              getSinglePreviewUrl={getSinglePreviewUrl}
+              onGalleryAddFiles={onGalleryAddFiles}
+              onGalleryRemoveItem={onGalleryRemoveItem}
+              getGalleryThumbnailUrl={getGalleryThumbnailUrl}
               onAlbumChange={setAlbum}
               onBgmChange={setBgm}
               onSelectTrack={selectTrack}
@@ -177,7 +188,14 @@ export default function ApplyPage() {
               onMiniRoomChange={setMiniRoom}
             />
           )}
-              {step === 3 && <PublishStep invitation={invitation} onLoad={loadInvitation} />}
+              {step === 3 && (
+                <PublishStep
+                  invitation={invitation}
+                  onLoad={loadInvitation}
+                  commitPendingUploads={commitPendingUploads}
+                  clearCommittedPending={clearCommittedPending}
+                />
+              )}
             </InvitationProvider>
           </ErrorBoundary>
         </main>

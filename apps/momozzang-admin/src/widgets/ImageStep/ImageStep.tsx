@@ -1,13 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { clsx } from 'clsx';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
-import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import {
   type WeddingInvitation,
   type ThemeColorOptions,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { GalleryManager } from '../GalleryManager/GalleryManager';
-import { resizeAndUploadImage } from '../../features/invitation/imageUpload';
 import {
   MOOD_OPTIONS,
   type Mood,
@@ -20,7 +18,14 @@ type Form = ReturnType<typeof useApplyForm>;
 
 interface Props {
   invitation: WeddingInvitation;
-  onSingleImage: Form['setSingleImage'];
+  /** 단일 슬롯 지연 선택(F1·F2·F5): 업로드 없이 pending 보관만. */
+  onSingleImagePending: Form['setSingleImagePending'];
+  /** 단일 슬롯 썸네일 src(F2): pending blob 우선. */
+  getSinglePreviewUrl: Form['getSinglePreviewUrl'];
+  /** 갤러리 신 인터페이스(F1·F2·F4) — S2 GalleryManager 배선. */
+  onGalleryAddFiles: Form['onGalleryAddFiles'];
+  onGalleryRemoveItem: Form['onGalleryRemoveItem'];
+  getGalleryThumbnailUrl: Form['getGalleryThumbnailUrl'];
   onAlbumChange: Form['setAlbum'];
   onBgmChange: Form['setBgm'];
   onSelectTrack: Form['selectTrack'];
@@ -37,74 +42,55 @@ const SINGLE_IMAGE_SLOTS: Array<{ slot: SingleImageSlot; label: string; preview:
   { slot: 'aboutBride', label: '신부 소개 이미지 (미리보기 반영)', preview: true },
 ];
 
-function currentSlotUrl(invitation: WeddingInvitation, slot: SingleImageSlot): string | undefined {
-  switch (slot) {
-    case 'main':
-      return invitation.customization?.mainImageUrl || undefined;
-    case 'share':
-      return invitation.invitationInfo.shareImageUrl || undefined;
-    case 'aboutGroom':
-      return invitation.aboutUs?.groomImageUrl || undefined;
-    case 'aboutBride':
-      return invitation.aboutUs?.brideImageUrl || undefined;
-    case 'representative':
-      return invitation.images?.find((img) => img.isRepresentative)?.url || undefined;
-    default:
-      return undefined;
-  }
-}
-
+/**
+ * 단일 이미지 슬롯 필드(F1·F2·F5).
+ * 파일 선택 시 R2 업로드를 하지 않고 부모(useApplyForm)의 setSingleImagePending 만 호출한다.
+ * 썸네일 src 는 getSinglePreviewUrl(slot)(=pending blob 우선, 없으면 저장 키).
+ */
 function ImageUploadField({
   slot,
   label,
-  url,
-  onUploaded,
+  previewUrl,
+  onSelect,
 }: {
   slot: SingleImageSlot;
   label: string;
-  url: string | undefined;
-  onUploaded: (slot: SingleImageSlot, url: string) => void;
+  previewUrl: string;
+  onSelect: (slot: SingleImageSlot, file: File) => void;
 }) {
-  const [uploading, setUploading] = useState(false);
-
   const handleChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      setUploading(true);
-      try {
-        const uploadedUrl = await resizeAndUploadImage(file, 'admin');
-        onUploaded(slot, uploadedUrl);
-      } catch (err) {
-        console.error('Upload failed', err);
-        alert('이미지 업로드에 실패했습니다.');
-      } finally {
-        setUploading(false);
-        e.target.value = '';
-      }
+      onSelect(slot, file); // 업로드 없음 — pending 보관 + blob previewUrl 만.
+      e.target.value = ''; // 같은 파일 재선택 허용.
     },
-    [slot, onUploaded],
+    [slot, onSelect],
   );
 
   return (
     <div className={styles.imageField}>
       <span className={styles.imageLabel}>{label}</span>
-      {url && <img src={url} alt={label} className={styles.thumb} loading="lazy" />}
+      {previewUrl && (
+        <img src={previewUrl} alt={label} className={styles.thumb} loading="lazy" />
+      )}
       <input
         type="file"
         accept="image/*"
         onChange={handleChange}
-        disabled={uploading}
         data-testid={`image-upload-${slot}`}
       />
-      {uploading && <span className={styles.uploading}>업로드 중...</span>}
     </div>
   );
 }
 
 export function ImageStep({
   invitation,
-  onSingleImage,
+  onSingleImagePending,
+  getSinglePreviewUrl,
+  onGalleryAddFiles,
+  onGalleryRemoveItem,
+  getGalleryThumbnailUrl,
   onAlbumChange,
   onBgmChange,
   onSelectTrack,
@@ -130,8 +116,8 @@ export function ImageStep({
               key={slot}
               slot={slot}
               label={label}
-              url={currentSlotUrl(invitation, slot)}
-              onUploaded={onSingleImage}
+              previewUrl={getSinglePreviewUrl(slot)}
+              onSelect={onSingleImagePending}
             />
           ))}
         </div>
@@ -141,7 +127,13 @@ export function ImageStep({
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>갤러리</h3>
         <p className={styles.hint}>사진을 추가/드래그 정렬/삭제할 수 있습니다(최대 20장). 미리보기 갤러리에 즉시 반영됩니다.</p>
-        <GalleryManager album={invitation.album ?? []} onChange={onAlbumChange} />
+        <GalleryManager
+          album={invitation.album ?? []}
+          onChange={onAlbumChange}
+          onAddFiles={onGalleryAddFiles}
+          onRemoveItem={onGalleryRemoveItem}
+          getThumbnailUrl={getGalleryThumbnailUrl}
+        />
       </section>
 
       {/* F11: BGM */}
