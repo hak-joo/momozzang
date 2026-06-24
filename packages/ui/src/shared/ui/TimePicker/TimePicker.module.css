@@ -1,0 +1,157 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+/* 트리거: DatePicker 트리거와 동일 톤앤매너(sub-100 배경 + main-600 글자 + radius 16) */
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 16px;
+  background: var(--color-sub-100);
+  padding: 14px 16px;
+  cursor: pointer;
+
+  color: var(--color-main-600);
+  font-family: var(--font-PyeongChang);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 153%;
+  letter-spacing: -0.12px;
+  text-align: left;
+}
+
+.trigger:focus-visible {
+  outline: 3px solid rgba(149, 174, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.triggerText {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.triggerIcon {
+  flex: none;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* 팝업: DatePicker와 동일한 픽셀/싸이월드 감성 — 각진 보더, 흰 배경, main 컬러 보더/그림자 */
+.popup {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 6px);
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  background: var(--color-basic-white);
+  border: 2px solid var(--color-main-600);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 0 var(--color-main-300);
+  padding: 10px;
+
+  font-family: var(--font-PyeongChang);
+  color: var(--color-main-600);
+}
+
+/* 오전/오후 토글 */
+.ampmToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.ampmButton {
+  border: 2px solid var(--color-main-300);
+  border-radius: 6px;
+  background: var(--color-sub-100);
+  color: var(--color-main-600);
+  font-family: var(--font-PyeongChang);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.ampmButton:hover {
+  background: var(--color-sub-300);
+}
+
+/* 시/분 컬럼 */
+.columns {
+  display: flex;
+  gap: 8px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 84px;
+}
+
+.columnLabel {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-main-400);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  height: 168px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  border: 2px solid var(--color-main-300);
+  border-radius: 6px;
+  background: var(--color-sub-100);
+}
+
+.item {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-main-600);
+  font-family: var(--font-PyeongChang);
+  font-size: 12px;
+  font-weight: 400;
+  padding: 6px 0;
+  cursor: pointer;
+  text-align: center;
+}
+
+.item:hover {
+  background: var(--color-basic-white);
+  border-color: var(--color-main-300);
+}
+
+/* 선택 항목 강조 — 메인 컬러 채움 (오전/오후 토글, 시/분 항목 공통) */
+.active,
+.item.active {
+  background: var(--color-main-600);
+  color: var(--color-basic-white);
+  border-color: var(--color-main-600);
+}
+
+.ampmButton.active:hover,
+.item.active:hover {
+  background: var(--color-main-600);
+}
