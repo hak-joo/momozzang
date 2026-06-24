@@ -17,8 +17,8 @@
 
 .header button {
   @mixin font-bold;
-  /* 좁은 폰 프레임(375px)에서 5개 라벨이 겹치지 않도록 13px → 12px 미세 축소 */
-  font-size: 12px;
+  /* 375px 프레임에서 5탭 합폭에 여유가 충분해 가독성을 위해 14px 로 재상향 */
+  font-size: 14px;
   line-height: var(--line-height-13-heading);
   letter-spacing: -0.3px;
   color: #f9f9f9;
@@ -29,8 +29,8 @@
   /* 균등 분배(flex:1 1 0) 대신 라벨 길이에 맞춰 폭을 잡되, 공간이 모자라면 함께 줄어든다 */
   flex: 0 1 auto;
   min-width: 0;
-  padding: 0 7px;
-  height: 34px;
+  padding: 0 9px;
+  height: 40px;
   box-sizing: border-box;
   white-space: nowrap;
   transition: background-color 0.3s ease;
