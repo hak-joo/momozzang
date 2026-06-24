@@ -21,7 +21,6 @@ export function PhonePreview({ invitation }: Props) {
 
   return (
     <div className={styles.frame}>
-      <div className={styles.notch} aria-hidden="true" />
       <div className={styles.screen} ref={screenRef}>
         <ToastProvider>
           <InvitationProvider data={invitation} previewMode>
