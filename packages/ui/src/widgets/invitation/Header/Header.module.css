@@ -3,13 +3,15 @@
   position: fixed;
   top: 13px;
   z-index: 100;
-  left: 10px;
+  left: 0;
   display: flex;
   justify-content: center;
 }
 .header nav {
   display: flex;
   gap: 0px;
+  /* 375px 프레임 안에서 5개 탭이 잘리지 않도록 좌우 여유를 둔 최대 폭 */
+  max-width: calc(100% - 16px);
 }
 
 .header nav > :not(:first-child) {
@@ -17,15 +19,18 @@
 }
 
 .header button {
-  @mixin typo-heading4;
+  @mixin typo-heading5;
   color: #f9f9f9;
   border-radius: 12px 12px 0 0;
   background: var(--color-main-300);
   box-shadow: 0 0 18px 0 rgba(0, 0, 0, 0.25);
 
-  width: 72px;
-  height: 37px;
-  box-sizing: content-box;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 4px;
+  height: 34px;
+  box-sizing: border-box;
+  white-space: nowrap;
   transition: background-color 0.3s ease;
 }
 .header button.active {
