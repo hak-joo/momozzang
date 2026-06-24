@@ -46,40 +46,6 @@
   color: #d83a3a;
 }
 
-.textarea {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid #d8dae0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-  resize: vertical;
-  line-height: 1.5;
-}
-
-.textarea:focus {
-  outline: none;
-  border-color: #5129b5;
-}
-
-.select {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid #d8dae0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-  background: #fff;
-  cursor: pointer;
-}
-
-.select:focus {
-  outline: none;
-  border-color: #5129b5;
-}
-
 .slugRow {
   display: flex;
   align-items: stretch;
@@ -115,15 +81,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
-}
-
-.checkboxRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #5b606b;
-  cursor: pointer;
 }
 
 .subLabel {
@@ -201,16 +158,10 @@
   box-sizing: border-box;
 }
 
+/* 이메일 도메인 셀렉트는 공통 Select 위에 폭만 콘텐츠 기준으로 축소 */
 .emailDomainSelect {
   flex: 0 0 auto;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid #d8dae0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-  background: #fff;
-  cursor: pointer;
+  width: auto;
 }
 
 /* 계좌 에디터 */
@@ -308,6 +259,45 @@
 .etcLineInput {
   flex: 1;
   min-width: 0;
+}
+
+/* 주소 검색 (F2) */
+.addressSearchRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.addressSearchInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressSearchButton {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  border: 1px solid #5129b5;
+  background: #5129b5;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 14px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.addressSearchButton:hover:not(:disabled) {
+  background: #41208f;
+}
+
+.addressSearchButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.addressMap {
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* RSVP 포함 항목 토글 */

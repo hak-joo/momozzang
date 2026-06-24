@@ -1,4 +1,9 @@
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Textarea } from '@momozzang/ui/src/shared/ui/Input/Textarea';
+import { Select } from '@momozzang/ui/src/shared/ui/Select';
+import { Checkbox } from '@momozzang/ui/src/shared/ui/Checkbox';
+import { DatePicker } from '@momozzang/ui/src/shared/ui/DatePicker';
+import { AddressSearchField } from './AddressSearchField';
 import {
   type WeddingInvitation,
   type ThemeKind,
@@ -186,22 +191,18 @@ function ParentBlock({
         onInternationalChange={(isInternational) => onPhoneChange(slot, { isInternational })}
         onCountryCodeChange={(countryCode) => onPhoneChange(slot, { countryCode })}
       />
-      <label className={styles.checkboxRow}>
-        <input
-          type="checkbox"
-          checked={isDeceased}
-          onChange={(e) => onPersonChange(slot, { isDeceased: e.target.checked })}
-        />
-        <span>고인</span>
-      </label>
+      <Checkbox
+        checked={isDeceased}
+        onChange={(e) => onPersonChange(slot, { isDeceased: e.target.checked })}
+        label="고인"
+      />
       {isDeceased && (
         <div className={styles.field}>
           <label className={styles.label} htmlFor={`apply-${slot}-deceasetype`}>
             고인 표기
           </label>
-          <select
+          <Select
             id={`apply-${slot}-deceasetype`}
-            className={styles.select}
             value={person?.deceasedType ?? 'none'}
             onChange={(e) =>
               onPersonChange(slot, { deceasedType: e.target.value as DeceaseType })
@@ -212,7 +213,7 @@ function ParentBlock({
                 {opt.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       )}
       <AccountEditor
@@ -241,14 +242,12 @@ function RsvpIncludeToggles({
       <span className={styles.subLabel}>포함 항목</span>
       <div className={styles.toggleGrid}>
         {RSVP_INCLUDE_OPTIONS.map(({ key, label }) => (
-          <label key={`${idPrefix}-${key}`} className={styles.checkboxRow}>
-            <input
-              type="checkbox"
-              checked={include?.[key] ?? false}
-              onChange={(e) => onChange({ [key]: e.target.checked })}
-            />
-            <span>{label}</span>
-          </label>
+          <Checkbox
+            key={`${idPrefix}-${key}`}
+            checked={include?.[key] ?? false}
+            onChange={(e) => onChange({ [key]: e.target.checked })}
+            label={label}
+          />
         ))}
       </div>
     </div>
@@ -325,9 +324,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-message">
             청첩장 문구
           </label>
-          <textarea
+          <Textarea
             id="apply-message"
-            className={styles.textarea}
             value={invitationInfo.message}
             onChange={(e) => onInvitationInfoChange({ message: e.target.value })}
             rows={5}
@@ -433,38 +431,29 @@ export function ApplyForm(props: Props) {
       {/* 축의금 옵션 (F9) */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>축의금 안내</h3>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={congratulatoryMoneyInfo.enabled}
-            onChange={(e) => onGiftMoneyChange({ enabled: e.target.checked })}
-          />
-          <span>축의금 안내(계좌) 사용</span>
-        </label>
+        <Checkbox
+          checked={congratulatoryMoneyInfo.enabled}
+          onChange={(e) => onGiftMoneyChange({ enabled: e.target.checked })}
+          label="축의금 안내(계좌) 사용"
+        />
         <p className={styles.hint}>
           끄면 미리보기 &lsquo;마음을 전하실 곳&rsquo;의 계좌 목록이 숨겨집니다.
         </p>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={congratulatoryMoneyInfo.cardPayment}
-            onChange={(e) => onGiftMoneyChange({ cardPayment: e.target.checked })}
-          />
-          <span>카드 결제 표시</span>
-        </label>
+        <Checkbox
+          checked={congratulatoryMoneyInfo.cardPayment}
+          onChange={(e) => onGiftMoneyChange({ cardPayment: e.target.checked })}
+          label="카드 결제 표시"
+        />
       </section>
 
       {/* 혼주 (F5) */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>혼주(부모) 정보</h3>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={parents.enabled}
-            onChange={(e) => onParentsEnabledChange(e.target.checked)}
-          />
-          <span>혼주 정보 사용</span>
-        </label>
+        <Checkbox
+          checked={parents.enabled}
+          onChange={(e) => onParentsEnabledChange(e.target.checked)}
+          label="혼주 정보 사용"
+        />
         {PARENT_SLOTS.map(({ slot, label }) => (
           <ParentBlock
             key={slot}
@@ -488,11 +477,11 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-date">
             예식 날짜
           </label>
-          <Input
+          <DatePicker
             id="apply-date"
-            type="date"
             value={weddingHallInfo.date}
-            onChange={(e) => onWeddingHallChange({ date: e.target.value })}
+            onChange={(date) => onWeddingHallChange({ date })}
+            aria-label="예식 날짜 선택"
           />
         </div>
 
@@ -501,23 +490,21 @@ export function ApplyForm(props: Props) {
             <label className={styles.label} htmlFor="apply-ampm">
               오전/오후
             </label>
-            <select
+            <Select
               id="apply-ampm"
-              className={styles.select}
               value={weddingHallInfo.ampm}
               onChange={(e) => onWeddingHallChange({ ampm: e.target.value as AmPm })}
             >
               <option value="AM">오전</option>
               <option value="PM">오후</option>
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-hour">
               시
             </label>
-            <select
+            <Select
               id="apply-hour"
-              className={styles.select}
               value={weddingHallInfo.hour}
               onChange={(e) => onWeddingHallChange({ hour: Number(e.target.value) })}
             >
@@ -526,15 +513,14 @@ export function ApplyForm(props: Props) {
                   {h}시
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-minute">
               분
             </label>
-            <select
+            <Select
               id="apply-minute"
-              className={styles.select}
               value={weddingHallInfo.minute}
               onChange={(e) => onWeddingHallChange({ minute: Number(e.target.value) })}
             >
@@ -543,7 +529,7 @@ export function ApplyForm(props: Props) {
                   {m}분
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 
@@ -572,16 +558,13 @@ export function ApplyForm(props: Props) {
           </div>
         </div>
 
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={weddingHallInfo.lineBreakBetweenNameAndHall}
-            onChange={(e) =>
-              onWeddingHallChange({ lineBreakBetweenNameAndHall: e.target.checked })
-            }
-          />
-          <span>예식장명과 홀 사이 줄바꿈</span>
-        </label>
+        <Checkbox
+          checked={weddingHallInfo.lineBreakBetweenNameAndHall}
+          onChange={(e) =>
+            onWeddingHallChange({ lineBreakBetweenNameAndHall: e.target.checked })
+          }
+          label="예식장명과 홀 사이 줄바꿈"
+        />
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-tel">
@@ -596,69 +579,23 @@ export function ApplyForm(props: Props) {
           />
         </div>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="apply-address">
-            주소
-          </label>
-          <Input
-            id="apply-address"
-            value={weddingHallInfo.address}
-            onChange={(e) => onWeddingHallChange({ address: e.target.value })}
-            placeholder="예식장 주소"
-          />
-          <p className={styles.hint}>미리보기 &lsquo;오시는 길&rsquo;에 즉시 반영됩니다.</p>
-        </div>
-
-        <div className={styles.grid2}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="apply-latitude">
-              위도(latitude)
-            </label>
-            <Input
-              id="apply-latitude"
-              type="number"
-              value={Number.isFinite(weddingHallInfo.latitude) ? weddingHallInfo.latitude : ''}
-              onChange={(e) =>
-                onWeddingHallChange({
-                  latitude: e.target.value === '' ? NaN : Number(e.target.value),
-                })
-              }
-              placeholder="예: 37.5665"
-              step="any"
-            />
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="apply-longitude">
-              경도(longitude)
-            </label>
-            <Input
-              id="apply-longitude"
-              type="number"
-              value={Number.isFinite(weddingHallInfo.longitude) ? weddingHallInfo.longitude : ''}
-              onChange={(e) =>
-                onWeddingHallChange({
-                  longitude: e.target.value === '' ? NaN : Number(e.target.value),
-                })
-              }
-              placeholder="예: 126.978"
-              step="any"
-            />
-          </div>
-        </div>
-        <p className={styles.hint}>좌표는 미입력해도 됩니다(지도 폴백 표시).</p>
+        <AddressSearchField
+          address={weddingHallInfo.address}
+          latitude={weddingHallInfo.latitude}
+          longitude={weddingHallInfo.longitude}
+          hallName={weddingHallInfo.hallName}
+          onChange={onWeddingHallChange}
+        />
       </section>
 
       {/* 교통/기타 안내 (F8) */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>교통/기타 안내</h3>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={etcInfo.enabled}
-            onChange={(e) => onEtcEnabledChange(e.target.checked)}
-          />
-          <span>교통/기타 안내 사용</span>
-        </label>
+        <Checkbox
+          checked={etcInfo.enabled}
+          onChange={(e) => onEtcEnabledChange(e.target.checked)}
+          label="교통/기타 안내 사용"
+        />
         {ETC_SECTIONS.map(({ key, label }) => (
           <EtcInfoEditor
             key={key}
@@ -675,14 +612,11 @@ export function ApplyForm(props: Props) {
       {/* RSVP (F7) */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>참석 의사(RSVP)</h3>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={rsvpRequest.enabled}
-            onChange={(e) => onRsvpChange({ enabled: e.target.checked })}
-          />
-          <span>RSVP 사용</span>
-        </label>
+        <Checkbox
+          checked={rsvpRequest.enabled}
+          onChange={(e) => onRsvpChange({ enabled: e.target.checked })}
+          label="RSVP 사용"
+        />
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-rsvp-title">
@@ -699,9 +633,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-rsvp-content">
             공통 내용
           </label>
-          <textarea
+          <Textarea
             id="apply-rsvp-content"
-            className={styles.textarea}
             value={rsvpRequest.content ?? ''}
             onChange={(e) => onRsvpChange({ content: e.target.value })}
             rows={3}
@@ -715,14 +648,11 @@ export function ApplyForm(props: Props) {
           onChange={onRsvpIncludeChange}
         />
 
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={rsvpRequest.separateForBrideGroom}
-            onChange={(e) => onRsvpChange({ separateForBrideGroom: e.target.checked })}
-          />
-          <span>신랑 · 신부 분리 설정</span>
-        </label>
+        <Checkbox
+          checked={rsvpRequest.separateForBrideGroom}
+          onChange={(e) => onRsvpChange({ separateForBrideGroom: e.target.checked })}
+          label="신랑 · 신부 분리 설정"
+        />
 
         {rsvpRequest.separateForBrideGroom &&
           (['groom', 'bride'] as Side[]).map((side) => {
@@ -746,9 +676,8 @@ export function ApplyForm(props: Props) {
                   <label className={styles.label} htmlFor={`apply-rsvp-${side}-content`}>
                     내용
                   </label>
-                  <textarea
+                  <Textarea
                     id={`apply-rsvp-${side}-content`}
-                    className={styles.textarea}
                     value={sideData?.content ?? ''}
                     onChange={(e) => onRsvpPerSideChange(side, { content: e.target.value })}
                     rows={2}
@@ -764,14 +693,11 @@ export function ApplyForm(props: Props) {
             );
           })}
 
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={rsvpRequest.popupOnAccess}
-            onChange={(e) => onRsvpChange({ popupOnAccess: e.target.checked })}
-          />
-          <span>접속 시 팝업 표시</span>
-        </label>
+        <Checkbox
+          checked={rsvpRequest.popupOnAccess}
+          onChange={(e) => onRsvpChange({ popupOnAccess: e.target.checked })}
+          label="접속 시 팝업 표시"
+        />
       </section>
 
       {/* 소개 (F13) */}
@@ -795,9 +721,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-about-groom">
             신랑 소개
           </label>
-          <textarea
+          <Textarea
             id="apply-about-groom"
-            className={styles.textarea}
             value={aboutUs?.groomDesc ?? ''}
             onChange={(e) => onAboutUsChange({ groomDesc: e.target.value })}
             rows={3}
@@ -808,9 +733,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-about-bride">
             신부 소개
           </label>
-          <textarea
+          <Textarea
             id="apply-about-bride"
-            className={styles.textarea}
             value={aboutUs?.brideDesc ?? ''}
             onChange={(e) => onAboutUsChange({ brideDesc: e.target.value })}
             rows={3}
@@ -827,29 +751,27 @@ export function ApplyForm(props: Props) {
             <label className={styles.label} htmlFor="apply-theme">
               테마
             </label>
-            <select
+            <Select
               id="apply-theme"
-              className={styles.select}
               value={theme}
               onChange={(e) => onThemeChange(e.target.value as ThemeKind)}
             >
               <option value="CYWORLD">CYWORLD</option>
               <option value="RETRO">RETRO</option>
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-themecolor">
               테마색
             </label>
-            <select
+            <Select
               id="apply-themecolor"
-              className={styles.select}
               value={themeColor}
               onChange={(e) => onThemeColorChange(e.target.value as ThemeColorOptions)}
             >
               <option value="PURPLE">PURPLE</option>
               <option value="PINK">PINK</option>
-            </select>
+            </Select>
           </div>
         </div>
       </section>
