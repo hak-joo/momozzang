@@ -1,0 +1,145 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+/* 트리거: Input(sub-100 배경 + main-600 글자 + radius 16) 톤앤매너 계승 */
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 16px;
+  background: var(--color-sub-100);
+  padding: 14px 16px;
+  cursor: pointer;
+
+  color: var(--color-main-600);
+  font-family: var(--font-PyeongChang);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 153%;
+  letter-spacing: -0.12px;
+  text-align: left;
+}
+
+.trigger:focus-visible {
+  outline: 3px solid rgba(149, 174, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.placeholder .triggerText {
+  color: var(--color-main-300);
+}
+
+.triggerText {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.triggerIcon {
+  flex: none;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* 팝업: 픽셀/싸이월드 감성 — 각진 보더, 흰 배경, main 컬러 보더/그림자 */
+.popup {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 6px);
+  left: 0;
+
+  background: var(--color-basic-white);
+  border: 2px solid var(--color-main-600);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 0 var(--color-main-300);
+  padding: 10px;
+}
+
+/* react-day-picker v10 테마 토큰 재정의 (커스텀 외형, OS 기본 비노출) */
+.calendar {
+  --rdp-accent-color: var(--color-main-600);
+  --rdp-accent-background-color: var(--color-sub-300);
+  --rdp-today-color: var(--color-main-600);
+  --rdp-day-width: 34px;
+  --rdp-day-height: 34px;
+  --rdp-day_button-width: 32px;
+  --rdp-day_button-height: 32px;
+  --rdp-day_button-border-radius: 6px;
+  --rdp-nav_button-width: 28px;
+  --rdp-nav_button-height: 28px;
+  --rdp-selected-border: 2px solid var(--color-main-600);
+  --rdp-outside-opacity: 0.4;
+
+  margin: 0;
+  font-family: var(--font-PyeongChang);
+  color: var(--color-main-600);
+}
+
+/* 월/연 캡션 라벨 */
+.calendar :global(.rdp-month_caption) {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-main-600);
+}
+
+/* 이전/다음 네비 버튼 — 픽셀 보더 */
+.calendar :global(.rdp-button_previous),
+.calendar :global(.rdp-button_next) {
+  color: var(--color-main-600);
+  border: 1px solid var(--color-main-300);
+  border-radius: 6px;
+  background: var(--color-sub-100);
+}
+
+.calendar :global(.rdp-button_previous:hover),
+.calendar :global(.rdp-button_next:hover) {
+  background: var(--color-sub-300);
+}
+
+.calendar :global(.rdp-chevron) {
+  fill: var(--color-main-600);
+}
+
+/* 요일 헤더 */
+.calendar :global(.rdp-weekday) {
+  color: var(--color-main-400);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* 일자 버튼 */
+.calendar :global(.rdp-day_button) {
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.calendar :global(.rdp-day_button:hover) {
+  background: var(--color-sub-100);
+  border-color: var(--color-main-300);
+}
+
+/* 오늘 */
+.today :global(.rdp-day_button),
+.calendar :global(.rdp-day.rdp-today .rdp-day_button) {
+  color: var(--color-main-600);
+  font-weight: 700;
+  border-color: var(--color-sub-400);
+}
+
+/* 선택된 날짜 — 메인 컬러 채움 */
+.selected :global(.rdp-day_button),
+.calendar :global(.rdp-day.rdp-selected .rdp-day_button) {
+  background: var(--color-main-600);
+  color: var(--color-basic-white);
+  border-color: var(--color-main-600);
+}
