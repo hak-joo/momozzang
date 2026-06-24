@@ -3,12 +3,12 @@ import { Textarea } from '@momozzang/ui/src/shared/ui/Input/Textarea';
 import { Select } from '@momozzang/ui/src/shared/ui/Select';
 import { Checkbox } from '@momozzang/ui/src/shared/ui/Checkbox';
 import { DatePicker } from '@momozzang/ui/src/shared/ui/DatePicker';
+import { TimePicker } from '@momozzang/ui/src/shared/ui/TimePicker';
 import { AddressSearchField } from './AddressSearchField';
 import {
   type WeddingInvitation,
   type ThemeKind,
   type ThemeColorOptions,
-  type AmPm,
   type Person,
   type Account,
   type Side,
@@ -70,9 +70,6 @@ interface Props {
   // 소개 (F13)
   onAboutUsChange: (patch: Partial<AboutUs>) => void;
 }
-
-const HOURS = Array.from({ length: 12 }, (_, i) => i + 1);
-const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 
 const PARENT_SLOTS: Array<{ slot: ParentSlot; label: string }> = [
   { slot: 'groomFather', label: '신랑 아버지' },
@@ -473,63 +470,34 @@ export function ApplyForm(props: Props) {
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>예식 정보</h3>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="apply-date">
-            예식 날짜
-          </label>
-          <DatePicker
-            id="apply-date"
-            value={weddingHallInfo.date}
-            onChange={(date) => onWeddingHallChange({ date })}
-            aria-label="예식 날짜 선택"
-          />
-        </div>
-
-        <div className={styles.grid3}>
+        <div className={styles.grid2}>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="apply-ampm">
-              오전/오후
+            <label className={styles.label} htmlFor="apply-date">
+              예식 날짜
             </label>
-            <Select
-              id="apply-ampm"
-              value={weddingHallInfo.ampm}
-              onChange={(e) => onWeddingHallChange({ ampm: e.target.value as AmPm })}
-            >
-              <option value="AM">오전</option>
-              <option value="PM">오후</option>
-            </Select>
+            <DatePicker
+              id="apply-date"
+              value={weddingHallInfo.date}
+              onChange={(date) => onWeddingHallChange({ date })}
+              aria-label="예식 날짜 선택"
+            />
           </div>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="apply-hour">
-              시
+            <label className={styles.label} htmlFor="apply-time">
+              예식 시간
             </label>
-            <Select
-              id="apply-hour"
-              value={weddingHallInfo.hour}
-              onChange={(e) => onWeddingHallChange({ hour: Number(e.target.value) })}
-            >
-              {HOURS.map((h) => (
-                <option key={h} value={h}>
-                  {h}시
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="apply-minute">
-              분
-            </label>
-            <Select
-              id="apply-minute"
-              value={weddingHallInfo.minute}
-              onChange={(e) => onWeddingHallChange({ minute: Number(e.target.value) })}
-            >
-              {MINUTES.map((m) => (
-                <option key={m} value={m}>
-                  {m}분
-                </option>
-              ))}
-            </Select>
+            <TimePicker
+              id="apply-time"
+              value={{
+                ampm: weddingHallInfo.ampm,
+                hour: weddingHallInfo.hour,
+                minute: weddingHallInfo.minute,
+              }}
+              onChange={({ ampm, hour, minute }) =>
+                onWeddingHallChange({ ampm, hour, minute })
+              }
+              aria-label="예식 시간 선택"
+            />
           </div>
         </div>
 
