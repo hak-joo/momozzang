@@ -1,4 +1,5 @@
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Checkbox } from '@momozzang/ui/src/shared/ui/Checkbox';
 import type { Phone } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import styles from './ApplyForm.module.css';
 
@@ -48,14 +49,11 @@ export function PhoneField({
           inputMode="tel"
         />
       </div>
-      <label className={styles.checkboxRow}>
-        <input
-          type="checkbox"
-          checked={phone.isInternational}
-          onChange={(e) => onInternationalChange(e.target.checked)}
-        />
-        <span>국제 전화번호 사용 (국가코드 입력)</span>
-      </label>
+      <Checkbox
+        checked={phone.isInternational}
+        onChange={(e) => onInternationalChange(e.target.checked)}
+        label="국제 전화번호 사용 (국가코드 입력)"
+      />
     </div>
   );
 }

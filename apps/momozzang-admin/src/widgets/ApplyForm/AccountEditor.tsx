@@ -1,4 +1,6 @@
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Select } from '@momozzang/ui/src/shared/ui/Select';
+import { Checkbox } from '@momozzang/ui/src/shared/ui/Checkbox';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import type { Account, DepositTarget } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import type { AccountOwner } from '../../features/apply/useApplyForm';
@@ -94,9 +96,8 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                   <label className={styles.label} htmlFor={`${aid}-target`}>
                     대상
                   </label>
-                  <select
+                  <Select
                     id={`${aid}-target`}
-                    className={styles.select}
                     value={account.target}
                     onChange={(e) =>
                       onUpdate(owner, account.id, { target: e.target.value as DepositTarget })
@@ -107,7 +108,7 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                         {opt.label}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
                 {account.target === 'custom' && (
                   <div className={styles.field}>
@@ -126,16 +127,13 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                 )}
               </div>
 
-              <label className={styles.checkboxRow}>
-                <input
-                  type="checkbox"
-                  checked={account.kakaoPayEnabled}
-                  onChange={(e) =>
-                    onUpdate(owner, account.id, { kakaoPayEnabled: e.target.checked })
-                  }
-                />
-                <span>카카오페이 사용</span>
-              </label>
+              <Checkbox
+                checked={account.kakaoPayEnabled}
+                onChange={(e) =>
+                  onUpdate(owner, account.id, { kakaoPayEnabled: e.target.checked })
+                }
+                label="카카오페이 사용"
+              />
               {account.kakaoPayEnabled && (
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor={`${aid}-kakaocode`}>

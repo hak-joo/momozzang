@@ -1,4 +1,5 @@
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Select } from '@momozzang/ui/src/shared/ui/Select';
 import styles from './ApplyForm.module.css';
 
 interface Props {
@@ -78,7 +79,7 @@ export function EmailField({ idPrefix, label = '이메일', email, onChange }: P
         ) : (
           <span className={styles.emailDomainText}>{domain || '도메인'}</span>
         )}
-        <select
+        <Select
           className={styles.emailDomainSelect}
           value={selectValue}
           onChange={(e) => handleDomainSelect(e.target.value)}
@@ -91,7 +92,7 @@ export function EmailField({ idPrefix, label = '이메일', email, onChange }: P
             </option>
           ))}
           <option value={DIRECT}>직접 입력</option>
-        </select>
+        </Select>
       </div>
     </div>
   );
