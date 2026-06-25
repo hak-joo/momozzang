@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { clsx } from 'clsx';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Select } from '@momozzang/ui/src/shared/ui/Select';
+import { Checkbox } from '@momozzang/ui/src/shared/ui/Checkbox';
 import {
   type WeddingInvitation,
   type ThemeColorOptions,
@@ -139,14 +141,11 @@ export function ImageStep({
       {/* F11: BGM */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>배경음악(BGM)</h3>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={bgm?.enabled ?? false}
-            onChange={(e) => onBgmChange({ enabled: e.target.checked })}
-          />
-          <span>BGM 사용</span>
-        </label>
+        <Checkbox
+          checked={bgm?.enabled ?? false}
+          onChange={(e) => onBgmChange({ enabled: e.target.checked })}
+          label="BGM 사용"
+        />
 
         {(bgm?.library?.length ?? 0) === 0 ? (
           <p className={styles.hint}>등록된 트랙이 없습니다.</p>
@@ -213,9 +212,8 @@ export function ImageStep({
               <label className={styles.label} htmlFor="bgm-edit-license">
                 라이선스
               </label>
-              <select
+              <Select
                 id="bgm-edit-license"
-                className={styles.select}
                 value={selectedTrack.license}
                 onChange={(e) =>
                   onUpdateTrack(selectedTrack.id, {
@@ -226,7 +224,7 @@ export function ImageStep({
                 <option value="free">free</option>
                 <option value="paid">paid</option>
                 <option value="custom">custom</option>
-              </select>
+              </Select>
             </div>
           </div>
         )}
@@ -235,31 +233,24 @@ export function ImageStep({
       {/* F12: 커스터마이즈 잔여 + 미니룸 (저장만) */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>커스터마이즈 (저장만)</h3>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={customization?.enabled ?? true}
-            onChange={(e) => onCustomizationChange({ enabled: e.target.checked })}
-          />
-          <span>커스터마이즈 사용</span>
-        </label>
-        <label className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            checked={customization?.showDDay ?? true}
-            onChange={(e) => onCustomizationChange({ showDDay: e.target.checked })}
-          />
-          <span>D-Day 표시</span>
-        </label>
+        <Checkbox
+          checked={customization?.enabled ?? true}
+          onChange={(e) => onCustomizationChange({ enabled: e.target.checked })}
+          label="커스터마이즈 사용"
+        />
+        <Checkbox
+          checked={customization?.showDDay ?? true}
+          onChange={(e) => onCustomizationChange({ showDDay: e.target.checked })}
+          label="D-Day 표시"
+        />
 
         <div className={styles.grid2}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-mood">
               무드
             </label>
-            <select
+            <Select
               id="apply-mood"
-              className={styles.select}
               value={customization?.mood ?? ''}
               onChange={(e) =>
                 onCustomizationChange({ mood: (e.target.value || undefined) as Mood | undefined })
@@ -271,15 +262,14 @@ export function ImageStep({
                   {mood}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-themecolor-step2">
               테마색
             </label>
-            <select
+            <Select
               id="apply-themecolor-step2"
-              className={styles.select}
               value={customization?.themeColor === 'PINK' ? 'PINK' : 'PURPLE'}
               onChange={(e) =>
                 onCustomizationChange({ themeColor: e.target.value as ThemeColorOptions })
@@ -287,7 +277,7 @@ export function ImageStep({
             >
               <option value="PURPLE">PURPLE</option>
               <option value="PINK">PINK</option>
-            </select>
+            </Select>
           </div>
         </div>
 
