@@ -1,0 +1,40 @@
+.field {
+  color: var(--color-main-600);
+  font-family: var(--font-PyeongChang);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 153%;
+  letter-spacing: -0.12px;
+
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 16px;
+  background-color: var(--color-sub-100);
+  padding: 14px 40px 14px 16px;
+  cursor: pointer;
+
+  /* 네이티브 화살표 제거 + 테마색 셰브론 */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%235129b5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.field:focus {
+  outline: none;
+}
+
+.field:focus-visible {
+  outline: 3px solid rgba(149, 174, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* 드롭다운 옵션도 가독 색상 명시(전역 흰색 텍스트 상속 방지) */
+.field option {
+  color: var(--color-main-600);
+  background: var(--color-basic-white);
+}
