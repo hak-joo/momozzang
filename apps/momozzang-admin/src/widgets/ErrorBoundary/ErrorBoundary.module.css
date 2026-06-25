@@ -4,9 +4,9 @@
   gap: 12px;
   align-items: flex-start;
   padding: 24px;
-  border: 1px solid #f0c2c2;
+  border: 1px solid var(--color-danger-150);
   border-radius: 12px;
-  background: #fff5f5;
+  background: var(--color-danger-50);
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -14,27 +14,27 @@
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #b4232a;
+  color: var(--color-danger-700);
 }
 
 .detail {
   margin: 0;
   font-size: 12px;
-  color: #9aa0ab;
+  color: var(--color-neutral-400);
   word-break: break-all;
 }
 
 .retry {
   padding: 8px 16px;
-  border: 1px solid #d96a6a;
+  border: 1px solid var(--color-danger-400);
   border-radius: 8px;
-  background: #fff;
-  color: #b4232a;
+  background: var(--color-basic-white);
+  color: var(--color-danger-700);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .retry:hover {
-  background: #fdeaea;
+  background: var(--color-danger-100);
 }

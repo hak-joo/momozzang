@@ -10,7 +10,7 @@
 
 .header {
   margin-bottom: 40px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-neutral-850);
   padding-bottom: 20px;
 }
 
@@ -38,7 +38,7 @@
 .loading {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--color-neutral-600);
 }
 
 .sectionHeader {
@@ -56,7 +56,7 @@
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
-  color: #888;
+  color: var(--color-neutral-450);
 }
 
 .previewImage {
@@ -64,7 +64,7 @@
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 8px;
-  background: #333;
+  background: var(--color-neutral-850);
 }
 
 .previewMain {

@@ -10,22 +10,22 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  border: 1px solid #e6e8ee;
+  border: 1px solid var(--color-line-200);
   border-radius: 12px;
-  background: #fff;
+  background: var(--color-basic-white);
 }
 
 .sectionTitle {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #2b2f38;
+  color: var(--color-neutral-900);
 }
 
 .hint {
   margin: 0;
   font-size: 12px;
-  color: #9aa0ab;
+  color: var(--color-neutral-400);
 }
 
 .imageGrid {
@@ -39,15 +39,15 @@
   flex-direction: column;
   gap: 8px;
   padding: 14px;
-  border: 1px dashed #d8dae0;
+  border: 1px dashed var(--color-line-300);
   border-radius: 10px;
-  background: #fafbfc;
+  background: var(--color-bg-50);
 }
 
 .imageLabel {
   font-size: 13px;
   font-weight: 600;
-  color: #5b606b;
+  color: var(--color-neutral-700);
 }
 
 .thumb {
@@ -56,13 +56,13 @@
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1px solid #e6e8ee;
-  background: #f1f2f5;
+  border: 1px solid var(--color-line-200);
+  background: var(--color-bg-150);
 }
 
 .uploading {
   font-size: 12px;
-  color: #5129b5;
+  color: var(--color-main-600);
 }
 
 .trackList {
@@ -79,15 +79,15 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border: 1px solid #e6e8ee;
+  border: 1px solid var(--color-line-200);
   border-radius: 8px;
   cursor: pointer;
-  background: #fff;
+  background: var(--color-basic-white);
 }
 
 .trackItemSelected {
-  border-color: #5129b5;
-  background: #f6f3fd;
+  border-color: var(--color-main-600);
+  background: var(--color-brand-tint-50);
 }
 
 .trackMeta {
@@ -99,12 +99,12 @@
 .trackTitle {
   font-size: 14px;
   font-weight: 600;
-  color: #2b2f38;
+  color: var(--color-neutral-900);
 }
 
 .trackArtist {
   font-size: 12px;
-  color: #8a8f99;
+  color: var(--color-neutral-500);
 }
 
 .field {
@@ -116,7 +116,7 @@
 .label {
   font-size: 13px;
   font-weight: 600;
-  color: #5b606b;
+  color: var(--color-neutral-700);
 }
 
 .grid2 {

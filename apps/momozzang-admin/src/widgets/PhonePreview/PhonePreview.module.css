@@ -3,7 +3,7 @@
   width: 375px;
   max-width: 100%;
   aspect-ratio: 375 / 780;
-  background: #111;
+  background: var(--color-bg-dark);
   border-radius: 44px;
   padding: 12px;
   box-shadow:
@@ -19,7 +19,7 @@
   transform: translateX(-50%);
   width: 132px;
   height: 26px;
-  background: #111;
+  background: var(--color-bg-dark);
   border-radius: 0 0 16px 16px;
   z-index: 10;
   pointer-events: none;
@@ -31,13 +31,13 @@
   height: 100%;
   border-radius: 32px;
   overflow: hidden;
-  background: #fff;
+  background: var(--color-basic-white);
   /* 새 containing block 생성:
      청첩장 내부의 position:fixed(Header)와 100vh 기반 레이아웃이 이 프레임 안에 갇히게 한다. */
   transform: translateZ(0);
   /* 청첩장 본문 폰트(PyeongChang)를 프레임 안에서만 적용 — 폼/스텝퍼 오염 방지 */
   font-family: var(--font-PyeongChang, 'PyeongChang', 'Noto Sans KR', sans-serif);
-  color: #222;
+  color: var(--color-neutral-870);
 }
 
 /* 미리보기 내부 스크롤바 숨김(청첩장 본래 UX) */
