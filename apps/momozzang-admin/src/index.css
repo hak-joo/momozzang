@@ -1,24 +1,19 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* admin 전역 진입점.
+   공통 SSOT(reset + fonts + theme + typography)를 상대경로 CSS @import로 연결한다.
+   주: tsconfig 별칭(@shared/...)은 vite-tsconfig-paths가 JS/TS 모듈 해석용이라
+   CSS @import 안에서는 해석이 보장되지 않으므로 상대경로를 사용한다. */
+@import '../../../packages/ui/src/index.css';
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+html,
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: var(--font-PyeongChang);
+  color: #222;
+  background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
