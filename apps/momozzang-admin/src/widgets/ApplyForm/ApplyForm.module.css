@@ -213,6 +213,35 @@
   cursor: pointer;
 }
 
+/* 주소 검색 행 */
+.addressRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.addressInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressSearchBtn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.geocodeHintError {
+  margin: 0;
+  font-size: var(--font-size-12);
+  color: var(--color-danger-500);
+}
+
+.geocodeHintLoading {
+  margin: 0;
+  font-size: var(--font-size-12);
+  color: var(--color-neutral-400);
+}
+
 /* 계좌 에디터 */
 .accountEditor {
   display: flex;

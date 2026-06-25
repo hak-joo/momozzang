@@ -1,4 +1,8 @@
+import { useState } from 'react';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Button } from '@momozzang/ui/src/shared/ui/Button';
+import { openPostcodeSearch } from '@momozzang/ui/src/shared/lib/daumPostcode';
+import { geocodeAddress } from '@momozzang/ui/src/shared/lib/naverMaps';
 import {
   type WeddingInvitation,
   type ThemeKind,
@@ -285,6 +289,30 @@ export function ApplyForm(props: Props) {
     onRsvpPerSideIncludeChange,
     onAboutUsChange,
   } = props;
+
+  // 주소 검색 + 지오코딩 상태
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [geocodeError, setGeocodeError] = useState<string | null>(null);
+
+  async function handleAddressSearch() {
+    setGeocodeError(null);
+    const result = await openPostcodeSearch();
+    if (!result) return; // 팝업 강제 닫기
+
+    onWeddingHallChange({ address: result.address });
+
+    setIsGeocoding(true);
+    try {
+      const coords = await geocodeAddress(result.address);
+      if (coords) {
+        onWeddingHallChange({ latitude: coords.latitude, longitude: coords.longitude });
+      } else {
+        setGeocodeError('주소로 좌표를 찾지 못했어요. 위/경도를 직접 입력해 주세요.');
+      }
+    } finally {
+      setIsGeocoding(false);
+    }
+  }
 
   const {
     invitationInfo,
@@ -600,12 +628,34 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-address">
             주소
           </label>
-          <Input
-            id="apply-address"
-            value={weddingHallInfo.address}
-            onChange={(e) => onWeddingHallChange({ address: e.target.value })}
-            placeholder="예식장 주소"
-          />
+          <div className={styles.addressRow}>
+            <Input
+              id="apply-address"
+              className={styles.addressInput}
+              value={weddingHallInfo.address}
+              onChange={(e) => {
+                setGeocodeError(null);
+                onWeddingHallChange({ address: e.target.value });
+              }}
+              placeholder="예식장 주소"
+              readOnly={isGeocoding}
+            />
+            <Button
+              className={styles.addressSearchBtn}
+              size="sm"
+              variant="secondary"
+              disabled={isGeocoding}
+              onClick={handleAddressSearch}
+            >
+              {isGeocoding ? '검색 중…' : '주소 검색'}
+            </Button>
+          </div>
+          {isGeocoding && (
+            <p className={styles.geocodeHintLoading}>좌표 변환 중입니다…</p>
+          )}
+          {geocodeError && !isGeocoding && (
+            <p className={styles.geocodeHintError}>{geocodeError}</p>
+          )}
           <p className={styles.hint}>미리보기 &lsquo;오시는 길&rsquo;에 즉시 반영됩니다.</p>
         </div>
 

@@ -1,58 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { loadNaverMapScript } from '@shared/lib/naverMaps';
 import styles from './NaverMap.module.css';
 
-const NAVER_MAP_SCRIPT_BASE = 'https://oapi.map.naver.com/openapi/v3/maps.js';
 const NAVER_MAP_CLIENT_ID = import.meta.env['VITE_NAVER_MAP_CLIENT_ID'];
-
-declare global {
-  interface Window {
-    naver?: {
-      maps?: {
-        LatLng: new (lat: number, lng: number) => any;
-        Map: new (element: HTMLElement, options: Record<string, any>) => any;
-        Marker: new (options: Record<string, any>) => any;
-      };
-    };
-  }
-}
-
-let scriptPromise: Promise<void> | null = null;
-let loadedClientId: string | null = null;
-
-function loadNaverMapScript(clientId: string): Promise<void> {
-  if (typeof window === 'undefined') return Promise.reject(new Error('window is undefined'));
-  if (window.naver?.maps) return Promise.resolve();
-  if (scriptPromise) return scriptPromise;
-
-  const existingScript = Array.from(document.querySelectorAll<HTMLScriptElement>('script')).find(
-    (script) => script.src.includes(NAVER_MAP_SCRIPT_BASE),
-  );
-  if (existingScript && loadedClientId === clientId) {
-    scriptPromise = new Promise((resolve, reject) => {
-      existingScript.addEventListener('load', () => resolve(), { once: true });
-      existingScript.addEventListener('error', () => reject(new Error('naver map load error')), {
-        once: true,
-      });
-    });
-    return scriptPromise;
-  }
-
-  const script = document.createElement('script');
-  script.src = `${NAVER_MAP_SCRIPT_BASE}?ncpKeyId=${clientId}`;
-  script.async = true;
-  script.defer = true;
-
-  scriptPromise = new Promise<void>((resolve, reject) => {
-    script.addEventListener('load', () => {
-      loadedClientId = clientId;
-      resolve();
-    });
-    script.addEventListener('error', () => reject(new Error('Failed to load Naver Map script')));
-  });
-
-  document.head.appendChild(script);
-  return scriptPromise;
-}
 
 export interface NaverMapProps {
   latitude: number;
