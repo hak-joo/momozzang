@@ -36,4 +36,53 @@
   --icon-button-radius: 18px;
   --icon-button-hover-bg: rgba(149, 174, 255, 0.2);
   --icon-button-shadow: 0 6px 12px rgba(81, 41, 133, 0.25);
+
+  /* ── Admin Design Tokens (F4) ─────────────────────────────
+   * admin 크롬 전용 정적 토큰. 값 = 원래 하드코딩 HEX와 동일(값 동일성 보존).
+   * 테마(PURPLE/PINK) 무관이므로 utils.ts PALETTES에는 넣지 않는다.
+   */
+
+  /* Admin Neutral (텍스트 중립) */
+  --color-neutral-900: #2b2f38;
+  --color-neutral-870: #222222;
+  --color-neutral-850: #333333;
+  --color-neutral-800: #3b3f48;
+  --color-neutral-700: #5b606b;
+  --color-neutral-600: #666666;
+  --color-neutral-500: #8a8f99;
+  --color-neutral-450: #888888;
+  --color-neutral-400: #9aa0ab;
+
+  /* Admin Line (라인/보더) */
+  --color-line-450: #b9bdc7;
+  --color-line-400: #c9cdd6;
+  --color-line-300: #d8dae0;
+  --color-line-200: #e6e8ee;
+
+  /* Admin Bg (배경) */
+  --color-bg-50: #fafbfc;
+  --color-bg-100: #f5f6f8;
+  --color-bg-150: #f1f2f5;
+  --color-bg-200: #e8eaef;
+  --color-bg-dark: #111111;
+
+  /* Admin Danger (시맨틱 — 위험/에러) */
+  --color-danger-700: #b4232a;
+  --color-danger-600: #c0392b;
+  --color-danger-500: #d83a3a;
+  --color-danger-400: #d96a6a;
+  --color-danger-200: #e6c4c4;
+  --color-danger-150: #f0c2c2;
+  --color-danger-100: #fdeaea;
+  --color-danger-75: #fdf2f2;
+  --color-danger-50: #fff5f5;
+
+  /* Admin Success (시맨틱 — 성공) */
+  --color-success-600: #1f7a3d;
+  --color-success-200: #b6e4c1;
+  --color-success-100: #eef9f0;
+
+  /* Admin Brand Tint (보라 강조 면/보더) */
+  --color-brand-tint-50: #f6f3fd;
+  --color-brand-tint-200: #d6c9f4;
 }
