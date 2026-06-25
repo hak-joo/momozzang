@@ -181,6 +181,7 @@ function ParentBlock({
           value={person?.name ?? ''}
           onChange={(e) => onPersonChange(slot, { name: e.target.value })}
           placeholder={`${label} 이름`}
+          maxLength={10}
         />
       </div>
       <PhoneField
@@ -345,6 +346,7 @@ export function ApplyForm(props: Props) {
             value={invitationInfo.title}
             onChange={(e) => onInvitationInfoChange({ title: e.target.value })}
             placeholder="예: OO ♥ OO 결혼합니다"
+            maxLength={60}
           />
           <p className={styles.hint}>브라우저 탭 제목(공유 시 메인 텍스트)에 사용됩니다.</p>
         </div>
@@ -360,6 +362,7 @@ export function ApplyForm(props: Props) {
             onChange={(e) => onInvitationInfoChange({ message: e.target.value })}
             rows={5}
             placeholder="모시는 글에 표시될 문구를 입력하세요. (여러 줄 가능)"
+            maxLength={200}
           />
         </div>
 
@@ -394,6 +397,7 @@ export function ApplyForm(props: Props) {
             value={order.name}
             onChange={(e) => onOrderChange({ name: e.target.value })}
             placeholder="주문자 이름"
+            maxLength={20}
           />
         </div>
         <PhoneField
@@ -423,6 +427,7 @@ export function ApplyForm(props: Props) {
               value={couple.groom.name}
               onChange={(e) => onGroomNameChange(e.target.value)}
               placeholder="신랑 이름"
+              maxLength={10}
             />
           </div>
           <div className={styles.field}>
@@ -434,6 +439,7 @@ export function ApplyForm(props: Props) {
               value={couple.bride.name}
               onChange={(e) => onBrideNameChange(e.target.value)}
               placeholder="신부 이름"
+              maxLength={10}
             />
           </div>
         </div>
@@ -585,6 +591,7 @@ export function ApplyForm(props: Props) {
               value={weddingHallInfo.hallName}
               onChange={(e) => onWeddingHallChange({ hallName: e.target.value })}
               placeholder="예식장 이름"
+              maxLength={20}
             />
           </div>
           <div className={styles.field}>
@@ -596,6 +603,7 @@ export function ApplyForm(props: Props) {
               value={weddingHallInfo.hallDetail}
               onChange={(e) => onWeddingHallChange({ hallDetail: e.target.value })}
               placeholder="예: 3층 그랜드홀"
+              maxLength={20}
             />
           </div>
         </div>
@@ -621,6 +629,7 @@ export function ApplyForm(props: Props) {
             onChange={(e) => onWeddingHallChange({ tel: e.target.value })}
             placeholder="예식장 대표 전화"
             inputMode="tel"
+            maxLength={20}
           />
         </div>
 
@@ -639,6 +648,7 @@ export function ApplyForm(props: Props) {
               }}
               placeholder="예식장 주소"
               readOnly={isGeocoding}
+              maxLength={60}
             />
             <Button
               className={styles.addressSearchBtn}
@@ -743,6 +753,7 @@ export function ApplyForm(props: Props) {
             value={rsvpRequest.title ?? ''}
             onChange={(e) => onRsvpChange({ title: e.target.value })}
             placeholder="예: 참석 여부를 알려주세요"
+            maxLength={60}
           />
         </div>
         <div className={styles.field}>
@@ -756,6 +767,7 @@ export function ApplyForm(props: Props) {
             onChange={(e) => onRsvpChange({ content: e.target.value })}
             rows={3}
             placeholder="RSVP 안내 문구"
+            maxLength={200}
           />
         </div>
 
@@ -790,6 +802,7 @@ export function ApplyForm(props: Props) {
                     value={sideData?.title ?? ''}
                     onChange={(e) => onRsvpPerSideChange(side, { title: e.target.value })}
                     placeholder={`${sideLabel} 제목`}
+                    maxLength={60}
                   />
                 </div>
                 <div className={styles.field}>
@@ -803,6 +816,7 @@ export function ApplyForm(props: Props) {
                     onChange={(e) => onRsvpPerSideChange(side, { content: e.target.value })}
                     rows={2}
                     placeholder={`${sideLabel} 내용`}
+                    maxLength={200}
                   />
                 </div>
                 <RsvpIncludeToggles
@@ -839,6 +853,7 @@ export function ApplyForm(props: Props) {
             value={aboutUs?.title ?? ''}
             onChange={(e) => onAboutUsChange({ title: e.target.value })}
             placeholder="예: 우리 두 사람을 소개합니다"
+            maxLength={60}
           />
         </div>
         <div className={styles.field}>
@@ -852,6 +867,7 @@ export function ApplyForm(props: Props) {
             onChange={(e) => onAboutUsChange({ groomDesc: e.target.value })}
             rows={3}
             placeholder="신랑 소개 문구"
+            maxLength={60}
           />
         </div>
         <div className={styles.field}>
@@ -865,6 +881,7 @@ export function ApplyForm(props: Props) {
             onChange={(e) => onAboutUsChange({ brideDesc: e.target.value })}
             rows={3}
             placeholder="신부 소개 문구"
+            maxLength={60}
           />
         </div>
       </section>
