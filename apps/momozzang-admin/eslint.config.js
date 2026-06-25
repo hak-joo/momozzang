@@ -32,6 +32,7 @@ const browserGlobals = {
   clearTimeout: 'readonly',
   requestAnimationFrame: 'readonly',
   HTMLInputElement: 'readonly',
+  HTMLCanvasElement: 'readonly',
   HTMLElement: 'readonly',
   HTMLDivElement: 'readonly',
   HTMLTextAreaElement: 'readonly',

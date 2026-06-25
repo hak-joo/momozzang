@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 28px;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-PyeongChang);
 }
 
 .section {
@@ -10,16 +10,16 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  border: 1px solid #e6e8ee;
+  border: 1px solid var(--color-line-200);
   border-radius: 12px;
-  background: #fff;
+  background: var(--color-basic-white);
 }
 
 .sectionTitle {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-16);
   font-weight: 700;
-  color: #2b2f38;
+  color: var(--color-neutral-900);
 }
 
 .field {
@@ -29,30 +29,30 @@
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
-  color: #5b606b;
+  color: var(--color-neutral-700);
 }
 
 .hint {
   margin: 0;
-  font-size: 12px;
-  color: #9aa0ab;
+  font-size: var(--font-size-12);
+  color: var(--color-neutral-400);
 }
 
 .error {
   margin: 0;
-  font-size: 12px;
-  color: #d83a3a;
+  font-size: var(--font-size-12);
+  color: var(--color-danger-500);
 }
 
 .textarea {
   width: 100%;
   box-sizing: border-box;
   padding: 10px 12px;
-  border: 1px solid #d8dae0;
+  border: 1px solid var(--color-line-300);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-family: inherit;
   resize: vertical;
   line-height: 1.5;
@@ -60,30 +60,30 @@
 
 .textarea:focus {
   outline: none;
-  border-color: #5129b5;
+  border-color: var(--color-main-600);
 }
 
 .select {
   width: 100%;
   box-sizing: border-box;
   padding: 10px 12px;
-  border: 1px solid #d8dae0;
+  border: 1px solid var(--color-line-300);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-family: inherit;
-  background: #fff;
+  background: var(--color-basic-white);
   cursor: pointer;
 }
 
 .select:focus {
   outline: none;
-  border-color: #5129b5;
+  border-color: var(--color-main-600);
 }
 
 .slugRow {
   display: flex;
   align-items: stretch;
-  border: 1px solid #d8dae0;
+  border: 1px solid var(--color-line-300);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -92,11 +92,11 @@
   display: inline-flex;
   align-items: center;
   padding: 0 10px;
-  background: #f1f2f5;
-  color: #8a8f99;
-  font-size: 13px;
+  background: var(--color-bg-150);
+  color: var(--color-neutral-500);
+  font-size: var(--font-size-13);
   white-space: nowrap;
-  border-right: 1px solid #d8dae0;
+  border-right: 1px solid var(--color-line-300);
 }
 
 .slugInput {
@@ -121,22 +121,22 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  color: #5b606b;
+  font-size: var(--font-size-14);
+  color: var(--color-neutral-700);
   cursor: pointer;
 }
 
 .subLabel {
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
-  color: #5b606b;
+  color: var(--color-neutral-700);
 }
 
 .subSectionTitle {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 700;
-  color: #3b3f48;
+  color: var(--color-neutral-800);
 }
 
 /* 인물 블록(신랑/신부/혼주/RSVP perSide) */
@@ -145,9 +145,9 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  border: 1px dashed #d8dae0;
+  border: 1px dashed var(--color-line-300);
   border-radius: 10px;
-  background: #fafbfc;
+  background: var(--color-bg-50);
 }
 
 /* 휴대폰 */
@@ -180,8 +180,8 @@
 }
 
 .emailAt {
-  color: #8a8f99;
-  font-size: 14px;
+  color: var(--color-neutral-500);
+  font-size: var(--font-size-14);
 }
 
 .emailDomainInput {
@@ -193,10 +193,10 @@
   flex: 1;
   min-width: 100px;
   padding: 10px 12px;
-  font-size: 14px;
-  color: #5b606b;
-  background: #f1f2f5;
-  border: 1px solid #d8dae0;
+  font-size: var(--font-size-14);
+  color: var(--color-neutral-700);
+  background: var(--color-bg-150);
+  border: 1px solid var(--color-line-300);
   border-radius: 8px;
   box-sizing: border-box;
 }
@@ -205,11 +205,11 @@
   flex: 0 0 auto;
   box-sizing: border-box;
   padding: 10px 12px;
-  border: 1px solid #d8dae0;
+  border: 1px solid var(--color-line-300);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-family: inherit;
-  background: #fff;
+  background: var(--color-basic-white);
   cursor: pointer;
 }
 
@@ -241,9 +241,9 @@
   flex-direction: column;
   gap: 12px;
   padding: 14px;
-  border: 1px solid #e6e8ee;
+  border: 1px solid var(--color-line-200);
   border-radius: 10px;
-  background: #fff;
+  background: var(--color-basic-white);
 }
 
 .accountCardHeader {
@@ -253,17 +253,17 @@
 }
 
 .removeButton {
-  border: 1px solid #e6c4c4;
-  background: #fff;
-  color: #d83a3a;
-  font-size: 12px;
+  border: 1px solid var(--color-danger-200);
+  background: var(--color-basic-white);
+  color: var(--color-danger-500);
+  font-size: var(--font-size-12);
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .removeButton:hover {
-  background: #fdf2f2;
+  background: var(--color-danger-75);
 }
 
 /* 교통 안내 에디터 */
@@ -272,16 +272,16 @@
   flex-direction: column;
   gap: 12px;
   padding: 14px;
-  border: 1px dashed #d8dae0;
+  border: 1px dashed var(--color-line-300);
   border-radius: 10px;
-  background: #fafbfc;
+  background: var(--color-bg-50);
 }
 
 .etcTitle {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 700;
-  color: #3b3f48;
+  color: var(--color-neutral-800);
 }
 
 .etcFieldGroup {

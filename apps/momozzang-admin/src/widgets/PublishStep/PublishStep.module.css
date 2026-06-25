@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 28px;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-PyeongChang);
 }
 
 .section {
@@ -10,22 +10,22 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  border: 1px solid #e6e8ee;
+  border: 1px solid var(--color-line-200);
   border-radius: 12px;
-  background: #fff;
+  background: var(--color-basic-white);
 }
 
 .sectionTitle {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-16);
   font-weight: 700;
-  color: #2b2f38;
+  color: var(--color-neutral-900);
 }
 
 .hint {
   margin: 0;
-  font-size: 12px;
-  color: #9aa0ab;
+  font-size: var(--font-size-12);
+  color: var(--color-neutral-400);
 }
 
 .field {
@@ -35,9 +35,9 @@
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
-  color: #5b606b;
+  color: var(--color-neutral-700);
 }
 
 .loadRow {
@@ -61,32 +61,32 @@
 .banner {
   padding: 12px 14px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   line-height: 1.5;
 }
 
 .bannerSuccess {
-  background: #eef9f0;
-  border: 1px solid #b6e4c1;
-  color: #1f7a3d;
+  background: var(--color-success-100);
+  border: 1px solid var(--color-success-200);
+  color: var(--color-success-600);
 }
 
 .bannerError {
-  background: #fdf2f2;
-  border: 1px solid #e6c4c4;
-  color: #c0392b;
+  background: var(--color-danger-75);
+  border: 1px solid var(--color-danger-200);
+  color: var(--color-danger-600);
 }
 
 .bannerInfo {
-  background: #f6f3fd;
-  border: 1px solid #d6c9f4;
-  color: #5129b5;
+  background: var(--color-brand-tint-50);
+  border: 1px solid var(--color-brand-tint-200);
+  color: var(--color-main-600);
 }
 
 .issueList {
   margin: 8px 0 0;
   padding-left: 18px;
-  font-size: 13px;
+  font-size: var(--font-size-13);
 }
 
 .completeLink {
@@ -103,8 +103,8 @@
 }
 
 .linkText {
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 600;
-  color: #5129b5;
+  color: var(--color-main-600);
   word-break: break-all;
 }

@@ -1,8 +1,8 @@
 .page {
   min-height: 100vh;
-  background: #f5f6f8;
-  color: #2b2f38;
-  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--color-bg-100);
+  color: var(--color-neutral-900);
+  font-family: var(--font-PyeongChang);
   display: flex;
   flex-direction: column;
 }
@@ -13,8 +13,8 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 24px;
-  background: #fff;
-  border-bottom: 1px solid #e6e8ee;
+  background: var(--color-basic-white);
+  border-bottom: 1px solid var(--color-line-200);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -28,12 +28,12 @@
 
 .navButton {
   padding: 8px 18px;
-  border: 1px solid #d8dae0;
+  border: 1px solid var(--color-line-300);
   border-radius: 8px;
-  background: #fff;
-  font-size: 14px;
+  background: var(--color-basic-white);
+  font-size: var(--font-size-14);
   font-weight: 600;
-  color: #2b2f38;
+  color: var(--color-neutral-900);
   cursor: pointer;
 }
 
@@ -72,16 +72,16 @@
 
 .placeholder {
   padding: 40px 20px;
-  border: 1px dashed #c9cdd6;
+  border: 1px dashed var(--color-line-400);
   border-radius: 12px;
-  background: #fff;
+  background: var(--color-basic-white);
   text-align: center;
-  color: #8a8f99;
+  color: var(--color-neutral-500);
 }
 
 .placeholder h3 {
   margin: 0 0 8px;
-  color: #2b2f38;
+  color: var(--color-neutral-900);
 }
 
 /* ── 반응형: ≤768px에서 2단 → 세로 스택 + 탭 토글 ── */
@@ -90,25 +90,25 @@
     display: flex;
     gap: 8px;
     padding: 12px 16px 0;
-    background: #f5f6f8;
+    background: var(--color-bg-100);
   }
 
   .mobileTab {
     flex: 1;
     padding: 10px;
-    border: 1px solid #d8dae0;
+    border: 1px solid var(--color-line-300);
     border-radius: 8px;
-    background: #fff;
-    font-size: 14px;
+    background: var(--color-basic-white);
+    font-size: var(--font-size-14);
     font-weight: 600;
-    color: #8a8f99;
+    color: var(--color-neutral-500);
     cursor: pointer;
   }
 
   .mobileTabActive {
-    background: #5129b5;
-    border-color: #5129b5;
-    color: #fff;
+    background: var(--color-main-600);
+    border-color: var(--color-main-600);
+    color: var(--color-basic-white);
   }
 
   .body {

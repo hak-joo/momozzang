@@ -10,7 +10,6 @@ import { ErrorBoundary } from '../../widgets/ErrorBoundary/ErrorBoundary';
 import { useApplyForm } from '../../features/apply/useApplyForm';
 import styles from './ApplyPage.module.css';
 import '@momozzang/ui/src/index.css';
-import './fonts.css';
 
 const STEPS: StepItem[] = [
   { id: 1, label: '정보입력' },

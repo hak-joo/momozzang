@@ -1,5 +1,6 @@
-/* 신청 폼 미리보기에서 사용하는 청첩장 본문 폰트.
-   청첩장 뷰어(global.css)와 동일 선언을 admin에 가져오되, body 스크롤 잠금 등 전역 규칙은 제외한다. */
+/* 폰트 단일 소스(SSOT).
+   invitation/admin 양쪽이 packages/ui/src/index.css aggregate를 통해 이 정의를 공유한다.
+   CDN URL·변수명은 변경 금지 — 기존 invitation global.css 값을 그대로 승격한 것이다. */
 
 @font-face {
   font-family: 'DungGeunMo';
@@ -12,6 +13,14 @@
 @font-face {
   font-family: 'PyeongChang';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChang-Regular.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Wanted Sans';
+  src: url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css')
     format('woff2');
   font-weight: normal;
   font-display: swap;
@@ -36,6 +45,7 @@
 :root {
   --font-DungGeunMo: 'DungGeunMo', 'Noto Sans KR', cursive;
   --font-PyeongChang: 'PyeongChang', 'Noto Sans KR', sans-serif;
+  --font-Wanted-Sans: 'Wanted Sans', 'Noto Sans KR', sans-serif;
   --font-DepartureMono: 'DepartureMono', 'Noto Sans KR', monospace;
   --font-PfStardust: 'PfStardust', 'Noto Sans KR', sans-serif;
 }

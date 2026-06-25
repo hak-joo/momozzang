@@ -10,6 +10,7 @@
 - 색상: `--color-*`, 형태: `--button-*`/`--icon-button-*`, 글자 크기: role mixin(`@mixin typo-*`). 토큰 목록은 [`design-system.md`](./design-system.md) 참조.
 - 새 색/스타일이 필요하면 임의 값을 박지 말고 **토큰을 추가**합니다(테마 색은 `utils.ts`의 `PALETTES`, 정적/형태 토큰은 `theme.css`).
 - 새 글자 스타일은 px 직접 지정 대신 `typo-heading*`/`typo-body*`/`typo-desc*` role mixin을 씁니다.
+- **이 "토큰 우선" 규칙은 invitation·admin 양쪽에 동일하게 적용됩니다.** admin은 공통 SSOT(`packages/ui/src/index.css` = reset+fonts+theme+typography)를 `apps/momozzang-admin/src/index.css`에서 상대경로 `@import`로 연결해, 동일한 색(`--color-*`)·폰트(`--font-*`)·크기(`--font-size-*`) 토큰을 사용합니다. admin 모듈 CSS의 폰트 패밀리는 `var(--font-PyeongChang)`, 글자 크기는 `var(--font-size-*)` 원시 타이포 토큰을 씁니다(스프린트3 F5 결과). 단 admin은 줄간격/자간을 거의 선언하지 않아 시각 무회귀를 위해 `@mixin typo-*` 전면 도입 대신 **크기 토큰만** 치환하며, 표준 토큰에 없는 비표준 크기(24px·15px)는 raw px로 보존합니다.
 
 ## 2. 스타일링 — CSS Modules + clsx
 
