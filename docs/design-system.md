@@ -63,6 +63,21 @@ momozzang의 픽셀/싸이월드 감성을 떠받치는 **디자인 토큰**(색
 | `--icon-button-hover-bg` | `rgba(149, 174, 255, 0.2)` | 아이콘버튼 hover 배경 |
 | `--icon-button-shadow` | `0 6px 12px rgba(81, 41, 133, 0.25)` | 아이콘버튼 그림자 |
 
+### 1.6 admin 크롬(중립 UI) 토큰 (theme.css 전용 — 테마 무관 고정값)
+
+admin 어드민 화면의 폼/카드/배지/배너 등 **중립 UI 크롬**에 쓰는 그레이스케일·상태색 토큰입니다. 스프린트2(F3·F4)에서 admin 모듈 CSS의 하드코딩 HEX를 치환하기 위해 `theme.css`의 `:root`에 추가됐고, 테마(PURPLE/PINK)와 무관한 고정값입니다(`utils.ts` 런타임 팔레트에는 없음). admin은 이 정의를 `apps/momozzang-admin/src/index.css`가 상대경로로 `@import '../../../packages/ui/src/index.css'`(reset+fonts+theme+typography aggregate)하여 공유합니다.
+
+> 아래 값은 `theme.css`의 `:root` 실제 정의와 글자 그대로 일치합니다. 토큰 단계는 더 있을 수 있으나, 여기 적은 토큰은 모두 소스에 실재하는 값입니다.
+
+| 토큰 그룹 | 토큰 → 값(theme.css) |
+|-----------|----------------------|
+| neutral(텍스트/회색 단계) | `--color-neutral-900` `#2b2f38` / `--color-neutral-870` `#222222` / `--color-neutral-850` `#333333` / `--color-neutral-800` `#3b3f48` / `--color-neutral-700` `#5b606b` / `--color-neutral-600` `#666666` / `--color-neutral-500` `#8a8f99` / `--color-neutral-450` `#888888` / `--color-neutral-400` `#9aa0ab` |
+| line(테두리/구분선) | `--color-line-450` `#b9bdc7` / `--color-line-400` `#c9cdd6` / `--color-line-300` `#d8dae0` / `--color-line-200` `#e6e8ee` |
+| bg(배경 단계) | `--color-bg-50` `#fafbfc` / `--color-bg-100` `#f5f6f8` / `--color-bg-150` `#f1f2f5` / `--color-bg-200` `#e8eaef` / `--color-bg-dark` `#111111` |
+| danger(오류/경고) | `--color-danger-700` `#b4232a` / `--color-danger-600` `#c0392b` / `--color-danger-500` `#d83a3a` / `--color-danger-400` `#d96a6a` / `--color-danger-200` `#e6c4c4` / `--color-danger-150` `#f0c2c2` / `--color-danger-100` `#fdeaea` / `--color-danger-75` `#fdf2f2` / `--color-danger-50` `#fff5f5` |
+| success(성공) | `--color-success-600` `#1f7a3d` / `--color-success-200` `#b6e4c1` / `--color-success-100` `#eef9f0` |
+| brand-tint(브랜드 옅은 틴트) | `--color-brand-tint-50` `#f6f3fd` / `--color-brand-tint-200` `#d6c9f4` |
+
 ## 2. 테마 시스템 (출처: `packages/ui/src/shared/styles/utils.ts`)
 
 - 런타임에 주입되는 팔레트는 **PURPLE / PINK 두 종**뿐입니다(`PALETTES`에 `BASIC`/`PURPLE`/`PINK`만 존재).
@@ -111,9 +126,11 @@ momozzang의 픽셀/싸이월드 감성을 떠받치는 **디자인 토큰**(색
 
 > 이 목록 외의 role mixin(예: `typo-heading6`, `typo-body3`)은 **존재하지 않습니다.** 하위 빌딩 블록 mixin으로 `font-bold`, `font-22/18/16/14/13/13-multi/13-heading/12`가 있습니다.
 
-## 4. 폰트 패밀리 (출처: `apps/momozzang-invitation/src/styles/global.css`)
+## 4. 폰트 패밀리 (출처: `packages/ui/src/shared/styles/fonts.css`)
 
-`global.css`의 `:root`는 다음 **5개 폰트 CSS 변수**를 정의합니다.
+폰트 `@font-face` 선언과 `--font-*` CSS 변수의 **단일 소스(SSOT)는 `packages/ui/src/shared/styles/fonts.css`** 입니다(파일 상단 주석에 SSOT 명시). invitation·admin 두 앱 모두 `packages/ui/src/index.css` aggregate(`@import './shared/styles/fonts.css'`)를 통해 동일 정의를 공유합니다. (과거 invitation `global.css`에 있던 정의를 fonts.css로 승격한 것이며, 변수명·CDN URL은 그대로입니다.)
+
+`fonts.css`의 `:root`는 다음 **5개 폰트 CSS 변수**를 정의합니다.
 
 | CSS 변수 | 변수가 참조하는 패밀리(스택) | 대표 용도 |
 |----------|------------------------------|-----------|
@@ -123,7 +140,7 @@ momozzang의 픽셀/싸이월드 감성을 떠받치는 **디자인 토큰**(색
 | `--font-DepartureMono` | `'DepartureMono', 'Noto Sans KR', monospace` | 숫자/D-Day |
 | `--font-PfStardust` | `'PfStardust', 'Noto Sans KR', sans-serif` | MiniRoom 등 |
 
-- `html, body`와 `button`은 둘 다 `font-family: var(--font-PyeongChang)`을 사용합니다(기본 본문/버튼 폰트).
+- invitation은 `html, body`·`button`에, admin은 `apps/momozzang-admin/src/index.css`의 `html, body`에 `font-family: var(--font-PyeongChang)`을 적용합니다(기본 본문/버튼 폰트). admin 모듈 CSS의 블록 루트 폰트도 모두 `var(--font-PyeongChang)`을 사용합니다(스프린트3 F5 결과 — `system-ui` 하드코딩 0건).
 - 각 폰트는 `@font-face`로 jsDelivr CDN에서 로드되며 `font-display: swap`을 사용합니다.
 - `@font-face` 선언명과 CSS 변수 참조명, 로드하는 woff2 파일명이 모두 `PyeongChang`(대문자 C)으로 일치합니다.
 
