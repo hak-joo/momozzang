@@ -1,0 +1,72 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-PyeongChang);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-main-600);
+  user-select: none;
+}
+
+/* 네이티브 input은 시각적으로 숨기되 접근성/포커스는 유지 */
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 2px solid var(--color-main-300);
+  border-radius: 6px;
+  background: var(--color-basic-white);
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+.check {
+  color: var(--color-basic-white);
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.input:checked + .box {
+  background: var(--color-main-600);
+  border-color: var(--color-main-600);
+}
+
+.input:checked + .box .check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.input:focus-visible + .box {
+  outline: 3px solid rgba(149, 174, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.label {
+  flex: 1;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
