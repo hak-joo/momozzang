@@ -7,7 +7,7 @@
   border: 1px solid var(--color-danger-150);
   border-radius: 12px;
   background: var(--color-danger-50);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-PyeongChang);
 }
 
 .title {
@@ -19,7 +19,7 @@
 
 .detail {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--font-size-12);
   color: var(--color-neutral-400);
   word-break: break-all;
 }
@@ -30,7 +30,7 @@
   border-radius: 8px;
   background: var(--color-basic-white);
   color: var(--color-danger-700);
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
   cursor: pointer;
 }

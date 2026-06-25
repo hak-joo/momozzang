@@ -2,10 +2,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 40px 20px;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: var(--font-PyeongChang);
 }
 
 .header {
@@ -43,7 +40,7 @@
 
 .sectionHeader {
   margin: 0 0 16px 0;
-  font-size: 18px;
+  font-size: var(--font-size-18);
 }
 
 .grid {
@@ -55,7 +52,7 @@
 .label {
   display: block;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-14);
   color: var(--color-neutral-450);
 }
 

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 28px;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-PyeongChang);
 }
 
 .section {
@@ -17,14 +17,14 @@
 
 .sectionTitle {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-16);
   font-weight: 700;
   color: var(--color-neutral-900);
 }
 
 .hint {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--font-size-12);
   color: var(--color-neutral-400);
 }
 
@@ -45,7 +45,7 @@
 }
 
 .imageLabel {
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
   color: var(--color-neutral-700);
 }
@@ -61,7 +61,7 @@
 }
 
 .uploading {
-  font-size: 12px;
+  font-size: var(--font-size-12);
   color: var(--color-main-600);
 }
 
@@ -97,13 +97,13 @@
 }
 
 .trackTitle {
-  font-size: 14px;
+  font-size: var(--font-size-14);
   font-weight: 600;
   color: var(--color-neutral-900);
 }
 
 .trackArtist {
-  font-size: 12px;
+  font-size: var(--font-size-12);
   color: var(--color-neutral-500);
 }
 
@@ -114,7 +114,7 @@
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--font-size-13);
   font-weight: 600;
   color: var(--color-neutral-700);
 }
