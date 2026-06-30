@@ -54,14 +54,4 @@ body {
   color: #222;
 }
 
-/* 버튼 reset */
-button {
-  font-family: var(--font-PyeongChang);
-  background: inherit;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 0;
-  overflow: visible;
-  cursor: pointer;
-}
+/* 버튼 정규화는 공유 SSOT(packages/ui/src/shared/assets/css/reset.css)로 이동했다. */
