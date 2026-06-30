@@ -65,6 +65,7 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                     value={account.bank}
                     onChange={(e) => onUpdate(owner, account.id, { bank: e.target.value })}
                     placeholder="은행명"
+                    maxLength={20}
                   />
                 </div>
                 <div className={styles.field}>
@@ -76,6 +77,7 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                     value={account.accountNumber}
                     onChange={(e) => onUpdate(owner, account.id, { accountNumber: e.target.value })}
                     placeholder="000-0000-000000"
+                    maxLength={30}
                   />
                 </div>
                 <div className={styles.field}>
@@ -87,6 +89,7 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                     value={account.accountHolder}
                     onChange={(e) => onUpdate(owner, account.id, { accountHolder: e.target.value })}
                     placeholder="예금주명"
+                    maxLength={20}
                   />
                 </div>
               </div>
@@ -122,6 +125,7 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                         onUpdate(owner, account.id, { customLabel: e.target.value })
                       }
                       placeholder="예: 신랑에게"
+                      maxLength={20}
                     />
                   </div>
                 )}
@@ -144,6 +148,7 @@ export function AccountEditor({ idPrefix, owner, accounts, onAdd, onRemove, onUp
                     value={account.kakaoPayCode ?? ''}
                     onChange={(e) => onUpdate(owner, account.id, { kakaoPayCode: e.target.value })}
                     placeholder="카카오페이 송금 코드"
+                    maxLength={30}
                   />
                 </div>
               )}

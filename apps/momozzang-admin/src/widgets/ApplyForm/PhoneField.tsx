@@ -38,6 +38,7 @@ export function PhoneField({
             onChange={(e) => onCountryCodeChange(e.target.value)}
             placeholder="+82"
             aria-label="국가코드"
+            maxLength={6}
           />
         )}
         <Input
@@ -47,6 +48,7 @@ export function PhoneField({
           onChange={(e) => onNumberChange(e.target.value)}
           placeholder="01012345678 (하이픈 없이)"
           inputMode="tel"
+          maxLength={20}
         />
       </div>
       <Checkbox
