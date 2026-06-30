@@ -116,3 +116,15 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+/* 버튼 정규화: Meyer reset이 폼 컨트롤을 건드리지 않으므로
+   두 앱(admin/invitation)에서 동일하게 UA 기본 스타일을 초기화한다. */
+button {
+  font-family: var(--font-PyeongChang);
+  background: inherit;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+}
