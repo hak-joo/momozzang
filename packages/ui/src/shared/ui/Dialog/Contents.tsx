@@ -1,6 +1,7 @@
 import * as DialogPrimitives from '@radix-ui/react-dialog';
 import { clsx } from 'clsx';
 import * as React from 'react';
+import { usePortalContainer } from '../PortalContainer';
 import { Overlay } from './Overlay';
 
 import styles from './Dialog.module.css';
@@ -27,10 +28,12 @@ export function Content({
   overlayClassName,
   ...contentProps
 }: React.PropsWithChildren<Props>) {
-  const Container = usePortal ? DialogPrimitives.Portal : React.Fragment;
+  // provider 가 없으면 `null` → `undefined` 로 넘겨 Radix 기본값(`document.body`)을 그대로 쓴다.
+  // 즉 뷰어의 코드 경로는 변경 전과 완전히 동일하다(계약 3 §4.1-1).
+  const portalContainer = usePortalContainer();
 
-  return (
-    <Container>
+  const content = (
+    <>
       {useOverlay && (
         <Overlay
           className={clsx(
@@ -51,6 +54,14 @@ export function Content({
       >
         {children}
       </DialogPrimitives.Content>
-    </Container>
+    </>
+  );
+
+  if (!usePortal) return content;
+
+  return (
+    <DialogPrimitives.Portal container={portalContainer ?? undefined}>
+      {content}
+    </DialogPrimitives.Portal>
   );
 }
