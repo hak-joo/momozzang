@@ -25,6 +25,15 @@
   --color-gradient-start: #aca4ff;
   --color-gradient-end: #6aa3ff;
 
+  /* Shadow (Default: Purple)
+   * 런타임 팔레트 주입(utils.ts PALETTES)은 `document.body`(또는 themeScope)의 **인라인 style**로
+   * 들어가므로 여기 :root 기본값은 항상 인라인에 진다 → 뷰어 동작 불변(계약 §0.5 N-D 실측).
+   * 이 기본값은 팔레트가 주입되지 않는 어드민 크롬에서 토큰이 빈 문자열이 되는 것을 막는다. */
+  --color-shadow-100: rgba(176, 196, 255, 0.30);
+  --color-shadow-200: rgba(51, 48, 255, 0.10);
+  --box-shadow-main: 0 4px 4px 0 var(--color-shadow-100) inset, 0 -2px 12px 2px var(--color-shadow-200) inset;
+  --box-shadow-sub: 0 3.6px 3.6px 0 var(--color-shadow-100) inset, 0 -1.8px 10.8px 1.8px var(--color-shadow-200) inset;
+
   /* Legacy to New Mapping (Optional: Keep for safer migration if needed, but instructed to replace) */
   /* We will remove legacy vars to force migration errors if missed */
 
@@ -54,6 +63,7 @@
   --color-neutral-400: #9aa0ab;
 
   /* Admin Line (라인/보더) */
+  --color-line-500: #868b95;
   --color-line-450: #b9bdc7;
   --color-line-400: #c9cdd6;
   --color-line-300: #d8dae0;
@@ -85,4 +95,30 @@
   /* Admin Brand Tint (보라 강조 면/보더) */
   --color-brand-tint-50: #f6f3fd;
   --color-brand-tint-200: #d6c9f4;
+
+  /* Admin Scrim / Overlay (반투명 오버레이 — 하드코딩 rgba() 대체) */
+  --color-scrim-280: rgba(0, 0, 0, 0.28);
+  --color-scrim-600: rgba(0, 0, 0, 0.6);
+  --color-scrim-800: rgba(0, 0, 0, 0.8);
+  --color-basic-white08: rgba(255, 255, 255, 0.08);
+  --color-basic-white25: rgba(255, 255, 255, 0.25);
+
+  /* ── Admin Surface (F7 카드 표면 SSOT) ────────────────────
+   * /apply 의 .section 과 /admin 의 Panel 이 **같은 토큰**을 소비한다(DoD 14).
+   * 뷰어 Box 의 inset 젤리 그림자가 아니라 약한 **외곽** 그림자를 쓴다(SPEC §1.4 / DoD 16). */
+  --color-shadow-admin-100: rgba(20, 24, 33, 0.06);
+  --color-shadow-admin-200: rgba(20, 24, 33, 0.05);
+  --admin-surface-bg: var(--color-basic-white);
+  --admin-surface-border: 1px solid var(--color-line-500);
+  --admin-surface-radius: 12px;
+  --admin-surface-padding: 20px;
+  --admin-surface-shadow: 0 1px 2px var(--color-shadow-admin-100), 0 4px 12px var(--color-shadow-admin-200);
+
+  /* ── Admin Control (F5 폼 컨트롤 중립 언어) ────────────────
+   * 테마 팔레트(--color-sub-*, --color-main-*)를 쓰지 않는다 — SPEC §1.4 "어드민 크롬은 테마 무관 중립". */
+  --admin-control-bg: var(--color-basic-white);
+  --admin-control-border: 1px solid var(--color-line-300);
+  --admin-control-radius: 8px;
+  --admin-control-font-size: var(--font-size-14);
+  --admin-control-color: var(--color-neutral-900);
 }
