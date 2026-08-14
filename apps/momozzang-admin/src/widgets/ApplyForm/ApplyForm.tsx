@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Textarea } from '@momozzang/ui/src/shared/ui/Input/Textarea';
+import { Select } from '@momozzang/ui/src/shared/ui/Select';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { openPostcodeSearch } from '@momozzang/ui/src/shared/lib/daumPostcode';
 import { geocodeAddress } from '@momozzang/ui/src/shared/lib/naverMaps';
@@ -205,9 +207,8 @@ function ParentBlock({
           <label className={styles.label} htmlFor={`apply-${slot}-deceasetype`}>
             고인 표기
           </label>
-          <select
+          <Select
             id={`apply-${slot}-deceasetype`}
-            className={styles.select}
             value={person?.deceasedType ?? 'none'}
             onChange={(e) =>
               onPersonChange(slot, { deceasedType: e.target.value as DeceaseType })
@@ -218,7 +219,7 @@ function ParentBlock({
                 {opt.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       )}
       <AccountEditor
@@ -356,9 +357,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-message">
             청첩장 문구
           </label>
-          <textarea
+          <Textarea
             id="apply-message"
-            className={styles.textarea}
             value={invitationInfo.message}
             onChange={(e) => onInvitationInfoChange({ message: e.target.value })}
             rows={5}
@@ -537,23 +537,21 @@ export function ApplyForm(props: Props) {
             <label className={styles.label} htmlFor="apply-ampm">
               오전/오후
             </label>
-            <select
+            <Select
               id="apply-ampm"
-              className={styles.select}
               value={weddingHallInfo.ampm}
               onChange={(e) => onWeddingHallChange({ ampm: e.target.value as AmPm })}
             >
               <option value="AM">오전</option>
               <option value="PM">오후</option>
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-hour">
               시
             </label>
-            <select
+            <Select
               id="apply-hour"
-              className={styles.select}
               value={weddingHallInfo.hour}
               onChange={(e) => onWeddingHallChange({ hour: Number(e.target.value) })}
             >
@@ -562,15 +560,14 @@ export function ApplyForm(props: Props) {
                   {h}시
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-minute">
               분
             </label>
-            <select
+            <Select
               id="apply-minute"
-              className={styles.select}
               value={weddingHallInfo.minute}
               onChange={(e) => onWeddingHallChange({ minute: Number(e.target.value) })}
             >
@@ -579,7 +576,7 @@ export function ApplyForm(props: Props) {
                   {m}분
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 
@@ -762,9 +759,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-rsvp-content">
             공통 내용
           </label>
-          <textarea
+          <Textarea
             id="apply-rsvp-content"
-            className={styles.textarea}
             value={rsvpRequest.content ?? ''}
             onChange={(e) => onRsvpChange({ content: e.target.value })}
             rows={3}
@@ -811,9 +807,8 @@ export function ApplyForm(props: Props) {
                   <label className={styles.label} htmlFor={`apply-rsvp-${side}-content`}>
                     내용
                   </label>
-                  <textarea
+                  <Textarea
                     id={`apply-rsvp-${side}-content`}
-                    className={styles.textarea}
                     value={sideData?.content ?? ''}
                     onChange={(e) => onRsvpPerSideChange(side, { content: e.target.value })}
                     rows={2}
@@ -862,9 +857,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-about-groom">
             신랑 소개
           </label>
-          <textarea
+          <Textarea
             id="apply-about-groom"
-            className={styles.textarea}
             value={aboutUs?.groomDesc ?? ''}
             onChange={(e) => onAboutUsChange({ groomDesc: e.target.value })}
             rows={3}
@@ -876,9 +870,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-about-bride">
             신부 소개
           </label>
-          <textarea
+          <Textarea
             id="apply-about-bride"
-            className={styles.textarea}
             value={aboutUs?.brideDesc ?? ''}
             onChange={(e) => onAboutUsChange({ brideDesc: e.target.value })}
             rows={3}
@@ -896,29 +889,27 @@ export function ApplyForm(props: Props) {
             <label className={styles.label} htmlFor="apply-theme">
               테마
             </label>
-            <select
+            <Select
               id="apply-theme"
-              className={styles.select}
               value={theme}
               onChange={(e) => onThemeChange(e.target.value as ThemeKind)}
             >
               <option value="CYWORLD">CYWORLD</option>
               <option value="RETRO">RETRO</option>
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-themecolor">
               테마색
             </label>
-            <select
+            <Select
               id="apply-themecolor"
-              className={styles.select}
               value={themeColor}
               onChange={(e) => onThemeColorChange(e.target.value as ThemeColorOptions)}
             >
               <option value="PURPLE">PURPLE</option>
               <option value="PINK">PINK</option>
-            </select>
+            </Select>
           </div>
         </div>
       </section>
