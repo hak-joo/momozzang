@@ -5,11 +5,11 @@ import {
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
-import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { ControlVariantProvider } from '@momozzang/ui/src/shared/ui/ControlVariant';
 import { GalleryManager } from '../widgets/GalleryManager/GalleryManager';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
 import styles from './AdminPage.module.css';
+import { Panel } from '../shared/ui/Panel';
 import { ImageThumb } from '../shared/ui/ImageThumb';
 import { useInvitationQuery } from '../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
@@ -199,39 +199,47 @@ export default function AdminPage() {
 
   const isBusy = isUploading || isSaving;
   const saveLabel = isUploading ? 'Uploading...' : isSaving ? 'Saving...' : 'Save Changes';
+  const statusMessage = isLoadingQuery
+    ? 'Loading data...'
+    : isUploading
+      ? 'Uploading...'
+      : isSaving
+        ? 'Saving...'
+        : null;
 
   return (
     <ControlVariantProvider value="admin">
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Momozzang Admin</h1>
-        <div className={styles.controls}>
-          <Input
-            value={inputSlug}
-            onChange={(e) => setInputSlug(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
-            placeholder="Invitation Slug"
-            className={styles.slugInput}
-          />
-          <Button onClick={handleLoad} variant="secondary">
-            Load
-          </Button>
-        </div>
-        {isLoadingQuery && <span style={{ marginLeft: 10 }}>Loading data...</span>}
-        {isUploading && <span style={{ marginLeft: 10 }}>Uploading...</span>}
-        {isSaving && <span style={{ marginLeft: 10 }}>Saving...</span>}
-        <div style={{ marginTop: 10 }}>
-          <Button onClick={handleSave} disabled={isBusy || !invitation} variant="primary">
-            {saveLabel}
-          </Button>
-        </div>
+        {/* A7: 슬러그 입력 + 불러오기 + 저장을 한 행(툴바)에 묶는다. */}
+        <Panel
+          toolbar={
+            <>
+              <Input
+                value={inputSlug}
+                onChange={(e) => setInputSlug(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
+                placeholder="Invitation Slug"
+                className={styles.slugInput}
+              />
+              <Button onClick={handleLoad} variant="secondary">
+                Load
+              </Button>
+              <Button onClick={handleSave} disabled={isBusy || !invitation} variant="primary">
+                {saveLabel}
+              </Button>
+            </>
+          }
+        >
+          {statusMessage && <p className={styles.status}>{statusMessage}</p>}
+        </Panel>
       </header>
 
       {invitation ? (
         <InvitationProvider data={invitation}>
           <div className={styles.content}>
-            <Box variant="primary">
-              <h3 className={styles.sectionHeader}>Main Images</h3>
+            <Panel title="Main Images">
               <div className={styles.grid}>
                 <div>
                   <label className={styles.label}>Main Image</label>
@@ -267,10 +275,9 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
-            </Box>
+            </Panel>
 
-            <Box variant="primary">
-              <h3 className={styles.sectionHeader}>Couple Images</h3>
+            <Panel title="Couple Images">
               <div className={styles.grid}>
                 <div>
                   <label className={styles.label}>Groom</label>
@@ -306,17 +313,20 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
-            </Box>
+            </Panel>
 
-            <GalleryManager
-              album={invitation.album || []}
-              onChange={(newAlbum) => setInvitation({ ...invitation, album: newAlbum })}
-              onAddFiles={handleGalleryAddFiles}
-              onRemoveItem={handleGalleryRemove}
-              // F2: 미리보기 src 단일 규칙. pending 이면 blob, 기존이면 키를 buildImageUrl 로 조립.
-              getThumbnailUrl={(item) => getPreviewUrl(item.id, item.url)}
-              disabled={isBusy}
-            />
+            {/* 갤러리의 표면은 호스트가 준다 — GalleryManager 자신은 표면을 갖지 않는다(중첩 카드 해소). */}
+            <Panel>
+              <GalleryManager
+                album={invitation.album || []}
+                onChange={(newAlbum) => setInvitation({ ...invitation, album: newAlbum })}
+                onAddFiles={handleGalleryAddFiles}
+                onRemoveItem={handleGalleryRemove}
+                // F2: 미리보기 src 단일 규칙. pending 이면 blob, 기존이면 키를 buildImageUrl 로 조립.
+                getThumbnailUrl={(item) => getPreviewUrl(item.id, item.url)}
+                disabled={isBusy}
+              />
+            </Panel>
           </div>
         </InvitationProvider>
       ) : (
