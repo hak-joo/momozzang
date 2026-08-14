@@ -4,6 +4,14 @@
    CSS @import 안에서는 해석이 보장되지 않으므로 상대경로를 사용한다. */
 @import '../../../packages/ui/src/index.css';
 
+/* 어드민 전용 토큰.
+   포커스 링은 뷰어 `Button` 의 `:focus-visible`(Button.module.css) 값을 그대로 승계한다
+   — SPEC §1.4 "상태 표현" 행의 SSOT. clip 으로 시각적으로 숨긴 컨트롤(파일 인풋·BGM 라디오)의
+   대표 표면이 `:focus-within` 으로 같은 링을 그리는 데 쓴다(DoD 13). */
+:root {
+  --color-focus-ring: rgba(149, 174, 255, 0.7);
+}
+
 html,
 body {
   margin: 0;
