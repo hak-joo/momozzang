@@ -51,3 +51,20 @@
 .screen::-webkit-scrollbar {
   display: none;
 }
+
+/* 프레임 안으로 들어온 시트/다이얼로그(F3-b)의 크기를 컨테이너(.screen) 상대로 재해석한다.
+   포털 컨테이너 주입만으로는 부족하다 — BottomSheet 는 `width: min(430px, 100vw)`,
+   Dialog 는 `width: 90vw; max-width: 430px`, 호출부는 인라인 `height: 80~92vh` 를 쓰므로
+   전부 **뷰포트**를 본다(폭 430 > .screen 폭 351). `.screen{overflow:hidden}` 이 잘라낸
+   영역은 히트테스트에서도 사라지므로, 이 규칙이 없으면 시트를 **닫을 수도 없다**(계약 3 §6 R4).
+
+   `max-height` 는 인라인 `height` 를 사후에 자르므로 호출부 수정 없이 세로도 갇힌다.
+   특이도 (0,2,0) 이라 `.sheet`/`.dialog`(0,1,0)를 !important 없이 이긴다.
+   이 파일은 **어드민 번들에만** 들어간다 — 뷰어는 로드조차 하지 않으므로 무회귀가 구조적이다.
+   CSS Modules 는 클래스 이름만 해시하므로 `[role='dialog']` 는 그대로 남는다(계약 3 §4.7). */
+.screen [role='dialog'] {
+  width: min(430px, 100%);
+  max-width: 100%;
+  min-width: 0;
+  max-height: 100%;
+}
