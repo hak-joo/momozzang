@@ -175,7 +175,7 @@ export default function AdminPage() {
       toSave = await commitPendingUploads(invitation, applyUploadedKey, resolveUploadPrefix);
     } catch (e) {
       console.error(e);
-      alert('Upload failed. Please try again.'); // F6: 업로드 실패 → 저장 안 함, pending 유지.
+      alert('이미지 업로드에 실패했어요. 잠시 후 다시 시도해주세요.'); // F6: 업로드 실패 → 저장 안 함, pending 유지.
       return;
     } finally {
       setIsUploading(false);
@@ -187,10 +187,10 @@ export default function AdminPage() {
       setInvitation(toSave);
       // F7-b: 저장 성공 직후 커밋된 slot 들의 blob revoke + pending clear.
       clearAfterCommit(committedSlots);
-      alert('Saved successfully!');
+      alert('저장했어요.');
     } catch (e) {
       console.error(e);
-      alert('Error saving invitation');
+      alert('저장에 실패했어요. 잠시 후 다시 시도해주세요.');
       // 저장 실패: 업로드는 이미 끝났으므로 키 치환 결과를 유지하고 blob 도 정리(재저장만 누르면 됨).
       setInvitation(toSave);
       clearAfterCommit(committedSlots);
@@ -198,20 +198,20 @@ export default function AdminPage() {
   };
 
   const isBusy = isUploading || isSaving;
-  const saveLabel = isUploading ? 'Uploading...' : isSaving ? 'Saving...' : 'Save Changes';
+  const saveLabel = isUploading ? '업로드 중...' : isSaving ? '저장 중...' : '저장';
   const statusMessage = isLoadingQuery
-    ? 'Loading data...'
+    ? '데이터를 불러오는 중...'
     : isUploading
-      ? 'Uploading...'
+      ? '이미지를 업로드하는 중...'
       : isSaving
-        ? 'Saving...'
+        ? '저장하는 중...'
         : null;
 
   return (
     <ControlVariantProvider value="admin">
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Momozzang Admin</h1>
+        <h1 className={styles.title}>청첩장 관리자</h1>
         {/* A7: 슬러그 입력 + 불러오기 + 저장을 한 행(툴바)에 묶는다. */}
         <Panel
           toolbar={
@@ -220,11 +220,11 @@ export default function AdminPage() {
                 value={inputSlug}
                 onChange={(e) => setInputSlug(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
-                placeholder="Invitation Slug"
+                placeholder="청첩장 주소(슬러그)"
                 className={styles.slugInput}
               />
               <Button onClick={handleLoad} variant="secondary">
-                Load
+                불러오기
               </Button>
               <Button onClick={handleSave} disabled={isBusy || !invitation} variant="primary">
                 {saveLabel}
@@ -239,13 +239,13 @@ export default function AdminPage() {
       {invitation ? (
         <InvitationProvider data={invitation}>
           <div className={styles.content}>
-            <Panel title="Main Images">
+            <Panel title="대표 이미지">
               <div className={styles.grid}>
                 <div>
-                  <label className={styles.label}>Main Image</label>
+                  <label className={styles.label}>메인 이미지</label>
                   <ImageThumb
                     src={getPreviewUrl('main', savedValueOf(invitation, 'main'))}
-                    alt="Main"
+                    alt="메인 이미지"
                     ratio="portrait"
                     className={styles.previewImage}
                   />
@@ -259,10 +259,10 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className={styles.label}>Share Thumbnail (Kakao)</label>
+                  <label className={styles.label}>공유 썸네일(카카오)</label>
                   <ImageThumb
                     src={getPreviewUrl('share', savedValueOf(invitation, 'share'))}
-                    alt="Share"
+                    alt="공유 썸네일"
                     ratio="square"
                     className={styles.previewImage}
                   />
@@ -277,13 +277,13 @@ export default function AdminPage() {
               </div>
             </Panel>
 
-            <Panel title="Couple Images">
+            <Panel title="신랑·신부 이미지">
               <div className={styles.grid}>
                 <div>
-                  <label className={styles.label}>Groom</label>
+                  <label className={styles.label}>신랑 사진</label>
                   <ImageThumb
                     src={getPreviewUrl('groom', savedValueOf(invitation, 'groom'))}
-                    alt="Groom"
+                    alt="신랑 사진"
                     ratio="square"
                     className={styles.previewImage}
                   />
@@ -297,10 +297,10 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className={styles.label}>Bride</label>
+                  <label className={styles.label}>신부 사진</label>
                   <ImageThumb
                     src={getPreviewUrl('bride', savedValueOf(invitation, 'bride'))}
-                    alt="Bride"
+                    alt="신부 사진"
                     ratio="square"
                     className={styles.previewImage}
                   />
@@ -332,10 +332,10 @@ export default function AdminPage() {
       ) : (
         <div className={styles.loading}>
           {isLoadingQuery
-            ? 'Loading...'
+            ? '불러오는 중...'
             : isError
-              ? `Error: ${error.message}`
-              : 'Please enter a slug to load invitation.'}
+              ? `오류: ${error.message}`
+              : '슬러그를 입력한 뒤 불러오기를 눌러주세요.'}
         </div>
       )}
     </div>

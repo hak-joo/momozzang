@@ -37,7 +37,7 @@ export const PhotoItem = memo(
         >
           <ImageThumb
             src={thumbnailUrl}
-            alt="Gallery"
+            alt="사진첩 이미지"
             size="sm"
             ratio="square"
             className={styles.image}

@@ -96,7 +96,7 @@ export function GalleryManager({
 
   const handleDelete = useCallback(
     (id: string) => {
-      if (confirm('Are you sure you want to remove this photo?')) {
+      if (confirm('이 사진을 삭제할까요? 삭제한 사진은 되돌릴 수 없어요.')) {
         // ①: 삭제 책임을 부모로 위임. revoke(pending) / album 필터(기존) 모두 부모 한 곳에서.
         onRemoveItem(id);
       }
@@ -112,9 +112,7 @@ export function GalleryManager({
 
     // 20장 합산 제한(완료정의6). album.length = 기존+pending 합산 수.
     if (album.length + files.length > MAX_PHOTOS) {
-      alert(
-        `You can only upload up to ${MAX_PHOTOS} photos. Current: ${album.length}, trying to add: ${files.length}`,
-      );
+      alert(`사진은 최대 ${MAX_PHOTOS}장까지예요. 현재 ${album.length}장 + 추가 ${files.length}장`);
       event.target.value = '';
       return;
     }
@@ -135,7 +133,7 @@ export function GalleryManager({
 
   return (
     <div className={styles.manager}>
-      <h3 className={styles.header}>{`Gallery (${album.length}/${MAX_PHOTOS})`}</h3>
+      <h3 className={styles.header}>{`사진첩 (${album.length}/${MAX_PHOTOS})`}</h3>
       <div className={styles.controls}>
         <input
           type="file"
@@ -147,7 +145,7 @@ export function GalleryManager({
           ref={fileInputRef}
         />
         <Button onClick={handleButtonClick} disabled={disabled || isFull}>
-          Add Photos +
+          사진 추가 +
         </Button>
       </div>
 
