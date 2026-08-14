@@ -24,6 +24,7 @@ import {
   type ApplyUploadedKey,
 } from '../invitation/usePendingImages';
 import { createPhotoId } from '../invitation/galleryHelpers';
+import { toDateInputValue } from '../../shared/lib/dateInput';
 
 /** 혼주 4인 슬롯 키 (Parents의 Person 필드) */
 export type ParentSlot = 'groomFather' | 'groomMother' | 'brideFather' | 'brideMother';
@@ -208,6 +209,18 @@ function applySingleImage(
 }
 
 /**
+ * 폼 상태 진입 지점 방어(F1): `weddingHallInfo.date` 를 `input[type=date]` 가 받는 형식으로 정규화한다.
+ * 시드/불러오기 데이터가 `YYYY-M-D` 를 담고 있어도 폼이 빈칸이 되지 않고, 저장 시 비정규 값이
+ * 다시 나가지도 않는다. 이미 정규형이면 동일 참조를 반환해 불필요한 재렌더를 만들지 않는다.
+ */
+function withNormalizedDate(data: WeddingInvitation): WeddingInvitation {
+  const raw = data.weddingHallInfo?.date;
+  const normalized = toDateInputValue(raw);
+  if (normalized === raw) return data;
+  return { ...data, weddingHallInfo: { ...data.weddingHallInfo, date: normalized } };
+}
+
+/**
  * 신청 폼 단일 진실원천.
  * 폼 상태는 `WeddingInvitation` 객체 1개이며, 모든 setter는 새 객체 참조를 반환하는
  * 불변 업데이트로 동작한다 → `InvitationProvider`(useMemo([data]))가 재렌더되어 미리보기가 즉시 갱신된다.
@@ -215,7 +228,7 @@ function applySingleImage(
 export function useApplyForm() {
   // 깊은 복사로 시드(공유 상수)를 직접 변형하지 않도록 한다.
   const [invitation, setInvitation] = useState<WeddingInvitation>(() =>
-    structuredClone(exampleWeddingInvitation),
+    withNormalizedDate(structuredClone(exampleWeddingInvitation)),
   );
 
   // ── 지연 업로드 pending 레이어(F1·F2·F5·F7·F8) ──────────────────────────────
@@ -585,7 +598,7 @@ export function useApplyForm() {
 
   // ── F14: 불러오기 — 폼 전체를 불러온 데이터로 교체 ──────────────────────────
   const loadInvitation = useCallback((data: WeddingInvitation) => {
-    setInvitation(structuredClone(data));
+    setInvitation(withNormalizedDate(structuredClone(data)));
   }, []);
 
   // ── 단일 5슬롯 지연 선택(F1·F2·F5) — 업로드 없이 pending 에 보관만 ─────────────

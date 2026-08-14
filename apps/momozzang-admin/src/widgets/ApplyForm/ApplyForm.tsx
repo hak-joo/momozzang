@@ -16,6 +16,7 @@ import {
   type AboutUs,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { getSlugError } from '../../features/apply/validateSlug';
+import { toDateInputValue } from '../../shared/lib/dateInput';
 import type {
   AccountOwner,
   EtcField,
@@ -525,7 +526,8 @@ export function ApplyForm(props: Props) {
           <Input
             id="apply-date"
             type="date"
-            value={weddingHallInfo.date}
+            /* 렌더 시점 2차 방어(F1): 상태에 비정규 값이 들어와도 입력이 빈칸이 되지 않는다. */
+            value={toDateInputValue(weddingHallInfo.date)}
             onChange={(e) => onWeddingHallChange({ date: e.target.value })}
           />
         </div>
