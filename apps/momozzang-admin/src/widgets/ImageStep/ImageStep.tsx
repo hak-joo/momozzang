@@ -150,19 +150,26 @@ export function ImageStep({
                   styles.trackItem,
                   selectedTrackId === track.id && styles.trackItemSelected,
                 )}
-                onClick={() => onSelectTrack(track.id)}
                 data-testid={`bgm-track-${track.id}`}
               >
+                {/* 네이티브 라디오 위젯은 clip 으로 숨기고 `.trackItem` 을 시각 위젯으로 삼는다(F6·M1-B).
+                    display:none 이 아니라 clip 이라 키보드 포커스가 살아 있고, 포커스 단서는
+                    `.trackItem:focus-within` 이 뷰어 Button 과 같은 링으로 그린다(DoD 13 · 기준 25-b). */}
                 <input
                   type="radio"
+                  id={`bgm-track-input-${track.id}`}
+                  className={styles.trackRadio}
                   name="bgm-track"
                   checked={selectedTrackId === track.id}
                   onChange={() => onSelectTrack(track.id)}
                 />
-                <span className={styles.trackMeta}>
-                  <span className={styles.trackTitle}>{track.title}</span>
-                  <span className={styles.trackArtist}>{track.artist ?? '아티스트 미상'}</span>
-                </span>
+                <label className={styles.trackLabel} htmlFor={`bgm-track-input-${track.id}`}>
+                  <span className={styles.trackDot} aria-hidden="true" />
+                  <span className={styles.trackMeta}>
+                    <span className={styles.trackTitle}>{track.title}</span>
+                    <span className={styles.trackArtist}>{track.artist ?? '아티스트 미상'}</span>
+                  </span>
+                </label>
               </li>
             ))}
           </ul>

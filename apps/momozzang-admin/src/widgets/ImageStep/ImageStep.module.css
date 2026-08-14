@@ -53,17 +53,71 @@
 .trackItem {
   display: flex;
   align-items: center;
-  gap: 10px;
   padding: 10px 12px;
   border: 1px solid var(--color-line-200);
-  border-radius: 8px;
+  border-radius: var(--admin-control-radius);
   cursor: pointer;
   background: var(--color-basic-white);
 }
 
+/* N1(QA_FINDINGS_2) — 어드민 크롬에 남아 있던 마지막 테마색 소비 지점을 중립 토큰으로 바꾼다.
+   종전 --color-main-600 / --color-brand-tint-50 은 테마 팔레트라 PINK/PURPLE 을 따라 변했다
+   (SPEC §1.4 "어드민 크롬은 테마 무관 중립 토큰" 위반). 중립 보더 대비 6.30:1. */
 .trackItemSelected {
-  border-color: var(--color-main-600);
-  background: var(--color-brand-tint-50);
+  border-color: var(--color-neutral-700);
+  background: var(--color-bg-150);
+}
+
+/* clip 으로 숨긴 라디오의 포커스 단서(DoD 13 · 기준 25-b).
+   뷰어 Button 의 :focus-visible 과 같은 링이다. */
+.trackItem:focus-within {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* clip 패턴 — 시각적으로만 숨기고 키보드 포커스·라벨 클릭은 살린다(계약 3 §4.2). */
+.trackRadio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.trackLabel {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* 네이티브 라디오를 대신하는 시각 위젯. */
+.trackDot {
+  flex: none;
+  box-sizing: border-box;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--color-line-450);
+  border-radius: 50%;
+  background: var(--color-basic-white);
+}
+
+.trackItemSelected .trackDot {
+  border-color: var(--color-neutral-700);
+}
+
+.trackItemSelected .trackDot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--color-neutral-700);
 }
 
 .trackMeta {
