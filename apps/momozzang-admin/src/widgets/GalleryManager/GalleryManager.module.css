@@ -34,7 +34,7 @@
   aspect-ratio: 1/1;
   border-radius: 8px;
   overflow: hidden;
-  /* P2-5: 어두운 박스(#333) 대신 중립 배경 토큰 — 로드 전/실패 시에도 어드민 표면과 어울린다. */
+  /* P2-5: 어두운 박스 대신 중립 배경 토큰 — 로드 전/실패 시에도 어드민 표면과 어울린다. */
   background-color: var(--color-bg-150);
   touch-action: none;
   transform: translate3d(0, 0, 0);
@@ -57,8 +57,8 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  background: var(--color-scrim-600);
+  color: var(--color-basic-white);
   border: none;
   border-radius: 50%;
   width: 24px;
@@ -73,5 +73,5 @@
 }
 
 .deleteButton:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--color-scrim-800);
 }

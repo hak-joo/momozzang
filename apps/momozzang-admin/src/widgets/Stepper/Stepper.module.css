@@ -60,7 +60,7 @@
 }
 
 .step.active .index {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--color-basic-white25);
   color: var(--color-basic-white);
 }
 

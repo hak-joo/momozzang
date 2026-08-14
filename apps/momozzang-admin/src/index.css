@@ -10,8 +10,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-family: var(--font-PyeongChang);
-  color: #222;
-  background-color: #fff;
+  color: var(--color-neutral-870);
+  background-color: var(--color-bg-100);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
