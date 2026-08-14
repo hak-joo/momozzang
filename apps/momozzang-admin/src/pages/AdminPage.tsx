@@ -11,6 +11,7 @@ import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation
 import styles from './AdminPage.module.css';
 import { Panel } from '../shared/ui/Panel';
 import { ImageThumb } from '../shared/ui/ImageThumb';
+import { FileDropField } from '../shared/ui/FileDropField';
 import { useInvitationQuery } from '../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
 import { usePendingImages, type ApplyUploadedKey } from '../features/invitation/usePendingImages';
@@ -241,77 +242,69 @@ export default function AdminPage() {
           <div className={styles.content}>
             <Panel title="대표 이미지">
               <div className={styles.grid}>
-                <div>
-                  <label className={styles.label}>메인 이미지</label>
+                <FileDropField
+                  slot="main"
+                  id="admin-file-main"
+                  label="메인 이미지"
+                  disabled={isBusy}
+                  onFiles={(files) => handleSingleSelect(files[0], 'main')}
+                >
                   <ImageThumb
                     src={getPreviewUrl('main', savedValueOf(invitation, 'main'))}
                     alt="메인 이미지"
                     ratio="portrait"
                     className={styles.previewImage}
                   />
-                  <input
-                    type="file"
-                    onChange={(e) =>
-                      e.target.files?.[0] && handleSingleSelect(e.target.files[0], 'main')
-                    }
-                    disabled={isBusy}
-                  />
-                </div>
+                </FileDropField>
 
-                <div>
-                  <label className={styles.label}>공유 썸네일(카카오)</label>
+                <FileDropField
+                  slot="share"
+                  id="admin-file-share"
+                  label="공유 썸네일(카카오)"
+                  disabled={isBusy}
+                  onFiles={(files) => handleSingleSelect(files[0], 'share')}
+                >
                   <ImageThumb
                     src={getPreviewUrl('share', savedValueOf(invitation, 'share'))}
                     alt="공유 썸네일"
                     ratio="square"
                     className={styles.previewImage}
                   />
-                  <input
-                    type="file"
-                    onChange={(e) =>
-                      e.target.files?.[0] && handleSingleSelect(e.target.files[0], 'share')
-                    }
-                    disabled={isBusy}
-                  />
-                </div>
+                </FileDropField>
               </div>
             </Panel>
 
             <Panel title="신랑·신부 이미지">
               <div className={styles.grid}>
-                <div>
-                  <label className={styles.label}>신랑 사진</label>
+                <FileDropField
+                  slot="groom"
+                  id="admin-file-groom"
+                  label="신랑 사진"
+                  disabled={isBusy}
+                  onFiles={(files) => handleSingleSelect(files[0], 'groom')}
+                >
                   <ImageThumb
                     src={getPreviewUrl('groom', savedValueOf(invitation, 'groom'))}
                     alt="신랑 사진"
                     ratio="square"
                     className={styles.previewImage}
                   />
-                  <input
-                    type="file"
-                    onChange={(e) =>
-                      e.target.files?.[0] && handleSingleSelect(e.target.files[0], 'groom')
-                    }
-                    disabled={isBusy}
-                  />
-                </div>
+                </FileDropField>
 
-                <div>
-                  <label className={styles.label}>신부 사진</label>
+                <FileDropField
+                  slot="bride"
+                  id="admin-file-bride"
+                  label="신부 사진"
+                  disabled={isBusy}
+                  onFiles={(files) => handleSingleSelect(files[0], 'bride')}
+                >
                   <ImageThumb
                     src={getPreviewUrl('bride', savedValueOf(invitation, 'bride'))}
                     alt="신부 사진"
                     ratio="square"
                     className={styles.previewImage}
                   />
-                  <input
-                    type="file"
-                    onChange={(e) =>
-                      e.target.files?.[0] && handleSingleSelect(e.target.files[0], 'bride')
-                    }
-                    disabled={isBusy}
-                  />
-                </div>
+                </FileDropField>
               </div>
             </Panel>
 
