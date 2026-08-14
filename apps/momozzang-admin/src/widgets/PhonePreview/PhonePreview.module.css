@@ -35,6 +35,13 @@
   /* 새 containing block 생성:
      청첩장 내부의 position:fixed(Header)와 100vh 기반 레이아웃이 이 프레임 안에 갇히게 한다. */
   transform: translateZ(0);
+  /* 노치 safe-area(F3). 실기기와 동일하게 노치는 베젤에 남고 콘텐츠가 그 아래에서 시작한다.
+     노치 bottom 은 .screen 기준 28px(frame top 14 + height 26 - frame padding 12)이므로
+     헤더 top 을 30px 로 내리면 겹침이 0 이 된다. left 0 은 헤더 박스를 .screen 폭에 정확히 맞춰
+     마지막 탭이 프레임 밖으로 나가지 않게 한다. 67px = 30 + (뷰어의 header top 13 -> 본문 50 간격 37). */
+  --invitation-header-top: 30px;
+  --invitation-header-left: 0px;
+  --invitation-content-top: 67px;
   /* 청첩장 본문 폰트(PyeongChang)를 프레임 안에서만 적용 — 폼/스텝퍼 오염 방지 */
   font-family: var(--font-PyeongChang, 'PyeongChang', 'Noto Sans KR', sans-serif);
   color: var(--color-neutral-870);
