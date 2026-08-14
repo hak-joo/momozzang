@@ -1,5 +1,8 @@
+/* `width: 100%` 이던 것을 `auto` 로 바꾼다.
+   상단바(`.topbar`)는 `flex-wrap: wrap` 인 flex 컨테이너라 스텝퍼가 100% 를 차지하면
+   이전/다음 내비가 반드시 둘째 줄로 밀려 상단바가 127px 이 됐다(계약 3 §0.4 · DoD 8). */
 .stepper {
-  width: 100%;
+  width: auto;
 }
 
 .list {

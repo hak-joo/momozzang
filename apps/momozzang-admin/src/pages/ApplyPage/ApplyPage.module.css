@@ -5,6 +5,11 @@
   font-family: var(--font-PyeongChang);
   display: flex;
   flex-direction: column;
+  /* sticky offset SSOT(계약 3 §4.6). 종전 `.previewPane { top: 96px }` 은 손으로 적은 상수라
+     실제 상단바 높이(127px)와 31px 어긋나 스크롤 시 프레임 상단이 가려졌다(DoD 11).
+     값은 상단바의 **자연 높이**와 같다: padding 16*2 + 내용 40 + border 1 = 73.
+     자연 높이보다 크게 잡으면 상단바가 다시 늘어나 기준 39 의 이동량 식이 깨진다(§6 R14). */
+  --apply-topbar-height: 73px;
 }
 
 .topbar {
@@ -19,6 +24,10 @@
   top: 0;
   z-index: 20;
   flex-wrap: wrap;
+  /* min-height 는 "떠받치는" 용도가 아니라 변수와 실제 높이가 같음을 고정하는 용도다.
+     이 저장소에는 전역 box-sizing 리셋이 없으므로 명시한다. */
+  box-sizing: border-box;
+  min-height: var(--apply-topbar-height);
 }
 
 .stepNav {
@@ -63,7 +72,8 @@
   display: flex;
   justify-content: center;
   position: sticky;
-  top: 96px;
+  /* `.topbar` 와 **같은 변수**를 소비한다 — 상수 중복이 만들던 sticky offset 불일치 해소. */
+  top: calc(var(--apply-topbar-height) + 16px);
 }
 
 .formPane {
