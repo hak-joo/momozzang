@@ -52,9 +52,10 @@
   gap: 20px;
 }
 
-.label {
-  display: block;
-  margin-bottom: 8px;
+/* 이미지 슬롯 라벨은 FileDropField 가 담당한다(F6). 여기 남은 `.toolbarLabel` 은 툴바의
+   슬러그 입력 라벨이다 — 툴바가 한 행이므로 아래 여백 없이 인라인으로 둔다. */
+.toolbarLabel {
+  flex: none;
   font-size: var(--font-size-14);
   /* DoD 17 전반부 — 흰 표면 대비 6.31:1 (종전 --color-neutral-450 은 2.67:1 로 AA 미달). */
   color: var(--color-neutral-700);

@@ -217,7 +217,13 @@ export default function AdminPage() {
         <Panel
           toolbar={
             <>
+              {/* DoD 22 — 화면의 모든 폼 컨트롤이 label[for] 로 연결된다.
+                  placeholder 는 입력이 시작되면 사라지므로 접근 가능한 이름의 근거가 아니다. */}
+              <label className={styles.toolbarLabel} htmlFor="admin-slug">
+                청첩장 주소
+              </label>
               <Input
+                id="admin-slug"
                 value={inputSlug}
                 onChange={(e) => setInputSlug(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
