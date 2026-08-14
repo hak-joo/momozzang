@@ -17,7 +17,6 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { ImageThumb } from '../../shared/ui/ImageThumb';
@@ -135,7 +134,7 @@ export function GalleryManager({
   const activePhoto = activeId ? album.find((p) => p.id === activeId) : null;
 
   return (
-    <Box variant="primary">
+    <div className={styles.manager}>
       <h3 className={styles.header}>{`Gallery (${album.length}/${MAX_PHOTOS})`}</h3>
       <div className={styles.controls}>
         <input
@@ -201,6 +200,6 @@ export function GalleryManager({
           ) : null}
         </DragOverlay>
       </DndContext>
-    </Box>
+    </div>
   );
 }

@@ -1,10 +1,21 @@
+/* 표면(면·보더·그림자·패딩)은 호스트가 준다 — /admin 은 Panel, /apply 는 .section.
+   자체 Box 를 갖고 있던 것이 /apply 스텝②의 "카드 안 카드" 원인이었다(계약 §4.4). */
+.manager {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
 .header {
-  margin: 0 0 16px 0;
-  font-size: var(--font-size-18);
+  margin: 0;
+  font-size: var(--font-size-16);
+  font-weight: 700;
+  color: var(--color-neutral-900);
 }
 
 .controls {
-  margin-bottom: 16px;
+  margin: 0;
 }
 
 .hiddenInput {
