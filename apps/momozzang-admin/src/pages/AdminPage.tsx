@@ -6,6 +6,7 @@ import {
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
+import { ControlVariantProvider } from '@momozzang/ui/src/shared/ui/ControlVariant';
 import { GalleryManager } from '../widgets/GalleryManager/GalleryManager';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
 import styles from './AdminPage.module.css';
@@ -200,6 +201,7 @@ export default function AdminPage() {
   const saveLabel = isUploading ? 'Uploading...' : isSaving ? 'Saving...' : 'Save Changes';
 
   return (
+    <ControlVariantProvider value="admin">
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Momozzang Admin</h1>
@@ -327,5 +329,6 @@ export default function AdminPage() {
         </div>
       )}
     </div>
+    </ControlVariantProvider>
   );
 }

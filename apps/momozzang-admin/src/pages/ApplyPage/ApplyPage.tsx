@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
+import { ControlVariantProvider } from '@momozzang/ui/src/shared/ui/ControlVariant';
 import { Stepper, type StepItem } from '../../widgets/Stepper/Stepper';
 import { PhonePreview } from '../../widgets/PhonePreview/PhonePreview';
 import { ApplyForm } from '../../widgets/ApplyForm/ApplyForm';
@@ -67,7 +68,10 @@ export default function ApplyPage() {
     loadInvitation,
   } = useApplyForm();
 
+  // 어드민 크롬(스텝퍼/폼 패널)의 폼 컨트롤을 admin 시각 언어로 세운다.
+  // 좌측 폰 미리보기 내부는 PhonePreview 가 다시 `invitation` 으로 되돌린다.
   return (
+    <ControlVariantProvider value="admin">
     <div className={styles.page}>
       <header className={styles.topbar}>
         <Stepper steps={STEPS} current={step} onStepClick={setStep} />
@@ -200,5 +204,6 @@ export default function ApplyPage() {
         </main>
       </div>
     </div>
+    </ControlVariantProvider>
   );
 }
