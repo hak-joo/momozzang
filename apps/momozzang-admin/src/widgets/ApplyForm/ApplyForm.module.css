@@ -37,6 +37,13 @@
   color: var(--color-neutral-700);
 }
 
+/* 필수 입력 표식(DoD 23). `aria-hidden="true"` 라 접근 가능한 이름에 섞이지 않는다 —
+   필수 정보는 컨트롤의 `aria-required` 가 전달한다(§6 R9). */
+.requiredMark {
+  margin-left: 2px;
+  color: var(--color-danger-600);
+}
+
 .hint {
   margin: 0;
   font-size: var(--font-size-12);
