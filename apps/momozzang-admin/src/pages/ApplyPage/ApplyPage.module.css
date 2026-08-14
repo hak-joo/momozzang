@@ -71,6 +71,9 @@
 .previewPane {
   display: flex;
   justify-content: center;
+  /* grid 아이템의 자동 최소 크기(auto)가 `.frame` 의 375px 기여분으로 잡히면
+     360/390 에서 트랙이 줄지 않아 가로 스크롤이 생긴다(DoD 9). */
+  min-width: 0;
   position: sticky;
   /* `.topbar` 와 **같은 변수**를 소비한다 — 상수 중복이 만들던 sticky offset 불일치 해소. */
   top: calc(var(--apply-topbar-height) + 16px);

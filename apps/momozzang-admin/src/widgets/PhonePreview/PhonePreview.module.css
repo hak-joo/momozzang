@@ -1,6 +1,8 @@
 .frame {
   position: relative;
-  width: 375px;
+  /* 1440 에서 `.previewPane` 트랙은 minmax(399px, 440px) 이라 min() 이 375 로 해석된다 —
+     넓은 폭의 프레임 크기는 불변이다. 좁은 폭(360/390)에서만 컨테이너를 따라 줄어든다(§6 R8). */
+  width: min(375px, 100%);
   max-width: 100%;
   aspect-ratio: 375 / 780;
   background: var(--color-bg-dark);
