@@ -23,7 +23,8 @@
   aspect-ratio: 1/1;
   border-radius: 8px;
   overflow: hidden;
-  background-color: var(--color-neutral-850);
+  /* P2-5: 어두운 박스(#333) 대신 중립 배경 토큰 — 로드 전/실패 시에도 어드민 표면과 어울린다. */
+  background-color: var(--color-bg-150);
   touch-action: none;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -34,6 +35,11 @@
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+}
+
+/* 앨범 0장일 때의 점선 빈 상태 슬롯(F2). 그리드 첫 칸 크기를 그대로 차지한다. */
+.emptySlot {
+  max-width: 160px;
 }
 
 .deleteButton {

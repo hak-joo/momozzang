@@ -7,6 +7,7 @@ import {
   type WeddingInvitation,
   type ThemeColorOptions,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+import { ImageThumb } from '../../shared/ui/ImageThumb';
 import { GalleryManager } from '../GalleryManager/GalleryManager';
 import {
   MOOD_OPTIONS,
@@ -73,9 +74,7 @@ function ImageUploadField({
   return (
     <div className={styles.imageField}>
       <span className={styles.imageLabel}>{label}</span>
-      {previewUrl && (
-        <img src={previewUrl} alt={label} className={styles.thumb} loading="lazy" />
-      )}
+      <ImageThumb src={previewUrl} alt={label} ratio="landscape" />
       <input
         type="file"
         accept="image/*"

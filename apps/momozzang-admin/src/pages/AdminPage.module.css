@@ -56,20 +56,9 @@
   color: var(--color-neutral-450);
 }
 
+/* 표면(비율·배경·보더)은 ImageThumb 가 담당한다. 여기서는 간격만 준다. */
 .previewImage {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 8px;
   margin-bottom: 8px;
-  background: var(--color-neutral-850);
-}
-
-.previewMain {
-  aspect-ratio: 2/3;
-}
-
-.previewSquare {
-  aspect-ratio: 1/1;
 }
 
 @media (max-width: 768px) {

@@ -9,7 +9,7 @@ import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { GalleryManager } from '../widgets/GalleryManager/GalleryManager';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
 import styles from './AdminPage.module.css';
-import { clsx } from 'clsx';
+import { ImageThumb } from '../shared/ui/ImageThumb';
 import { useInvitationQuery } from '../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
 import { usePendingImages, type ApplyUploadedKey } from '../features/invitation/usePendingImages';
@@ -233,14 +233,12 @@ export default function AdminPage() {
               <div className={styles.grid}>
                 <div>
                   <label className={styles.label}>Main Image</label>
-                  {getPreviewUrl('main', savedValueOf(invitation, 'main')) && (
-                    <img
-                      src={getPreviewUrl('main', savedValueOf(invitation, 'main'))}
-                      alt="Main"
-                      className={clsx(styles.previewImage, styles.previewMain)}
-                      loading="lazy"
-                    />
-                  )}
+                  <ImageThumb
+                    src={getPreviewUrl('main', savedValueOf(invitation, 'main'))}
+                    alt="Main"
+                    ratio="portrait"
+                    className={styles.previewImage}
+                  />
                   <input
                     type="file"
                     onChange={(e) =>
@@ -252,14 +250,12 @@ export default function AdminPage() {
 
                 <div>
                   <label className={styles.label}>Share Thumbnail (Kakao)</label>
-                  {getPreviewUrl('share', savedValueOf(invitation, 'share')) && (
-                    <img
-                      src={getPreviewUrl('share', savedValueOf(invitation, 'share'))}
-                      alt="Share"
-                      className={clsx(styles.previewImage, styles.previewSquare)}
-                      loading="lazy"
-                    />
-                  )}
+                  <ImageThumb
+                    src={getPreviewUrl('share', savedValueOf(invitation, 'share'))}
+                    alt="Share"
+                    ratio="square"
+                    className={styles.previewImage}
+                  />
                   <input
                     type="file"
                     onChange={(e) =>
@@ -276,14 +272,12 @@ export default function AdminPage() {
               <div className={styles.grid}>
                 <div>
                   <label className={styles.label}>Groom</label>
-                  {getPreviewUrl('groom', savedValueOf(invitation, 'groom')) && (
-                    <img
-                      src={getPreviewUrl('groom', savedValueOf(invitation, 'groom'))}
-                      alt="Groom"
-                      className={clsx(styles.previewImage, styles.previewSquare)}
-                      loading="lazy"
-                    />
-                  )}
+                  <ImageThumb
+                    src={getPreviewUrl('groom', savedValueOf(invitation, 'groom'))}
+                    alt="Groom"
+                    ratio="square"
+                    className={styles.previewImage}
+                  />
                   <input
                     type="file"
                     onChange={(e) =>
@@ -295,14 +289,12 @@ export default function AdminPage() {
 
                 <div>
                   <label className={styles.label}>Bride</label>
-                  {getPreviewUrl('bride', savedValueOf(invitation, 'bride')) && (
-                    <img
-                      src={getPreviewUrl('bride', savedValueOf(invitation, 'bride'))}
-                      alt="Bride"
-                      className={clsx(styles.previewImage, styles.previewSquare)}
-                      loading="lazy"
-                    />
-                  )}
+                  <ImageThumb
+                    src={getPreviewUrl('bride', savedValueOf(invitation, 'bride'))}
+                    alt="Bride"
+                    ratio="square"
+                    className={styles.previewImage}
+                  />
                   <input
                     type="file"
                     onChange={(e) =>

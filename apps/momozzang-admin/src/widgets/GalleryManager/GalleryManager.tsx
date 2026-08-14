@@ -20,6 +20,7 @@ import {
 import { Box } from '@momozzang/ui/src/shared/ui/Box/Box';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+import { ImageThumb } from '../../shared/ui/ImageThumb';
 import { SortableImage, PhotoItem } from './SortableImage';
 import styles from './GalleryManager.module.css';
 
@@ -163,6 +164,19 @@ export function GalleryManager({
           },
         }}
       >
+        {album.length === 0 && (
+          <div className={styles.grid}>
+            {/* 빈 상태(F2): 빈 그리드 대신 점선 슬롯으로 "여기에 등록"임을 알린다. */}
+            <ImageThumb
+              alt="사진첩 빈 상태"
+              size="sm"
+              ratio="square"
+              className={styles.emptySlot}
+              emptyLabel="여기에 사진을 등록하세요"
+            />
+          </div>
+        )}
+
         <SortableContext items={album.map((p) => p.id)} strategy={rectSortingStrategy}>
           <div className={styles.grid}>
             {album.map((photo) => (

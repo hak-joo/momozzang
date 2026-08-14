@@ -50,15 +50,7 @@
   color: var(--color-neutral-700);
 }
 
-.thumb {
-  width: 100%;
-  max-width: 160px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid var(--color-line-200);
-  background: var(--color-bg-150);
-}
+/* 썸네일 표면은 ImageThumb(3상태 슬롯)가 담당한다 — 여기의 .thumb 규칙은 제거됐다. */
 
 .uploading {
   font-size: var(--font-size-12);
