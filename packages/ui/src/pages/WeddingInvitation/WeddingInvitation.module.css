@@ -11,7 +11,11 @@
 }
 
 .main.scoped .decorator {
-  height: 100%;
+  /* .decorator 는 box-sizing:content-box + border 2px 이라 실박스가 (높이 + 4px)다.
+     스코프 미리보기에서는 이 4px 때문에 .screen 이 4px 스크롤돼 하단이 잘렸다(P2-6).
+     4px = border-width 2px × 2. 뷰어(.scoped 없음)는 이 선택자에 걸리지 않아 완전 불변이고,
+     가로 폭 16px 도 뷰어와 동일하게 유지된다. */
+  height: calc(100% - 4px);
 }
 
 .main.scoped .mainWrapper {
