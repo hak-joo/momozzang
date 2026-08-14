@@ -3,6 +3,8 @@ import styles from './Gallery.module.css';
 
 import * as Dialog from '@shared/ui/Dialog';
 import { buildImageUrl } from '@shared/lib/imageUrl';
+import { SafeImage } from '@shared/ui/SafeImage';
+import { useIsPreviewMode } from '@entities/WeddingInvitation/Context';
 import type { GalleryImage } from './types';
 
 type CarouselProps = {
@@ -13,6 +15,7 @@ type CarouselProps = {
 
 export function Carousel({ images, startIndex, onClose }: CarouselProps) {
   const [index, setIndex] = useState(startIndex);
+  const isPreview = useIsPreviewMode();
 
   const prev = () => setIndex((i) => (i > 0 ? i - 1 : i));
   const next = () => setIndex((i) => (i < images.length - 1 ? i + 1 : i));
@@ -24,10 +27,11 @@ export function Carousel({ images, startIndex, onClose }: CarouselProps) {
           <button className={styles.carouselButton} onClick={prev} disabled={index === 0}>
             &lt;
           </button>
-          <img
+          <SafeImage
             className={styles.carouselImage}
             src={buildImageUrl(images[index].url)}
             alt={images[index].alt ?? ''}
+            fallback={isPreview}
           />
           <button
             className={styles.carouselButton}
