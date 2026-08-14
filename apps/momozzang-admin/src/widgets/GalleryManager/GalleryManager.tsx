@@ -17,9 +17,9 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { ImageThumb } from '../../shared/ui/ImageThumb';
+import { FileDropField } from '../../shared/ui/FileDropField';
 import { SortableImage, PhotoItem } from './SortableImage';
 import styles from './GalleryManager.module.css';
 
@@ -104,29 +104,22 @@ export function GalleryManager({
     [onRemoveItem],
   );
 
-  // F1: 파일 선택 → 업로드 없이 부모에게 File 들만 위임(부모가 pending + placeholder 추가).
-  const handleSelectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = event.target.files;
-    if (!fileList || fileList.length === 0) return;
-    const files = Array.from(fileList);
-
-    // 20장 합산 제한(완료정의6). album.length = 기존+pending 합산 수.
-    if (album.length + files.length > MAX_PHOTOS) {
-      alert(`사진은 최대 ${MAX_PHOTOS}장까지예요. 현재 ${album.length}장 + 추가 ${files.length}장`);
-      event.target.value = '';
-      return;
-    }
-
-    onAddFiles(files);
-    // 같은 파일 재선택을 허용하기 위해 input 리셋.
-    event.target.value = '';
-  };
+  // F1: 파일 선택/드롭 → 업로드 없이 부모에게 File 들만 위임(부모가 pending + placeholder 추가).
+  const handleSelectFiles = useCallback(
+    (files: File[]) => {
+      // 20장 합산 제한(완료정의6). album.length = 기존+pending 합산 수.
+      if (album.length + files.length > MAX_PHOTOS) {
+        alert(
+          `사진은 최대 ${MAX_PHOTOS}장까지예요. 현재 ${album.length}장 + 추가 ${files.length}장`,
+        );
+        return;
+      }
+      onAddFiles(files);
+    },
+    [album.length, onAddFiles],
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
 
   const isFull = album.length >= MAX_PHOTOS;
   const activePhoto = activeId ? album.find((p) => p.id === activeId) : null;
@@ -134,20 +127,19 @@ export function GalleryManager({
   return (
     <div className={styles.manager}>
       <h3 className={styles.header}>{`사진첩 (${album.length}/${MAX_PHOTOS})`}</h3>
-      <div className={styles.controls}>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleSelectFiles}
-          disabled={disabled || isFull}
-          className={styles.hiddenInput}
-          ref={fileInputRef}
-        />
-        <Button onClick={handleButtonClick} disabled={disabled || isFull}>
-          사진 추가 +
-        </Button>
-      </div>
+      {/* F6: 네이티브 위젯 대신 드롭존. `사진 추가 +` 버튼은 종전과 같이 인풋을 click() 으로
+          트리거한다(§6 R11). 인풋은 display:none 이 아니라 clip 이라 키보드 포커스가 살아 있다. */}
+      <FileDropField
+        slot="gallery"
+        id="gallery-file-input"
+        label="사진 추가"
+        buttonLabel="사진 추가 +"
+        hint="여러 장을 한 번에 고르거나 이곳에 끌어다 놓을 수 있어요(최대 20장)."
+        multiple
+        disabled={disabled || isFull}
+        onFiles={handleSelectFiles}
+        inputRef={fileInputRef}
+      />
 
       <DndContext
         sensors={sensors}

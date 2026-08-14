@@ -14,13 +14,8 @@
   color: var(--color-neutral-900);
 }
 
-.controls {
-  margin: 0;
-}
-
-.hiddenInput {
-  display: none;
-}
+/* 파일 추가 조작면(`.controls` / `.hiddenInput`)은 FileDropField 가 담당한다(F6).
+   `display:none` 이던 인풋이 clip 숨김으로 바뀌어 키보드 포커스가 살아났다(계약 3 §4.2). */
 
 .grid {
   display: grid;
