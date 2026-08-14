@@ -37,28 +37,9 @@
   gap: 16px;
 }
 
-.imageField {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px;
-  border: 1px dashed var(--color-line-300);
-  border-radius: 10px;
-  background: var(--color-bg-50);
-}
-
-.imageLabel {
-  font-size: var(--font-size-13);
-  font-weight: 600;
-  color: var(--color-neutral-700);
-}
-
-/* 썸네일 표면은 ImageThumb(3상태 슬롯)가 담당한다 — 여기의 .thumb 규칙은 제거됐다. */
-
-.uploading {
-  font-size: var(--font-size-12);
-  color: var(--color-main-600);
-}
+/* 단일 이미지 슬롯의 표면은 FileDropField 가 담당한다(F6).
+   여기 있던 `.imageField`(radius 10px — 체계에 없는 값 · QA_FINDINGS_2 N1)와 `.imageLabel`
+   은 제거됐다. 썸네일 표면은 ImageThumb(3상태 슬롯)가 담당한다. */
 
 .trackList {
   list-style: none;

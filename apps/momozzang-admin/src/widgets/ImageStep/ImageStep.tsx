@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { clsx } from 'clsx';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
 import { Select } from '@momozzang/ui/src/shared/ui/Select';
@@ -8,6 +7,7 @@ import {
   type ThemeColorOptions,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { ImageThumb } from '../../shared/ui/ImageThumb';
+import { FileDropField } from '../../shared/ui/FileDropField';
 import { GalleryManager } from '../GalleryManager/GalleryManager';
 import {
   MOOD_OPTIONS,
@@ -46,9 +46,13 @@ const SINGLE_IMAGE_SLOTS: Array<{ slot: SingleImageSlot; label: string; preview:
 ];
 
 /**
- * 단일 이미지 슬롯 필드(F1·F2·F5).
- * 파일 선택 시 R2 업로드를 하지 않고 부모(useApplyForm)의 setSingleImagePending 만 호출한다.
+ * 단일 이미지 슬롯 필드(F1·F2·F5 · F6).
+ * 파일 선택/드롭 시 R2 업로드를 하지 않고 부모(useApplyForm)의 setSingleImagePending 만 호출한다.
  * 썸네일 src 는 getSinglePreviewUrl(slot)(=pending blob 우선, 없으면 저장 키).
+ *
+ * 조작면은 `FileDropField` 가 담당한다 — 네이티브 위젯은 clip 으로 숨기고 한국어 라벨·버튼·
+ * 드래그&드롭을 제공한다(계약 3 F6). `ImageThumb`(3상태 슬롯)은 손대지 않고 children 으로 넣어
+ * 스프린트 1 의 `[data-image-thumb]`·`data-state` 측정이 그대로 유지되게 한다(§6 R12).
  */
 function ImageUploadField({
   slot,
@@ -61,27 +65,16 @@ function ImageUploadField({
   previewUrl: string;
   onSelect: (slot: SingleImageSlot, file: File) => void;
 }) {
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      onSelect(slot, file); // 업로드 없음 — pending 보관 + blob previewUrl 만.
-      e.target.value = ''; // 같은 파일 재선택 허용.
-    },
-    [slot, onSelect],
-  );
-
   return (
-    <div className={styles.imageField}>
-      <span className={styles.imageLabel}>{label}</span>
+    <FileDropField
+      slot={slot}
+      id={`apply-file-${slot}`}
+      label={label}
+      onFiles={(files) => onSelect(slot, files[0])}
+      inputTestId={`image-upload-${slot}`}
+    >
       <ImageThumb src={previewUrl} alt={label} ratio="landscape" />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleChange}
-        data-testid={`image-upload-${slot}`}
-      />
-    </div>
+    </FileDropField>
   );
 }
 
