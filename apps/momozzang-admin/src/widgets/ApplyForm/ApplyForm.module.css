@@ -5,14 +5,17 @@
   font-family: var(--font-PyeongChang);
 }
 
+/* 표면 값은 /admin 의 Panel 과 **같은 토큰**에서 온다(DoD 14 — 두 화면 카드 표면 SSOT). */
 .section {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 20px;
-  border: 1px solid var(--color-line-200);
-  border-radius: 12px;
-  background: var(--color-basic-white);
+  box-sizing: border-box;
+  padding: var(--admin-surface-padding);
+  border: var(--admin-surface-border);
+  border-radius: var(--admin-surface-radius);
+  background: var(--admin-surface-bg);
+  box-shadow: var(--admin-surface-shadow);
 }
 
 .sectionTitle {
