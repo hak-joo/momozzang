@@ -33,7 +33,7 @@ export const MOCK_GALLERY_LIST: GalleryImage[] = [
   },
   {
     id: '7',
-    url: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=600',
+    url: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600',
     alt: '샘플7',
   },
   {
@@ -78,7 +78,7 @@ export const MOCK_GALLERY_LIST: GalleryImage[] = [
   },
   {
     id: '16',
-    url: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=600',
+    url: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600',
     alt: '샘플17',
   },
   {
