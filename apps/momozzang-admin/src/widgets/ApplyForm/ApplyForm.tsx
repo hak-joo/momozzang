@@ -63,11 +63,17 @@ interface Props {
   onRsvpPerSideIncludeChange: (side: Side, patch: Partial<RsvpSettings['include']>) => void;
   // 소개 (F13)
   onAboutUsChange: (patch: Partial<AboutUs>) => void;
-  // 신청 메타데이터 (F3)
-  applicantContact: string;
-  editPassword: string;
-  onApplicantContactChange: (value: string) => void;
-  onEditPasswordChange: (value: string) => void;
+  /**
+   * 신청 메타데이터 (F3) — **넷을 모두 넘길 때만** `신청 정보` 섹션이 렌더된다.
+   *
+   * `/apply` 는 넷을 그대로 넘기므로 화면이 바뀌지 않는다. `/edit` 은 넘기지 않는다 —
+   * 편집 저장 경로(`updateInvitationWithPassword`)는 본문 `data` 만 갱신하므로 그 두 입력을
+   * 노출하면 타이핑은 되지만 저장에 아무 영향이 없는 죽은 입력이 된다.
+   */
+  applicantContact?: string;
+  editPassword?: string;
+  onApplicantContactChange?: (value: string) => void;
+  onEditPasswordChange?: (value: string) => void;
 }
 
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -387,43 +393,49 @@ export function ApplyForm(props: Props) {
         </div>
       </section>
 
-      {/* 신청 정보 (F3) — 청첩장 본문이 아니라 신청 메타데이터 */}
-      <section className={styles.section}>
-        <h3 className={styles.sectionTitle}>신청 정보</h3>
+      {/* 신청 정보 (F3) — 청첩장 본문이 아니라 신청 메타데이터.
+          신청 메타 props 넷이 모두 주어진 화면(`/apply`)에서만 렌더한다. */}
+      {applicantContact !== undefined &&
+        editPassword !== undefined &&
+        onApplicantContactChange !== undefined &&
+        onEditPasswordChange !== undefined && (
+          <section className={styles.section}>
+            <h3 className={styles.sectionTitle}>신청 정보</h3>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="apply-applicant-contact">
-            신청자 연락처
-          </label>
-          <Input
-            id="apply-applicant-contact"
-            value={applicantContact}
-            onChange={(e) => onApplicantContactChange(e.target.value)}
-            placeholder="예: 010-0000-0000"
-            maxLength={100}
-            aria-required="true"
-          />
-          <p className={styles.hint}>승인 결과를 안내받을 연락처입니다. 관리자만 확인합니다.</p>
-        </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="apply-applicant-contact">
+                신청자 연락처
+              </label>
+              <Input
+                id="apply-applicant-contact"
+                value={applicantContact}
+                onChange={(e) => onApplicantContactChange(e.target.value)}
+                placeholder="예: 010-0000-0000"
+                maxLength={100}
+                aria-required="true"
+              />
+              <p className={styles.hint}>승인 결과를 안내받을 연락처입니다. 관리자만 확인합니다.</p>
+            </div>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="apply-edit-password">
-            편집 비밀번호
-          </label>
-          <Input
-            id="apply-edit-password"
-            type="password"
-            value={editPassword}
-            onChange={(e) => onEditPasswordChange(e.target.value)}
-            maxLength={64}
-            aria-required="true"
-            autoComplete="new-password"
-          />
-          <p className={styles.hint}>
-            신청 후 청첩장을 수정할 때 사용합니다. 8자 이상 64자 이하로 입력해 주세요.
-          </p>
-        </div>
-      </section>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="apply-edit-password">
+                편집 비밀번호
+              </label>
+              <Input
+                id="apply-edit-password"
+                type="password"
+                value={editPassword}
+                onChange={(e) => onEditPasswordChange(e.target.value)}
+                maxLength={64}
+                aria-required="true"
+                autoComplete="new-password"
+              />
+              <p className={styles.hint}>
+                신청 후 청첩장을 수정할 때 사용합니다. 8자 이상 64자 이하로 입력해 주세요.
+              </p>
+            </div>
+          </section>
+        )}
 
       {/* 주문자 정보 (F3) */}
       <section className={styles.section}>
