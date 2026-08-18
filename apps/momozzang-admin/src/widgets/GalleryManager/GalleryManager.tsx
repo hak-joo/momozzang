@@ -49,6 +49,12 @@ interface GalleryManagerProps {
   getThumbnailUrl: (item: AlbumPhoto) => string;
   /** 업로드/저장 진행 중 추가/삭제/정렬 잠금. */
   disabled?: boolean;
+  /**
+   * 카드 제목 바로 아래 보조 설명. **호스트가 별도 제목을 달지 않게** 하기 위한 통로다 —
+   * `/apply` 는 종전에 `갤러리` 라는 섹션 제목을 따로 달아 `사진첩 (n/20)` 과 제목이
+   * 이중화돼 있었고 `/admin` 과 규칙이 어긋났다(QA_FINDINGS_3 N4).
+   */
+  description?: string;
 }
 
 export function GalleryManager({
@@ -58,6 +64,7 @@ export function GalleryManager({
   onRemoveItem,
   getThumbnailUrl,
   disabled = false,
+  description,
 }: GalleryManagerProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const toast = useAdminToast();
@@ -142,6 +149,7 @@ export function GalleryManager({
   return (
     <div className={styles.manager}>
       <h3 className={styles.header}>{`사진첩 (${album.length}/${MAX_PHOTOS})`}</h3>
+      {description ? <p className={styles.description}>{description}</p> : null}
       {/* F6: 네이티브 위젯 대신 드롭존. `사진 추가 +` 버튼은 종전과 같이 인풋을 click() 으로
           트리거한다(§6 R11). 인풋은 display:none 이 아니라 clip 이라 키보드 포커스가 살아 있다. */}
       <FileDropField

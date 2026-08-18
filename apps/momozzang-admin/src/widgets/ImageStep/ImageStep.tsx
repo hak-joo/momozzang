@@ -117,16 +117,18 @@ export function ImageStep({
         </div>
       </section>
 
-      {/* F10: 갤러리 (드래그 정렬·최대 20장·삭제) */}
+      {/* F10: 갤러리 (드래그 정렬·최대 20장·삭제)
+          제목은 GalleryManager 의 `사진첩 (n/20)` 하나만 둔다 — 종전에는 여기에 `갤러리`
+          섹션 제목을 따로 달아 한 카드에 제목이 둘이었고 /admin 과 규칙이 어긋났다
+          (QA_FINDINGS_3 N4). 설명문은 GalleryManager 의 description 슬롯으로 넘긴다. */}
       <section className={styles.section}>
-        <h3 className={styles.sectionTitle}>갤러리</h3>
-        <p className={styles.hint}>사진을 추가/드래그 정렬/삭제할 수 있습니다(최대 20장). 미리보기 갤러리에 즉시 반영됩니다.</p>
         <GalleryManager
           album={invitation.album ?? []}
           onChange={onAlbumChange}
           onAddFiles={onGalleryAddFiles}
           onRemoveItem={onGalleryRemoveItem}
           getThumbnailUrl={getGalleryThumbnailUrl}
+          description="사진을 추가/드래그 정렬/삭제할 수 있습니다(최대 20장). 미리보기 갤러리에 즉시 반영됩니다."
         />
       </section>
 
