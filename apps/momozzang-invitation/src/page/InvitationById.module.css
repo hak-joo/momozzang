@@ -1,0 +1,36 @@
+/* 뷰어 게이트/로딩/오류 화면 전용 스타일.
+   신규 색상 리터럴을 만들지 않고 기존 디자인 토큰만 조합한다.
+   이 저장소에는 전역 box-sizing 리셋이 없어 컨테이너에 명시한다. */
+.screen {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  font-family: var(--font-PyeongChang);
+  background: var(--color-bg-dark);
+  color: var(--color-basic-white);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-18);
+  line-height: var(--line-height-18);
+  letter-spacing: var(--letter-spacing-18);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-basic-white);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+  color: var(--color-basic-white50);
+}
