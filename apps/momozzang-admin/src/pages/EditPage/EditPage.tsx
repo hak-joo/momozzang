@@ -70,6 +70,30 @@ export function EditPage() {
   const form = useApplyForm();
   const { loadInvitation, commitPendingUploads, clearCommittedPending } = form;
 
+  /**
+   * 좁은 폭(≤768px) 탭 토글. `/apply` 와 **같은 폭 분기·같은 구조·같은 라벨**을 쓴다.
+   * 종전에는 폰 미리보기가 폼 위에 통째로 쌓여 입력 폼이 첫 화면 밖(문서 기준 수천 px 아래)에 있었다.
+   */
+  const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
+
+  /**
+   * 스텝을 바꾸면 폼 pane 상단으로 스크롤을 되돌린다. 스텝 버튼은 화면 위쪽에 있는데 내용은
+   * 아래에서 통째로 갈리므로, 되돌리지 않으면 새 스텝의 중간부터 보인다.
+   *
+   * `useEffect` + `ref` 가 아니라 **클릭 핸들러**에서 처리한다. 이유는 둘이다.
+   *  1) 폼 pane 의 문서 기준 top 은 스텝과 무관하다(위에 있는 상단바·탭 높이가 고정) — 리렌더 전에
+   *     읽어도 같은 값이다.
+   *  2) `useEffect`/`useRef` 를 쓰면 파일 1행의 react import 를 고쳐야 하는데, 같은 파일을 만지는
+   *     T7 이 이미 그 줄을 고친다. 같은 줄을 두 브랜치가 고치면 cherry-pick 이 반드시 충돌한다.
+   */
+  const goToStep = (next: number) => {
+    setStep(next);
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    const pane = document.querySelector('[data-testid="edit-form-pane"]');
+    if (!pane) return;
+    window.scrollTo({ top: pane.getBoundingClientRect().top + window.scrollY, behavior: 'auto' });
+  };
+
   const handleGateSubmit = (event: FormEvent) => {
     event.preventDefault();
     // fieldset disabled 와 별개로 한 번 더 막는다 — Enter 연타는 같은 프레임 안에서 여러 번
@@ -263,7 +287,7 @@ export function EditPage() {
   return (
     <div className={styles.page} data-testid="edit-form">
       <header className={styles.topbar}>
-        <Stepper steps={STEPS} current={step} onStepClick={setStep} />
+        <Stepper steps={STEPS} current={step} onStepClick={goToStep} />
         {/* Stepper 가 좁은 폭에서 숫자만 노출하므로 스텝 이름을 그대로 가진 버튼을 따로 둔다. */}
         <div className={styles.stepNav}>
           {STEPS.map((item) => (
@@ -273,7 +297,7 @@ export function EditPage() {
               className={styles.navButton}
               aria-current={step === item.id ? 'true' : undefined}
               data-testid={`edit-step-${item.id}`}
-              onClick={() => setStep(item.id)}
+              onClick={() => goToStep(item.id)}
             >
               {item.label}
             </button>
@@ -281,14 +305,50 @@ export function EditPage() {
         </div>
       </header>
 
+      {/* 좁은 폭 전용 탭 토글 (≤768px) — /apply 와 같은 구조·라벨 */}
+      <div className={styles.mobileTabs} role="tablist" data-testid="edit-mobile-tabs">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mobileTab === 'form'}
+          data-testid="edit-mobile-tab-form"
+          className={clsx(styles.mobileTab, mobileTab === 'form' && styles.mobileTabActive)}
+          onClick={() => setMobileTab('form')}
+        >
+          입력 폼
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mobileTab === 'preview'}
+          data-testid="edit-mobile-tab-preview"
+          className={clsx(styles.mobileTab, mobileTab === 'preview' && styles.mobileTabActive)}
+          onClick={() => setMobileTab('preview')}
+        >
+          미리보기
+        </button>
+      </div>
+
       <div className={styles.body}>
-        <aside className={styles.previewPane}>
+        <aside
+          className={clsx(
+            styles.previewPane,
+            mobileTab === 'preview' ? styles.mobileShow : styles.mobileHide,
+          )}
+          data-testid="edit-preview-pane"
+        >
           <ErrorBoundary label="미리보기">
             <PhonePreview invitation={form.displayInvitation} />
           </ErrorBoundary>
         </aside>
 
-        <main className={styles.formPane}>
+        <main
+          className={clsx(
+            styles.formPane,
+            mobileTab === 'form' ? styles.mobileShow : styles.mobileHide,
+          )}
+          data-testid="edit-form-pane"
+        >
           <p className={styles.slugHint} data-testid="edit-slug-fixed-hint">
             주소(슬러그)는 변경할 수 없습니다. 현재 주소:{' '}
             <span className={styles.slugValue}>{gate.slug}</span>
@@ -344,8 +404,7 @@ export function EditPage() {
                 />
               )}
               {step === 3 && (
-                <section className={styles.saveStep}>
-                  <h3 className={styles.saveTitle}>수정 저장</h3>
+                <Panel title="수정 저장" testId="edit-save-step">
                   <p className={styles.saveDescription}>
                     수정한 내용을 저장합니다. 공개 상태와 신청 정보는 그대로 유지됩니다.
                   </p>
@@ -383,7 +442,7 @@ export function EditPage() {
                   <Button type="button" onClick={handleSave} disabled={isBusy}>
                     {saveLabel}
                   </Button>
-                </section>
+                </Panel>
               )}
             </InvitationProvider>
           </ErrorBoundary>

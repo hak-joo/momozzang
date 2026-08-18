@@ -45,8 +45,13 @@
   background: var(--color-brand-tint-50);
 }
 
-/* 좁은 폭에서는 미리보기가 폼 위로 쌓이고, 넓은 폭에서는 좌우 2열이다.
-   `/apply` 의 모바일 탭 토글은 복제하지 않는다(탭 상태를 두 벌 유지하게 된다). */
+/* 좁은 폭(≤768px)에서는 `/apply` 와 같은 탭 토글로 한 번에 한 pane 만 보이고,
+   넓은 폭에서는 좌우 2열이다. 종전 주석("탭 토글은 복제하지 않는다")의 판단을 뒤집는다 —
+   미리보기를 폼 위에 쌓으면 390px 에서 입력 폼이 첫 화면 밖으로 밀려 아예 보이지 않는다(실측). */
+.mobileTabs {
+  display: none;
+}
+
 .body {
   box-sizing: border-box;
   flex: 1;
@@ -65,6 +70,55 @@
     grid-template-columns: minmax(399px, 440px) 1fr;
     gap: 32px;
     align-items: start;
+  }
+}
+
+/* ── 반응형: ≤768px 에서 탭 토글로 한 pane 만 보인다 (`/apply` 와 같은 분기·구조·라벨) ── */
+@media (max-width: 768px) {
+  .mobileTabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px 0;
+    background: var(--color-bg-100);
+  }
+
+  .mobileTab {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--color-line-300);
+    border-radius: 8px;
+    background: var(--color-basic-white);
+    font-size: var(--font-size-14);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-neutral-500);
+    cursor: pointer;
+  }
+
+  .mobileTabActive {
+    background: var(--color-main-600);
+    border-color: var(--color-main-600);
+    color: var(--color-basic-white);
+  }
+
+  .body {
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .previewPane {
+    justify-content: center;
+  }
+
+  /* 클래스명을 두 번 겹쳐 명시도를 (0,2,0) 으로 올린다. 이 미디어 블록은 파일 앞쪽(다른
+     미디어 쿼리 옆)에 있고 `.previewPane`/`.formPane` 규칙이 뒤에 오므로, (0,1,0) 끼리면
+     같은 명시도에서 뒤 규칙이 이긴다 — 실측으로 확인했다. 저장소에 이미 쓰이는 기법이다
+     (`AdminConfirmDialog.module.css` 의 `.destructive.destructive`). */
+  .mobileHide.mobileHide {
+    display: none;
+  }
+
+  .mobileShow.mobileShow {
+    display: flex;
   }
 }
 
@@ -98,25 +152,8 @@
   color: var(--color-neutral-900);
 }
 
-.saveStep {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-  border: 1px solid var(--color-line-200);
-  border-radius: 12px;
-  background: var(--color-basic-white);
-}
-
-.saveTitle {
-  margin: 0;
-  font-size: var(--font-size-16);
-  line-height: var(--line-height-16);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-neutral-900);
-}
-
+/* `.saveStep` · `.saveTitle` 은 삭제했다 — 저장 카드가 어드민 표면 SSOT 인 `Panel` 로 바뀌었다.
+   자체 표면 값(흰 면 · 1px 라인 · radius 12)을 여기서 다시 그리면 /admin 의 Panel 과 조용히 갈린다. */
 .saveDescription {
   margin: 0;
   font-size: var(--font-size-14);

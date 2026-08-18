@@ -8,6 +8,8 @@ export interface PanelProps {
   /** 한 행에 묶이는 액션 영역. `data-admin-toolbar` 를 달아 측정 훅으로도 쓴다. */
   toolbar?: ReactNode;
   className?: string;
+  /** 판정 앵커. 주면 루트에 `data-testid` 로 그대로 단다(선택 — 기존 사용처는 영향 없음). */
+  testId?: string;
   children?: ReactNode;
 }
 
@@ -20,9 +22,9 @@ export interface PanelProps {
  * `LoginPage`·`RequireAdmin`·`ApprovalsPage`·`EditPage` 도 같은 표면을 쓴다.
  * 화면 전체를 채우는 단일 카드 레이아웃이 필요하면 `PanelScreen` 으로 감싼다.
  */
-export function Panel({ title, toolbar, className, children }: PanelProps) {
+export function Panel({ title, toolbar, className, testId, children }: PanelProps) {
   return (
-    <div data-admin-panel="" className={clsx(styles.panel, className)}>
+    <div data-admin-panel="" data-testid={testId} className={clsx(styles.panel, className)}>
       {title ? <h3 className={styles.title}>{title}</h3> : null}
       {toolbar ? (
         <div data-admin-toolbar="" className={styles.toolbar}>

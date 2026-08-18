@@ -57,6 +57,21 @@ flowchart LR
 - `useInvitationMutation.ts` — 청첩장 저장(react-query mutation).
 - `useImageUploadMutation.ts` — 이미지 업로드(아래 참조).
 
+## `/edit` 좁은 폭 레이아웃과 저장 카드
+
+> 이 절의 **위치**는 서술 순서가 아니라 **독립성**으로 정해졌다. 같은 문서를 여러 태스크가 만지므로
+> 각 태스크의 삽입 지점을 6줄 이상 떼어 놓는다(`.harness/runs/ux-diff-picks/APPLY.md` §2.2).
+
+- **탭 토글(`768px` 이하)** — `/apply` 와 **같은 폭 분기·같은 구조(`role="tablist"` + `aria-selected`)·같은 라벨**
+  (`입력 폼` / `미리보기`)로 한 번에 한 pane 만 보입니다. 미리보기를 폼 위에 쌓으면 390px 에서 입력 폼이
+  첫 화면 밖(문서 기준 수천 px 아래)으로 밀려 아예 보이지 않습니다. 데스크톱 2열은 그대로입니다.
+- **스텝 전환 스크롤** — 스텝을 바꾸면 폼 pane 상단으로 스크롤이 돌아옵니다. 스텝 버튼은 화면 위쪽인데
+  내용은 아래에서 통째로 갈리므로, 되돌리지 않으면 새 스텝의 중간부터 보입니다.
+- **저장 카드** — 스텝 ③의 저장 카드는 자체 표면을 그리지 않고 어드민 표면 SSOT 인 `Panel` 을 씁니다
+  (`/admin`·`/login` 과 같은 면). `.saveStep`/`.saveTitle` CSS 는 삭제했습니다.
+- 판정 앵커: `edit-mobile-tabs` · `edit-mobile-tab-form` · `edit-mobile-tab-preview` · `edit-form-pane` ·
+  `edit-preview-pane` · `edit-save-step`.
+
 ## 이미지 업로드 / 리사이즈
 
 - 업로드 전, 클라이언트에서 `canvas`로 이미지를 리사이즈합니다. 최대 크기는 **1920 x 1080**, 가로/세로 비율을 유지하며 긴 변 기준으로 축소하고 품질 `0.8`의 blob으로 인코딩합니다(`AdminPage`의 `handleImageResize`, 갤러리도 동일 로직).
