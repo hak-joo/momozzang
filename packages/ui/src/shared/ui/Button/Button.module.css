@@ -196,6 +196,101 @@
   display: none;
 }
 
+/* ── 어드민 표면 (ControlVariant opt-in) ────────────────────────────────────
+ * `useControlVariant() === 'admin'` 일 때만 붙는다. 뷰어는 기본값이 `invitation` 이라
+ * 이 클래스를 **받지 않으므로** 렌더가 0 변화다(계약 4 §4.2 · 기준 18·31 이 잰다).
+ *
+ * 존재 이유는 라벨 대비다 — 뷰어 팔레트를 그대로 쓰면 primary 는 흰 글자 on `--color-main-300`
+ * 로 **2.21**, secondary 는 그래디언트 하단 스톱에서 **4.19** 라 WCAG AA(4.5) 에 못 미친다.
+ * 새 색을 만들지 않고 이미 어드민이 쓰는 토큰(`--color-main-600` 9.00 · 중립 라인)만 쓴다.
+ * 젤리 하이라이트(::before/::after)는 뷰어 언어이므로 어드민 크롬에서는 걷어낸다
+ * (SPEC §1.4 "어드민 크롬은 테마 무관 중립"). */
+.adminSurface {
+  /* 이 저장소에는 전역 box-sizing 리셋이 없다. 보더를 더해도 min-height 가 그대로이도록 명시한다. */
+  box-sizing: border-box;
+  text-shadow: none;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.adminSurface::before,
+.adminSurface::after {
+  display: none;
+}
+
+.adminSurface:active {
+  transform: none;
+  filter: none;
+}
+
+.adminSurface:hover:not(:disabled) {
+  filter: none;
+}
+
+.adminPrimary {
+  background: var(--color-main-600);
+  color: var(--color-basic-white);
+  border: 1px solid var(--color-main-600);
+}
+
+.adminPrimary:hover:not(:disabled) {
+  background: var(--color-main-500);
+  border-color: var(--color-main-500);
+}
+
+.adminPrimary.button:disabled {
+  background: var(--color-line-300);
+  border-color: var(--color-line-300);
+  color: var(--color-neutral-700);
+}
+
+.adminSecondary {
+  background: var(--color-basic-white);
+  color: var(--color-main-600);
+  border: 1px solid var(--color-line-400);
+}
+
+.adminSecondary:hover:not(:disabled) {
+  background: var(--color-bg-100);
+  border-color: var(--color-line-500);
+}
+
+.adminSecondary.button:disabled,
+.adminGhost.button:disabled,
+.adminPlain.button:disabled {
+  background: var(--color-bg-150);
+  border-color: var(--color-line-300);
+  color: var(--color-neutral-500);
+}
+
+.adminGhost {
+  background: transparent;
+  color: var(--color-main-600);
+  border: 1px solid var(--color-line-400);
+  backdrop-filter: none;
+}
+
+.adminGhost:hover:not(:disabled) {
+  background: var(--color-bg-100);
+}
+
+.adminPlain {
+  background: transparent;
+  color: var(--color-main-600);
+  border: 0;
+}
+
+.adminPlain:hover:not(:disabled),
+.adminPlain:focus-visible {
+  background: var(--color-bg-150);
+}
+
+.adminPlain:active:not(:disabled) {
+  background: var(--color-bg-200);
+}
+
 .iconButton {
   padding: 0;
   border-radius: var(--icon-button-radius);
