@@ -63,6 +63,11 @@ interface Props {
   onRsvpPerSideIncludeChange: (side: Side, patch: Partial<RsvpSettings['include']>) => void;
   // 소개 (F13)
   onAboutUsChange: (patch: Partial<AboutUs>) => void;
+  // 신청 메타데이터 (F3)
+  applicantContact: string;
+  editPassword: string;
+  onApplicantContactChange: (value: string) => void;
+  onEditPasswordChange: (value: string) => void;
 }
 
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -282,6 +287,10 @@ export function ApplyForm(props: Props) {
     onRsvpPerSideChange,
     onRsvpPerSideIncludeChange,
     onAboutUsChange,
+    applicantContact,
+    editPassword,
+    onApplicantContactChange,
+    onEditPasswordChange,
   } = props;
 
   // 주소 검색 + 지오코딩 상태
@@ -375,6 +384,44 @@ export function ApplyForm(props: Props) {
             />
           </div>
           {slugError && <p className={styles.error}>{slugError}</p>}
+        </div>
+      </section>
+
+      {/* 신청 정보 (F3) — 청첩장 본문이 아니라 신청 메타데이터 */}
+      <section className={styles.section}>
+        <h3 className={styles.sectionTitle}>신청 정보</h3>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="apply-applicant-contact">
+            신청자 연락처
+          </label>
+          <Input
+            id="apply-applicant-contact"
+            value={applicantContact}
+            onChange={(e) => onApplicantContactChange(e.target.value)}
+            placeholder="예: 010-0000-0000"
+            maxLength={100}
+            aria-required="true"
+          />
+          <p className={styles.hint}>승인 결과를 안내받을 연락처입니다. 관리자만 확인합니다.</p>
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="apply-edit-password">
+            편집 비밀번호
+          </label>
+          <Input
+            id="apply-edit-password"
+            type="password"
+            value={editPassword}
+            onChange={(e) => onEditPasswordChange(e.target.value)}
+            maxLength={64}
+            aria-required="true"
+            autoComplete="new-password"
+          />
+          <p className={styles.hint}>
+            신청 후 청첩장을 수정할 때 사용합니다. 8자 이상 64자 이하로 입력해 주세요.
+          </p>
         </div>
       </section>
 

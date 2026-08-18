@@ -65,6 +65,10 @@ export default function ApplyPage() {
     setCustomization,
     setMiniRoom,
     loadInvitation,
+    editPassword,
+    applicantContact,
+    setEditPassword,
+    setApplicantContact,
   } = useApplyForm();
 
   return (
@@ -169,6 +173,10 @@ export default function ApplyPage() {
                   onRsvpPerSideChange={setRsvpPerSide}
                   onRsvpPerSideIncludeChange={setRsvpPerSideInclude}
                   onAboutUsChange={setAboutUs}
+                  applicantContact={applicantContact}
+                  editPassword={editPassword}
+                  onApplicantContactChange={setApplicantContact}
+                  onEditPasswordChange={setEditPassword}
                 />
               )}
               {step === 2 && (
