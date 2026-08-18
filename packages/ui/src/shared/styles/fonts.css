@@ -2,6 +2,16 @@
    invitation/admin 양쪽이 packages/ui/src/index.css aggregate를 통해 이 정의를 공유한다.
    CDN URL·변수명은 변경 금지 — 기존 invitation global.css 값을 그대로 승격한 것이다. */
 
+/* Wanted Sans — 서브셋 스타일시트(`@import`).
+   종전에는 이 `.min.css` URL 을 `@font-face { src: url(...) format('woff2') }` 로 선언했다.
+   폰트 바이너리가 아니라 **스타일시트**를 woff2 라고 선언한 것이라 브라우저가
+   `OTS parsing error: invalid sfntVersion` 으로 디코딩에 실패했고, `Wanted Sans` 는
+   항상 `status: 'error'` 로 폴백만 그렸다(계약 4 §0.2-c 실측 · SPEC DoD 29b·29c).
+   `.min.css` 는 `font-family:"Wanted Sans Variable"` 을 선언하는 unicode-range 서브셋
+   시트이므로 `@import` 로 그대로 얹는 것이 정공법이다 — 실측 전송량 121KB(계약 4 §0.9-V2).
+   `@import` 는 CSS 규격상 다른 규칙보다 먼저 와야 하므로 이 파일 최상단에 둔다. */
+@import url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css');
+
 @font-face {
   font-family: 'DungGeunMo';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.3/NeoDunggeunmo.woff')
@@ -13,14 +23,6 @@
 @font-face {
   font-family: 'PyeongChang';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChang-Regular.woff2')
-    format('woff2');
-  font-weight: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Wanted Sans';
-  src: url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css')
     format('woff2');
   font-weight: normal;
   font-display: swap;
@@ -45,7 +47,9 @@
 :root {
   --font-DungGeunMo: 'DungGeunMo', 'Noto Sans KR', cursive;
   --font-PyeongChang: 'PyeongChang', 'Noto Sans KR', sans-serif;
-  --font-Wanted-Sans: 'Wanted Sans', 'Noto Sans KR', sans-serif;
+  /* 패밀리명은 서브셋 시트가 선언하는 이름(`Wanted Sans Variable`)을 따른다.
+     구 이름 `Wanted Sans` 는 어떤 `@font-face` 도 선언하지 않으므로 남겨 두면 폴백이 된다. */
+  --font-Wanted-Sans: 'Wanted Sans Variable', 'Noto Sans KR', sans-serif;
   --font-DepartureMono: 'DepartureMono', 'Noto Sans KR', monospace;
   --font-PfStardust: 'PfStardust', 'Noto Sans KR', sans-serif;
 }
