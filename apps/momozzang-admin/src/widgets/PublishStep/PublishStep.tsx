@@ -18,6 +18,9 @@ interface Props {
   commitPendingUploads: Form['commitPendingUploads'];
   /** 저장 성공 후 commit 에 포함된 pending blob revoke+clear(F7-b). */
   clearCommittedPending: Form['clearCommittedPending'];
+  /** 신청 메타데이터(F3) — 저장 전 검증 대상이며 화면에 되뱉지 않는다. */
+  editPassword: string;
+  applicantContact: string;
 }
 
 /**
@@ -32,6 +35,8 @@ export function PublishStep({
   onLoad,
   commitPendingUploads,
   clearCommittedPending,
+  editPassword,
+  applicantContact,
 }: Props) {
   // ── 불러오기 슬러그(폼의 url과 별개 입력) ──
   const [loadSlug, setLoadSlug] = useState('');
@@ -85,7 +90,7 @@ export function PublishStep({
   const handleSave = useCallback(async () => {
     if (isUploading || mutation.isPending) return;
     setSaveMessage(null);
-    const found = validateInvitation(invitation);
+    const found = validateInvitation(invitation, { editPassword, applicantContact });
     setIssues(found);
     if (found.length > 0) {
       // F14 필수값 누락 안내 — commit/저장 모두 호출하지 않음.
@@ -129,7 +134,16 @@ export function PublishStep({
         },
       },
     );
-  }, [invitation, mutation, isUploading, commitPendingUploads, clearCommittedPending, onLoad]);
+  }, [
+    invitation,
+    mutation,
+    isUploading,
+    commitPendingUploads,
+    clearCommittedPending,
+    onLoad,
+    editPassword,
+    applicantContact,
+  ]);
 
   // F3: 저장 버튼 라벨/비활성 — 업로드 중 → 저장 중 → 평시.
   const isBusy = isUploading || mutation.isPending;

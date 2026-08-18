@@ -201,6 +201,8 @@ export default function ApplyPage() {
                   onLoad={loadInvitation}
                   commitPendingUploads={commitPendingUploads}
                   clearCommittedPending={clearCommittedPending}
+                  editPassword={editPassword}
+                  applicantContact={applicantContact}
                 />
               )}
             </InvitationProvider>
