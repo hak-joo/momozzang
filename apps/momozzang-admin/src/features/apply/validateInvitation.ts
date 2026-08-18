@@ -20,19 +20,15 @@ const EDIT_PASSWORD_MAX_LENGTH = 64;
 const APPLICANT_CONTACT_MAX_LENGTH = 100;
 
 /**
- * 저장(신청) 전 필수값/형식 검증.
- * 필수값: 슬러그, 제목, 신랑 이름, 신부 이름, 예식 날짜, 신청자 연락처, 편집 비밀번호.
- * 형식: 슬러그 패턴+길이(3~50), 시(1~12)/분(0~59) 범위, 연락처 1~100자, 비밀번호 8~64자.
+ * 청첩장 **본문** 전용 검증.
+ * 필수값: 슬러그, 제목, 신랑 이름, 신부 이름, 예식 날짜. 형식: 슬러그 패턴+길이(3~50), 시(1~12)/분(0~59).
  *
- * `meta` 는 **필수 인자**다. 선택 인자로 두면 호출부가 빼먹어도 컴파일이 통과해
- * 신청 검증이 조용히 사라진다.
+ * `/edit` 은 신청 메타(연락처·편집 비밀번호)를 다루지 않는다 — 저장 경로가 본문 `data` 만 갱신하므로
+ * 가짜 `meta` 를 지어 넣지 않도록 본문 검사를 여기로 분리했다.
  *
- * 오류 메시지에는 입력값을 넣지 않는다(비밀번호·연락처가 화면에 되뱉어지는 것을 막는다).
+ * 오류 메시지에는 입력값을 넣지 않는다.
  */
-export function validateInvitation(
-  data: WeddingInvitation,
-  meta: ApplicationMeta,
-): ValidationIssue[] {
+export function validateInvitationBody(data: WeddingInvitation): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const { invitationInfo, couple, weddingHallInfo } = data;
 
@@ -73,6 +69,22 @@ export function validateInvitation(
   ) {
     issues.push({ field: 'minute', label: '예식 시각(분)', message: '분은 0~59 범위여야 합니다.' });
   }
+
+  return issues;
+}
+
+/**
+ * 저장(신청) 전 필수값/형식 검증 = 본문 검증 + 신청 메타 검증.
+ * 이슈 순서는 본문 → 신청자 연락처 → 편집 비밀번호다(기존과 동일).
+ *
+ * `meta` 는 **필수 인자**다. 선택 인자로 두면 호출부가 빼먹어도 컴파일이 통과해
+ * 신청 검증이 조용히 사라진다.
+ */
+export function validateInvitation(
+  data: WeddingInvitation,
+  meta: ApplicationMeta,
+): ValidationIssue[] {
+  const issues: ValidationIssue[] = validateInvitationBody(data);
 
   if (!meta.applicantContact.trim()) {
     issues.push({
