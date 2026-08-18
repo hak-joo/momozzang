@@ -146,7 +146,11 @@ export function FileDropField({
         aria-describedby={hintId}
         {...(inputTestId ? { 'data-testid': inputTestId } : null)}
       />
-      {children}
+      {/* 썸네일 슬롯은 드롭존에 남는 높이를 **흡수**한다(QA_FINDINGS_3 N3).
+          같은 grid 행의 드롭존들은 stretch 로 높이가 이미 같은데(363/363), 그 안의 썸네일
+          비율이 다르면(portrait 240 vs square 160) 뒤따르는 버튼·안내문이 80px 어긋났다.
+          남는 높이를 여기서 먹으면 조작면이 행 바닥에 정렬된다. */}
+      {children ? <div className={styles.body}>{children}</div> : null}
       <div className={styles.actions}>
         <Button
           type="button"
