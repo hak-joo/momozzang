@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './OnboardingPage.module.css';
 
 /**
@@ -20,6 +22,24 @@ export function OnboardingPage() {
   // 빈 href 는 "현재 페이지 재요청"으로 동작해 눌러도 아무 일도 없는 죽은 버튼이 되고,
   // `/apply` 같은 그럴듯한 기본값은 이 앱에서 `/:invitationId` 에 잡혀 오히려 오해를 만든다.
   const applyUrl = (import.meta.env.VITE_APPLY_URL ?? '').trim();
+  // 수정 주소도 같은 규칙이다 — 비어 있으면 앵커를 만들지 않고 안내 문구만 낸다.
+  const editUrl = (import.meta.env.VITE_EDIT_URL ?? '').trim();
+
+  const navigate = useNavigate();
+  const [slugInput, setSlugInput] = useState('');
+  const [slugError, setSlugError] = useState(false);
+
+  const handleStatusSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    const slug = slugInput.trim();
+    if (!slug) {
+      // 이동하지 않고 알린다. 빈 값으로 이동하면 `/` 로 되돌아와 아무 일도 안 한 것처럼 보인다.
+      setSlugError(true);
+      return;
+    }
+    setSlugError(false);
+    navigate(`/${slug}`);
+  };
 
   return (
     <div className={styles.page}>
@@ -51,6 +71,47 @@ export function OnboardingPage() {
       <p className={styles.hint} data-testid="onboarding-edit-hint">
         이미 신청하셨나요? 신청할 때 정한 슬러그와 편집 비밀번호로 수정할 수 있습니다.
       </p>
+
+      {editUrl ? (
+        <a className={styles.editCta} data-testid="onboarding-edit-cta" href={editUrl}>
+          내 청첩장 수정하기
+        </a>
+      ) : (
+        <p className={styles.unavailable} data-testid="onboarding-edit-unavailable">
+          수정 주소가 아직 설정되지 않았습니다. 운영자에게 문의해 주세요.
+        </p>
+      )}
+
+      <p className={styles.hint} data-testid="onboarding-status-hint">
+        승인 대기 중에는 내 주소로 접속하면 현재 상태를 볼 수 있습니다.
+      </p>
+
+      <form
+        className={styles.statusForm}
+        data-testid="onboarding-status-form"
+        onSubmit={handleStatusSubmit}
+      >
+        <label className={styles.statusLabel} htmlFor="onboarding-slug">
+          내 청첩장 주소
+        </label>
+        <div className={styles.statusRow}>
+          <input
+            className={styles.statusInput}
+            data-testid="onboarding-status-input"
+            id="onboarding-slug"
+            value={slugInput}
+            onChange={(event) => setSlugInput(event.target.value)}
+          />
+          <button className={styles.statusSubmit} data-testid="onboarding-status-submit" type="submit">
+            상태 확인
+          </button>
+        </div>
+        {slugError ? (
+          <p className={styles.statusError} data-testid="onboarding-status-error" role="alert">
+            청첩장 주소를 입력해 주세요.
+          </p>
+        ) : null}
+      </form>
     </div>
   );
 }

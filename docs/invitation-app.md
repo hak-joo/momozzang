@@ -69,6 +69,8 @@ flowchart LR
 - 방명록은 `getGuestBookRepository`로 접근합니다.
 - 지도 섹션은 `VITE_NAVER_MAP_CLIENT_ID` 환경변수를 사용합니다.
 - 로컬 개발 시 `/api` 요청은 `apps/momozzang-invitation/vite.config.ts`에서 `http://localhost:8081`로 프록시됩니다.
+- 랜딩(`/`)의 `내 청첩장 수정하기` 앵커는 `VITE_EDIT_URL` 을 가리킵니다(어드민 앱의 `/edit` 주소). 값이 비어 있으면 앵커를 렌더하지 않고 안내 문구만 냅니다 — `VITE_APPLY_URL` 과 같은 규칙입니다.
+- 랜딩의 **상태 확인** 입력에 청첩장 주소(슬러그)를 넣고 제출하면 `/<슬러그>` 로 이동합니다. 앞뒤 공백은 제거하며, 값이 공백뿐이면 이동하지 않고 `청첩장 주소를 입력해 주세요.` 를 `role="alert"` 로 알립니다.
 
 ## 관련 명령
 
