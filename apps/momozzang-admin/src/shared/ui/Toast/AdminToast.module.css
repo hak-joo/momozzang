@@ -1,0 +1,103 @@
+/* 어드민 비차단 피드백(F10 · DoD 24).
+   색은 어드민 시맨틱 토큰(success/danger)만 쓴다 — 테마 팔레트(--color-main-*, --color-sub-*)를
+   소비하지 않는다(SPEC §1.4 "어드민 크롬은 테마 무관 중립"). raw HEX/rgba 0건(DoD 20). */
+
+.viewport {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  /* 폰 미리보기(.screen) 는 1440 에서 x 188.5~539.5 다. 우측 하단 고정이면 교차 면적이 0 이다
+     (계약 4 기준 8). 좁은 폭에서는 max-width 가 가로 스크롤을 막는다(기준 23 과 같은 축). */
+  width: 360px;
+  max-width: calc(100% - 48px);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* 미리보기 위를 덮더라도 클릭은 통과시킨다 — 항목만 pointer-events 를 되살린다. */
+  pointer-events: none;
+  z-index: 200;
+}
+
+.toast {
+  pointer-events: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--admin-control-radius);
+  border: 1px solid var(--color-line-300);
+  background: var(--color-basic-white);
+  color: var(--color-neutral-900);
+  box-shadow: var(--admin-surface-shadow);
+  font-family: var(--font-PyeongChang);
+}
+
+/* variant 는 **면 색으로 구분**한다 — SPEC F10 "성공/실패를 색과 문구로 구분".
+   기준 3 이 success 와 error 의 computed backgroundColor 가 서로 다름을 직접 잰다. */
+.success {
+  background: var(--color-success-100);
+  border-color: var(--color-success-200);
+  color: var(--color-success-600);
+}
+
+.error {
+  background: var(--color-danger-100);
+  border-color: var(--color-danger-150);
+  color: var(--color-danger-700);
+}
+
+.info {
+  background: var(--color-bg-50);
+  border-color: var(--color-line-300);
+  color: var(--color-neutral-900);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-14);
+  font-weight: 700;
+  /* 긴 슬러그가 넘치지 않도록 줄바꿈을 허용한다. */
+  overflow-wrap: anywhere;
+}
+
+.description {
+  margin: 0;
+  font-size: var(--font-size-13);
+  /* 면 색과 무관하게 AA 를 넘기는 중립값(흰 면 6.31 / success 면 5.84 / danger 면 5.45). */
+  color: var(--color-neutral-700);
+  overflow-wrap: anywhere;
+}
+
+.dismiss {
+  flex: none;
+  border: 1px solid var(--color-line-300);
+  border-radius: 6px;
+  background: var(--color-basic-white);
+  color: var(--color-neutral-700);
+  font-family: inherit;
+  font-size: var(--font-size-12);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.dismiss:hover {
+  background: var(--color-bg-100);
+}
+
+.dismiss:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
