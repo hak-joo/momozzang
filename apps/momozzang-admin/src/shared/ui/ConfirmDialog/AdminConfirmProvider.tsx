@@ -18,7 +18,7 @@ export interface AdminConfirmOptions {
 }
 
 /**
- * 이름이 `confirm` 이면 안 된다 — 네이티브 `confirm(` 소스 가드(계약 4 기준 6)가 정상 구현을
+ * 이름이 `confirm` 이면 안 된다 — 네이티브 대화상자 소스 가드(계약 4 기준 6)가 정상 구현을
  * 위양성으로 잡는다. 호출부는 반드시 `askConfirm` 으로 받는다.
  */
 export type AskConfirm = (options: AdminConfirmOptions) => Promise<boolean>;
@@ -34,7 +34,7 @@ interface DialogState {
 const CLOSED: DialogState = { open: false, options: undefined, resolve: undefined };
 
 /**
- * 어드민 확인 대화(SPEC F10 · DoD 24) — 네이티브 `confirm()` 대체.
+ * 어드민 확인 대화(SPEC F10 · DoD 24) — 네이티브 확인 대화상자를 대체한다.
  *
  * 표면은 공유 `Dialog` 프리미티브(포털 컨테이너 인지 — S3 자산)를 쓰되 스타일은 어드민
  * `Panel` 언어(흰 면 · 중립 라인 · radius 12)로 그린다. 이 provider 는 `App.tsx` 루트,

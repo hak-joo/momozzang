@@ -16,6 +16,7 @@ import { useInvitationQuery } from '../features/invitation/api/useInvitationQuer
 import { useInvitationMutation } from '../features/invitation/api/useInvitationMutation';
 import { usePendingImages, type ApplyUploadedKey } from '../features/invitation/usePendingImages';
 import { createPhotoId, normalizeAlbumIds } from '../features/invitation/galleryHelpers';
+import { useAdminToast } from '../shared/ui/Toast';
 
 /** 어드민 단일 4필드 slotKey. usePendingImages 는 임의 문자열을 받지만 여기선 이 4개만 쓴다. */
 type SingleSlot = 'main' | 'share' | 'groom' | 'bride';
@@ -84,6 +85,12 @@ function savedValueOf(invitation: WeddingInvitation, slot: SingleSlot): string |
 export default function AdminPage() {
   const [inputSlug, setInputSlug] = useState('demo-captain-luna');
   const [slug, setSlug] = useState('demo-captain-luna');
+  const toast = useAdminToast();
+  /**
+   * 사용자가 `불러오기` 를 누른 요청. 최초 자동 조회에는 피드백을 내지 않기 위해 필요하다.
+   * 같은 슬러그를 다시 눌러도(=캐시 적중) 피드백이 나가야 하므로 nonce 를 함께 담는다.
+   */
+  const [loadRequest, setLoadRequest] = useState<{ slug: string; nonce: number } | null>(null);
 
   const {
     data: fetchedInvitation,
@@ -119,8 +126,46 @@ export default function AdminPage() {
     }
   }, [fetchedInvitation, isError]);
 
+  /**
+   * 불러오기 결과 알림(SPEC F10 · DoD 24).
+   *
+   * 종전에는 **성공도 실패도 아무 피드백이 없었다.** 특히 존재하지 않는 슬러그는
+   * `SupabaseInvitationRepository.getInvitation` 이 에러가 아니라 `null` 을 돌려주므로
+   * `isError` 분기에도 걸리지 않아 화면이 전혀 변하지 않았다 — 이전 청첩장이 그대로 남아
+   * 사용자는 무엇이 일어났는지 알 수 없었다(계약 4 §0.9-V4 실측).
+   */
+  useEffect(() => {
+    if (!loadRequest) return;
+    // 새 슬러그로 전환되기 전이면 아직 판정하지 않는다.
+    if (loadRequest.slug !== slug) return;
+    if (isLoadingQuery) return;
+
+    if (isError) {
+      toast.error({
+        title: `'${slug}' 청첩장을 불러오지 못했어요.`,
+        description: `${error.message} — 잠시 후 다시 시도해주세요.`,
+      });
+    } else if (fetchedInvitation) {
+      toast.success({ title: `'${slug}' 청첩장을 불러왔어요.` });
+    } else {
+      // 결과 없음(null). 에러가 아니므로 위 분기에 걸리지 않는다.
+      toast.error({
+        title: `'${slug}' 청첩장을 찾지 못했어요.`,
+        description:
+          '주소(슬러그)를 확인한 뒤 다시 시도해주세요. 화면에는 직전에 불러온 내용이 그대로 남아 있어요.',
+      });
+    }
+    setLoadRequest(null);
+  }, [loadRequest, slug, isLoadingQuery, isError, error, fetchedInvitation, toast]);
+
   const handleLoad = () => {
-    setSlug(inputSlug);
+    const next = inputSlug.trim();
+    if (!next) {
+      toast.error({ title: '청첩장 주소(슬러그)를 입력한 뒤 다시 눌러주세요.' });
+      return;
+    }
+    setSlug(next);
+    setLoadRequest({ slug: next, nonce: Date.now() });
   };
 
   // 파일 선택(F1): 업로드하지 않고 pending 에 보관 + blob previewUrl 생성만 한다.
@@ -176,7 +221,11 @@ export default function AdminPage() {
       toSave = await commitPendingUploads(invitation, applyUploadedKey, resolveUploadPrefix);
     } catch (e) {
       console.error(e);
-      alert('이미지 업로드에 실패했어요. 잠시 후 다시 시도해주세요.'); // F6: 업로드 실패 → 저장 안 함, pending 유지.
+      // F6: 업로드 실패 → 저장 안 함, pending 유지.
+      toast.error({
+        title: '이미지 업로드에 실패했어요.',
+        description: '선택한 이미지는 그대로 남아 있어요. 잠시 후 다시 저장해주세요.',
+      });
       return;
     } finally {
       setIsUploading(false);
@@ -188,10 +237,13 @@ export default function AdminPage() {
       setInvitation(toSave);
       // F7-b: 저장 성공 직후 커밋된 slot 들의 blob revoke + pending clear.
       clearAfterCommit(committedSlots);
-      alert('저장했어요.');
+      toast.success({ title: '저장했어요.', description: `'${slug}' 청첩장에 반영됐어요.` });
     } catch (e) {
       console.error(e);
-      alert('저장에 실패했어요. 잠시 후 다시 시도해주세요.');
+      toast.error({
+        title: '저장에 실패했어요.',
+        description: '잠시 후 저장을 다시 눌러주세요.',
+      });
       // 저장 실패: 업로드는 이미 끝났으므로 키 치환 결과를 유지하고 blob 도 정리(재저장만 누르면 됨).
       setInvitation(toSave);
       clearAfterCommit(committedSlots);

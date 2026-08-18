@@ -20,6 +20,8 @@ import {
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { ImageThumb } from '../../shared/ui/ImageThumb';
 import { FileDropField } from '../../shared/ui/FileDropField';
+import { useAdminToast } from '../../shared/ui/Toast';
+import { useAdminConfirm } from '../../shared/ui/ConfirmDialog';
 import { SortableImage, PhotoItem } from './SortableImage';
 import styles from './GalleryManager.module.css';
 
@@ -58,6 +60,10 @@ export function GalleryManager({
   disabled = false,
 }: GalleryManagerProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const toast = useAdminToast();
+  // 지역 변수명을 `confirm` 으로 두면 네이티브 대화상자 소스 가드(계약 4 기준 6)가
+  // 정상 구현을 위양성으로 잡는다. 반드시 `askConfirm` 이다.
+  const askConfirm = useAdminConfirm();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -95,13 +101,19 @@ export function GalleryManager({
   );
 
   const handleDelete = useCallback(
-    (id: string) => {
-      if (confirm('이 사진을 삭제할까요? 삭제한 사진은 되돌릴 수 없어요.')) {
-        // ①: 삭제 책임을 부모로 위임. revoke(pending) / album 필터(기존) 모두 부모 한 곳에서.
-        onRemoveItem(id);
-      }
+    async (id: string) => {
+      const accepted = await askConfirm({
+        title: '이 사진을 삭제할까요?',
+        description: '삭제한 사진은 되돌릴 수 없어요.',
+        confirmText: '삭제',
+        cancelText: '취소',
+        destructive: true,
+      });
+      if (!accepted) return;
+      // ①: 삭제 책임을 부모로 위임. revoke(pending) / album 필터(기존) 모두 부모 한 곳에서.
+      onRemoveItem(id);
     },
-    [onRemoveItem],
+    [askConfirm, onRemoveItem],
   );
 
   // F1: 파일 선택/드롭 → 업로드 없이 부모에게 File 들만 위임(부모가 pending + placeholder 추가).
@@ -109,14 +121,17 @@ export function GalleryManager({
     (files: File[]) => {
       // 20장 합산 제한(완료정의6). album.length = 기존+pending 합산 수.
       if (album.length + files.length > MAX_PHOTOS) {
-        alert(
-          `사진은 최대 ${MAX_PHOTOS}장까지예요. 현재 ${album.length}장 + 추가 ${files.length}장`,
-        );
+        toast.error({
+          title: `사진은 최대 ${MAX_PHOTOS}장까지예요.`,
+          description: `현재 ${album.length}장인데 ${files.length}장을 더 고르셨어요. ${
+            MAX_PHOTOS - album.length
+          }장까지 추가할 수 있어요.`,
+        });
         return;
       }
       onAddFiles(files);
     },
-    [album.length, onAddFiles],
+    [album.length, onAddFiles, toast],
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -15,11 +15,15 @@ interface AdminToastItem extends AdminToastOptions {
   duration: number;
 }
 
-/** 실패는 읽을 시간이 더 필요하다. */
+/**
+ * 노출 시간. 저장·불러오기는 사용자의 시선이 화면 다른 곳(폼·미리보기)에 있을 때 끝나는 일이라
+ * 짧으면 결과를 놓친다. 실패는 원인·다음 행동을 읽어야 하므로 더 길게 둔다.
+ * 어느 쪽이든 `닫기` 로 즉시 없앨 수 있다.
+ */
 const DEFAULT_DURATION: Record<AdminToastVariant, number> = {
-  success: 4000,
-  info: 4000,
-  error: 6000,
+  success: 8000,
+  info: 8000,
+  error: 12000,
 };
 
 let seq = 0;

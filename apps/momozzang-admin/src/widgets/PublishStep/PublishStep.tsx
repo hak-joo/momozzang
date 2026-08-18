@@ -10,6 +10,7 @@ import {
   type ValidationIssue,
 } from '../../features/apply/validateInvitation';
 import type { useApplyForm } from '../../features/apply/useApplyForm';
+import { useAdminToast } from '../../shared/ui/Toast';
 import styles from './PublishStep.module.css';
 
 type Form = ReturnType<typeof useApplyForm>;
@@ -36,6 +37,9 @@ export function PublishStep({
   commitPendingUploads,
   clearCommittedPending,
 }: Props) {
+  // 인라인 배너(`saveMessage`·`loadMessage`)는 **유지**한다 — 필수값 누락 목록처럼 오래 남아야
+  // 하는 정보는 토스트로 옮기지 않는다. 토스트는 "방금 무슨 일이 일어났는가"만 겹쳐 알린다.
+  const toast = useAdminToast();
   // ── 불러오기 슬러그(폼의 url과 별개 입력) ──
   const [loadSlug, setLoadSlug] = useState('');
   // useInvitationQuery로 트리거하기 위한 활성 슬러그
@@ -54,16 +58,30 @@ export function PublishStep({
     if (loadQuery.data) {
       onLoad(loadQuery.data);
       setLoadMessage({ kind: 'success', text: `'${activeLoadSlug}' 청첩장을 불러왔습니다.` });
+      toast.success({ title: `'${activeLoadSlug}' 청첩장을 불러왔어요.` });
     } else if (loadQuery.isError || loadQuery.data === null) {
       setLoadMessage({ kind: 'error', text: '해당 슬러그의 청첩장을 불러오지 못했습니다.' });
+      toast.error({
+        title: `'${activeLoadSlug}' 청첩장을 찾지 못했어요.`,
+        description: '주소(슬러그)를 확인한 뒤 다시 시도해주세요.',
+      });
     }
     setPendingLoad(false);
-  }, [pendingLoad, loadQuery.isLoading, loadQuery.data, loadQuery.isError, onLoad, activeLoadSlug]);
+  }, [
+    pendingLoad,
+    loadQuery.isLoading,
+    loadQuery.data,
+    loadQuery.isError,
+    onLoad,
+    activeLoadSlug,
+    toast,
+  ]);
 
   const handleLoad = useCallback(() => {
     const slug = loadSlug.trim();
     if (!slug) {
       setLoadMessage({ kind: 'error', text: '불러올 슬러그를 입력해 주세요.' });
+      toast.error({ title: '불러올 슬러그를 입력한 뒤 다시 눌러주세요.' });
       return;
     }
     setLoadMessage(null);
@@ -71,7 +89,7 @@ export function PublishStep({
     setPendingLoad(true);
     // 동일 슬러그 재불러오기(라운드트립 검증)에서도 최신값을 받도록 무효화 후 재조회.
     loadQuery.refetch();
-  }, [loadSlug, loadQuery]);
+  }, [loadSlug, loadQuery, toast]);
 
   // ── 저장(제작 완료) ──
   const mutation = useInvitationMutation();
@@ -90,6 +108,11 @@ export function PublishStep({
     setIssues(found);
     if (found.length > 0) {
       // F14 필수값 누락 안내 — commit/저장 모두 호출하지 않음.
+      // 목록 자체는 인라인 배너에 남기고, 토스트는 "왜 저장이 안 됐는지"만 겹쳐 알린다.
+      toast.error({
+        title: '아직 저장할 수 없어요.',
+        description: `확인이 필요한 항목이 ${found.length}건 있어요. 아래 안내를 확인해주세요.`,
+      });
       return;
     }
 
@@ -106,6 +129,10 @@ export function PublishStep({
           err instanceof Error ? err.message : '알 수 없는 오류'
         }. 다시 시도해 주세요.`,
       });
+      toast.error({
+        title: '이미지 업로드에 실패했어요.',
+        description: '선택한 이미지는 그대로 남아 있어요. 잠시 후 다시 저장해주세요.',
+      });
       return; // pending 유지(clearCommittedPending 미호출).
     } finally {
       setIsUploading(false);
@@ -118,6 +145,7 @@ export function PublishStep({
         onSuccess: () => {
           setSavedSlug(slug);
           setSaveMessage({ kind: 'success', text: '청첩장이 저장(제작)되었습니다.' });
+          toast.success({ title: '저장했어요.', description: `'${slug}' 청첩장에 반영됐어요.` });
           // 키 치환된 결과로 폼 state 갱신(blob→키, 미리보기 깨짐 방지) + commit blob revoke+clear(F7-b).
           onLoad(toSave);
           clearCommittedPending();
@@ -127,10 +155,22 @@ export function PublishStep({
             kind: 'error',
             text: `저장에 실패했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`,
           });
+          toast.error({
+            title: '저장에 실패했어요.',
+            description: '잠시 후 저장을 다시 눌러주세요.',
+          });
         },
       },
     );
-  }, [invitation, mutation, isUploading, commitPendingUploads, clearCommittedPending, onLoad]);
+  }, [
+    invitation,
+    mutation,
+    isUploading,
+    commitPendingUploads,
+    clearCommittedPending,
+    onLoad,
+    toast,
+  ]);
 
   // F3: 저장 버튼 라벨/비활성 — 업로드 중 → 저장 중 → 평시.
   const isBusy = isUploading || mutation.isPending;
