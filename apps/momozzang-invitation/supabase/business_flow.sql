@@ -63,8 +63,10 @@ for select
 to anon
 using (status = 'approved');
 
--- 6. 관리자(로그인 사용자): 전체 조회 / 승인·반려 갱신
-grant select, update on public.momozzang to authenticated;
+-- 6. 관리자(로그인 사용자): 해시를 제외한 컬럼만 조회 / 승인·반려·본문만 갱신
+revoke all on public.momozzang from authenticated;
+grant select (id, slug, data, status, applicant_contact, created_at, approved_at) on public.momozzang to authenticated;
+grant update (data, status, approved_at) on public.momozzang to authenticated;
 
 drop policy if exists "admin reads all" on public.momozzang;
 create policy "admin reads all"
