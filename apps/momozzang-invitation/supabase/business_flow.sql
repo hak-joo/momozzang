@@ -64,6 +64,7 @@ to anon
 using (status = 'approved');
 
 -- 6. 관리자(로그인 사용자): 해시를 제외한 컬럼만 조회 / 승인·반려·본문만 갱신
+-- 주의: 아래 revoke all 은 select/update 뿐 아니라 insert/delete 권한까지 함께 회수한다. 로그인 사용자의 신규 신청 생성은 create_invitation RPC(security definer)로만 가능하다.
 revoke all on public.momozzang from authenticated;
 grant select (id, slug, data, status, applicant_contact, created_at, approved_at) on public.momozzang to authenticated;
 grant update (data, status, approved_at) on public.momozzang to authenticated;
