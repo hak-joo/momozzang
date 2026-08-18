@@ -189,6 +189,28 @@ export interface WeddingInvitation {
   aboutUs?: AboutUs;
 }
 
+/**
+ * 청첩장 신청 → 승인 → 공개로 이어지는 수명주기 상태.
+ * DB(`public.momozzang.status`)의 check 제약과 값이 1:1로 대응한다.
+ */
+export type InvitationStatus = 'pending' | 'approved' | 'rejected';
+
+/**
+ * 저장소가 돌려주는 청첩장 레코드(본문 + 수명주기 메타).
+ * 편집 비밀번호 해시는 이 타입에 **존재하지 않는다** — 클라이언트로 내려보내지 않는다.
+ */
+export interface InvitationRecord {
+  slug: string;
+  status: InvitationStatus;
+  data: WeddingInvitation;
+  applicantContact: string;
+  createdAt: string;
+  approvedAt: string | null;
+}
+
+/** 목록 조회용 요약 레코드. 본문(`data`)을 제외한다. */
+export type InvitationSummary = Omit<InvitationRecord, 'data'>;
+
 /** 화면 호환용 평면 모델 (원한다면 사용) */
 export type WeddingInvitationFlat = Omit<WeddingInvitation, 'couple' | 'parents'> & {
   groom: Person;
