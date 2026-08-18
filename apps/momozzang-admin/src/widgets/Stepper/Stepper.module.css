@@ -29,7 +29,10 @@
   border: 1px solid var(--color-line-300);
   border-radius: 999px;
   background: var(--color-basic-white);
-  color: var(--color-neutral-500);
+  /* 흰 표면 대비 6.31:1. 종전 --color-neutral-500 은 3.25:1 로 WCAG AA(4.5) 미달이었다
+     — S2·S3 이 공유 Button 만 보느라 놓친 3번째 대비 결함이다(계약 4 §0.5-a).
+     같은 값을 /admin 의 .toolbarLabel 이 이미 쓴다(DoD 17). */
+  color: var(--color-neutral-700);
   font-size: var(--font-size-14);
   font-weight: 600;
   cursor: pointer;
@@ -51,7 +54,8 @@
   height: 22px;
   border-radius: 50%;
   background: var(--color-bg-200);
-  color: var(--color-neutral-500);
+  /* 라벨과 같은 중립값으로 맞춘다 — bg-200 대비 5.24:1(종전 neutral-500 은 2.70:1). */
+  color: var(--color-neutral-700);
   font-size: var(--font-size-12);
   font-weight: 700;
 }
