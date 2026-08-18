@@ -34,3 +34,78 @@
   letter-spacing: var(--letter-spacing-14);
   color: var(--color-basic-white50);
 }
+
+/* ── T9: 안내 화면의 다음 행동 + 로딩 진행 표시 ─────────────────────────────
+   기존 규칙 사이에 끼워넣지 않고 파일 끝에 새 블록으로 붙인다.
+   신규 색상 리터럴을 만들지 않고 기존 디자인 토큰만 조합한다. */
+
+/* 버튼(button)과 링크(a)가 같은 표면을 공유한다 — 두 화면의 다음 행동이 시각적으로 갈리지 않게. */
+.action {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-basic-white50);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-PyeongChang);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+  color: var(--color-basic-white);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.action:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* 로딩 진행 표시. 애니메이션은 이 요소 자신에 걸린다 —
+   `prefers-reduced-motion: reduce` 에서 animation-name 이 실제로 none 이 되는지가 판정 지점이다. */
+.progress {
+  box-sizing: border-box;
+  width: 160px;
+  height: 4px;
+  max-width: 60%;
+  border-radius: 999px;
+  background-color: var(--color-basic-white25);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-basic-white25) 0%,
+    var(--color-basic-white) 50%,
+    var(--color-basic-white25) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 60% 100%;
+  animation: invitationLoadingSweep 1.4s ease-in-out infinite;
+}
+
+@keyframes invitationLoadingSweep {
+  from {
+    background-position: -60% 0;
+  }
+  to {
+    background-position: 160% 0;
+  }
+}
+
+/* 정적 대체 — 움직이지 않는 부분 채움 막대로 "진행 중" 을 표현한다. */
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    animation: none;
+    background-image: linear-gradient(
+      90deg,
+      var(--color-basic-white) 0%,
+      var(--color-basic-white) 45%,
+      var(--color-basic-white25) 45%,
+      var(--color-basic-white25) 100%
+    );
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+}

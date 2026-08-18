@@ -33,6 +33,21 @@
 
 저장된 행이 없을 때는 예외가 아니라 정상 경로이며 `/` 로 리다이렉트하지 않습니다.
 
+위 표는 **화면 문구·앵커의 정본**이라 행을 고치지 않습니다. 각 조건에서 사용자가 할 수 있는 행동은
+아래 **액션 열**로 덧붙입니다 — 안내 화면은 막다른 골목이 아니어야 합니다.
+
+| 조건 | 액션 |
+|------|------|
+| 조회 중 | 진행 표시(`data-testid="invitation-loading-progress"`, `aria-hidden="true"`). `prefers-reduced-motion: reduce` 에서는 애니메이션을 끄고 정적 막대로 대체합니다 |
+| 조회 실패 | `다시 시도` 버튼(`data-testid="invitation-error-retry"`) → `refetch()`. 재조회 중 라벨은 `다시 시도 중...` |
+| 저장된 행 없음 | `모모짱 홈으로` 링크(`data-testid="invitation-missing-home"`, `href="/"`) |
+| `status='pending'` | `상태 다시 확인` 버튼(`data-testid="invitation-pending-refresh"`) → `refetch()`, 재조회 중 라벨은 `확인 중...`. 함께 놓인 안내 문장(`data-testid="invitation-pending-help"`)이 승인 절차와 결과 통보 경로를 알립니다 |
+| `status='rejected'` | `모모짱 홈으로` 링크(`data-testid="invitation-rejected-home"`, `href="/"`) |
+| `status='approved'` | — (본문이 열립니다) |
+
+조회는 `retry: false` 라 실패해도 자동 재시도가 없습니다. 그래서 실패·대기 화면의 재조회는 **사용자가
+직접 눌러야** 하고, 위 두 버튼이 그 유일한 경로입니다(새로고침을 요구하지 않습니다).
+
 ## 화면 흐름
 
 ```mermaid
