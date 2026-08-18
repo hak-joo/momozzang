@@ -94,7 +94,48 @@
     display: none;
   }
 
+  /* ── 좁은 폭 1행화(QA_FINDINGS_3 §8-8) ──────────────────────────────
+   * S3 은 상단바에 `flex-wrap: wrap` 을 허용하면서 "좁은 폭에서는 활성 라벨만 남으니
+   * 폭이 준다"를 전제했는데, **활성 라벨이 길면 그 전제가 무너진다** — 실측하면
+   * 360px 스텝②는 145px 3행이었다(계약 4 §0.4). 스텝퍼가 줄어들 수 있게 만들고
+   * 마지막 수단으로 활성 라벨을 말줄임한다. 라벨은 계속 보이므로 DoD 10 은 유지된다. */
+  .stepper {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .list {
+    gap: 2px;
+    min-width: 0;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  .item {
+    min-width: 0;
+  }
+
+  .step {
+    padding: 6px 10px;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .index {
+    width: 20px;
+    height: 20px;
+    flex: none;
+  }
+
+  .label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 커넥터는 1행 폭 예산에서 가장 먼저 덜어낼 장식이다. */
   .connector {
-    width: 12px;
+    display: none;
   }
 }
