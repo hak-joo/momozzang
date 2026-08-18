@@ -63,6 +63,20 @@ flowchart LR
 - 리사이즈된 파일을 Supabase Storage `wedding-images` 버킷에 업로드한 뒤 public URL을 사용합니다(`src/features/invitation/api/useImageUploadMutation.ts`).
 - 단일 이미지 필드: 메인 이미지(`customization.mainImageUrl`), 공유 썸네일(`invitationInfo.shareImageUrl`), 신랑/신부 이미지(`aboutUs.groomImageUrl` / `aboutUs.brideImageUrl`).
 
+<!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. -->
+## 승인 콘솔 좁은 폭 카드 레이아웃 (/admin)
+
+- `768px` 이하에서 승인 목록 표가 **행 단위 카드**로 접힙니다. `thead` 를 숨기고 각 행을 카드 표면
+  (테두리 + 라운드 + 여백)으로, 각 셀을 블록으로 바꿉니다. 그래서 **가로 스크롤이 발생하지 않고**
+  `처리` 버튼이 스크롤 없이 화면 안에 들어옵니다.
+- 항목 이름은 마크업이 아니라 `ApprovalsPage.module.css` 의 `::before` 로 그립니다
+  (`슬러그` · `연락처` · `상태` · `신청일` · `신랑·신부` · `예식일` · `처리`).
+  펼침 미리보기 행과 `내용 보기` 셀에는 라벨을 붙이지 않습니다.
+- 선택자는 컬럼 개수에 흔들리지 않도록 앞·뒤·구조 기준으로 씁니다. 상태 셀은 `[data-badge]` 를 가진
+  유일한 셀이고 신청일은 그 다음 셀입니다.
+- `769px` 이상에서는 기존 표 레이아웃이 그대로입니다(`white-space: nowrap` 포함).
+
+
 ## 갤러리 드래그 정렬
 
 갤러리 관리는 `src/widgets/GalleryManager/GalleryManager.tsx`가 담당하며 `@dnd-kit`(core/sortable/utilities)을 사용합니다.

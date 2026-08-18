@@ -248,6 +248,105 @@
   color: var(--color-success-600);
 }
 
+/* T4: 좁은 폭에서 표를 행 단위 카드로 접는다.
+   ── 삽입 지점(.badge[data-badge='approved'] 직후)은 주제 순서가 아니라 병합 독립성
+      기준이다(계약 §5.2). 파일 끝은 T1 이, 그 위 두 지점은 T3·T2 가 점유했다.
+   ── 이 태스크는 ApprovalsPage.tsx 를 **한 줄도 만지지 않는다.** 슬러그 셀은 T1 이,
+      연락처 셀 뒤는 T3 의 삽입 앵커라 <td data-label="…"> 를 다는 순간 정면 충돌한다.
+      그래서 항목 라벨을 구조 선택자 + ::before 로만 만든다.
+   ── 선택자는 컬럼 개수가 5·6·7·8 로 바뀌어도 같은 셀을 가리키도록 앞 기준·구조 기준으로
+      쓴다: 슬러그는 언제나 첫 셀, 처리는 언제나 마지막 셀, 상태는 [data-badge] 를 가진
+      유일한 셀, 신청일은 그 다음 셀이다. T3·T12 가 더하는 셀은 그 사이에 들어간다.
+      .badge 가 아니라 [data-badge] 를 쓰는 이유: CSS 모듈 클래스는 브라우저에서 해시로
+      바뀌어 검증식과 문자열이 갈린다. 마크업에 이미 있는 속성을 쓰면 그 착오가 없다.
+   ── .table / .tableScroll 처럼 단일 클래스 선택자는 클래스명을 겹쳐 명시도를 (0,2,0) 으로
+      올린다. T1 이 파일 끝에 같은 명시도의 규칙을 두므로, 순서에 기대지 않기 위해서다.
+      단순화하면 카드 전환이 조용히 죽는다. */
+@media (max-width: 768px) {
+  .tableScroll.tableScroll {
+    /* 카드는 넘칠 폭이 없다. 가로 스크롤 컨테이너를 그대로 두면 스크롤바가 남는다. */
+    overflow-x: visible;
+  }
+
+  .table.table,
+  .table.table tbody,
+  .table.table tr,
+  .table.table td {
+    display: block;
+  }
+
+  .table.table {
+    /* BASE 는 nowrap 이다. 카드에서는 값이 줄바꿈으로 흘러야 한다. */
+    white-space: normal;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) {
+    border: 1px solid var(--color-line-200);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td {
+    padding: 6px 0;
+    border-bottom: 0;
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td::before {
+    display: block;
+    font-size: var(--font-size-12);
+    line-height: var(--line-height-12);
+    color: var(--color-neutral-700);
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td:first-child::before {
+    content: '슬러그';
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td:nth-child(2)::before {
+    content: '연락처';
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td:has([data-badge])::before {
+    content: '상태';
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td:has([data-badge]) + td::before {
+    content: '신청일';
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td:last-child::before {
+    content: '처리';
+  }
+
+  /* 아래 두 선택자는 T12 가 없으면 아무것도 매칭하지 않는다. 선택자는 참조가 아니므로
+     T4 단독 적용에서도 빌드·렌더가 모두 정상이다(dependsOn 은 비어 있다). */
+  .table tbody tr:not([data-testid='approvals-preview-row'])
+    > td[data-testid='approvals-couple-cell']::before {
+    content: '신랑·신부';
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row'])
+    > td[data-testid='approvals-date-cell']::before {
+    content: '예식일';
+  }
+
+  /* 펼침 토글 셀에는 라벨을 붙이지 않는다 — 버튼 문구(`내용 보기`)가 스스로 설명한다.
+     T3 이 없으면 이 선택자도 아무것도 매칭하지 않는다. */
+  .table tbody tr:not([data-testid='approvals-preview-row'])
+    > td:has([data-testid='approvals-preview-toggle'])::before {
+    content: none;
+  }
+
+  .table tbody tr:not([data-testid='approvals-preview-row']) > td:last-child .rowActions {
+    flex-wrap: wrap;
+  }
+}
+
 .badge[data-badge='rejected'] {
   border-color: var(--color-danger-200);
   background: var(--color-danger-50);
