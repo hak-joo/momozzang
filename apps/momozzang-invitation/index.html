@@ -22,12 +22,14 @@
       type="font/woff2"
       crossorigin
     />
+    <!-- Wanted Sans 는 폰트 바이너리가 아니라 **서브셋 스타일시트**다.
+         fonts.css 가 이 URL 을 @import 로 얹으므로 preload 도 as="style" 이어야 한다.
+         as="font" 로 두면 preload 가 실제 요청과 매칭되지 않아 브라우저가
+         "preloaded but not used" 경고를 낸다. -->
     <link
       rel="preload"
       href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
-      as="font"
-      type="font/woff2"
-      crossorigin
+      as="style"
     />
     <link
       rel="preload"
