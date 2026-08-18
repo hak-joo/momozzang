@@ -3,27 +3,36 @@
   margin: 0 auto;
   padding: 40px 20px;
   font-family: var(--font-PyeongChang);
+  /* /apply 와 같은 페이지 배경(DoD 14 전반부). */
+  background: var(--color-bg-100);
 }
 
+/* 경계는 툴바 Panel 이 그린다 — 종전의 진한 border-bottom 구분선은 제거했다(P1-5). */
 .header {
-  margin-bottom: 40px;
-  border-bottom: 1px solid var(--color-neutral-850);
-  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
+/* 브랜드 시그니처(SPEC F11 · DoD 19). 페이지 헤더 타이틀만 픽셀 폰트를 입고,
+   본문·폼·버튼은 PyeongChang 을 유지한다 — 어드민 크롬의 가독성이 우선이다. */
 .title {
+  margin: 0;
+  font-family: var(--font-DungGeunMo);
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 16px;
 }
 
-.controls {
-  display: flex;
-  gap: 8px;
+.status {
+  margin: 0;
+  font-size: var(--font-size-13);
+  color: var(--color-neutral-700);
 }
 
 .slugInput {
   flex: 1;
+  min-width: 0;
 }
 
 .content {
@@ -38,10 +47,7 @@
   color: var(--color-neutral-600);
 }
 
-.sectionHeader {
-  margin: 0 0 16px 0;
-  font-size: var(--font-size-18);
-}
+/* 섹션 제목은 Panel 의 `title` 슬롯이 담당한다(좌측 정렬 SSOT). */
 
 .grid {
   display: grid;
@@ -49,27 +55,18 @@
   gap: 20px;
 }
 
-.label {
-  display: block;
-  margin-bottom: 8px;
+/* 이미지 슬롯 라벨은 FileDropField 가 담당한다(F6). 여기 남은 `.toolbarLabel` 은 툴바의
+   슬러그 입력 라벨이다 — 툴바가 한 행이므로 아래 여백 없이 인라인으로 둔다. */
+.toolbarLabel {
+  flex: none;
   font-size: var(--font-size-14);
-  color: var(--color-neutral-450);
+  /* DoD 17 전반부 — 흰 표면 대비 6.31:1 (종전 --color-neutral-450 은 2.67:1 로 AA 미달). */
+  color: var(--color-neutral-700);
 }
 
+/* 표면(비율·배경·보더)은 ImageThumb 가 담당한다. 여기서는 간격만 준다. */
 .previewImage {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 8px;
   margin-bottom: 8px;
-  background: var(--color-neutral-850);
-}
-
-.previewMain {
-  aspect-ratio: 2/3;
-}
-
-.previewSquare {
-  aspect-ratio: 1/1;
 }
 
 @media (max-width: 768px) {

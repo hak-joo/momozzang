@@ -5,6 +5,11 @@
   font-family: var(--font-PyeongChang);
   display: flex;
   flex-direction: column;
+  /* sticky offset SSOT(계약 3 §4.6). 종전 `.previewPane { top: 96px }` 은 손으로 적은 상수라
+     실제 상단바 높이(127px)와 31px 어긋나 스크롤 시 프레임 상단이 가려졌다(DoD 11).
+     값은 상단바의 **자연 높이**와 같다: padding 16*2 + 내용 40 + border 1 = 73.
+     자연 높이보다 크게 잡으면 상단바가 다시 늘어나 기준 39 의 이동량 식이 깨진다(§6 R14). */
+  --apply-topbar-height: 73px;
 }
 
 .topbar {
@@ -19,6 +24,24 @@
   top: 0;
   z-index: 20;
   flex-wrap: wrap;
+  /* min-height 는 "떠받치는" 용도가 아니라 변수와 실제 높이가 같음을 고정하는 용도다.
+     이 저장소에는 전역 box-sizing 리셋이 없으므로 명시한다. */
+  box-sizing: border-box;
+  min-height: var(--apply-topbar-height);
+}
+
+/* 페이지 타이틀(DoD 19). 상단바의 자연 높이는 스텝 pill 40px 이 결정한다 —
+   타이틀 줄높이를 그보다 낮게(18px * 1.2 = 21.6) 두면 --apply-topbar-height: 73px 이
+   그대로 유지된다(기준 12·33). */
+.pageTitle {
+  flex: none;
+  margin: 0;
+  font-family: var(--font-DungGeunMo);
+  font-size: var(--font-size-18);
+  line-height: 1.2;
+  font-weight: 400;
+  color: var(--color-neutral-900);
+  white-space: nowrap;
 }
 
 .stepNav {
@@ -62,12 +85,24 @@
 .previewPane {
   display: flex;
   justify-content: center;
+  /* grid 아이템의 자동 최소 크기(auto)가 `.frame` 의 375px 기여분으로 잡히면
+     360/390 에서 트랙이 줄지 않아 가로 스크롤이 생긴다(DoD 9). */
+  min-width: 0;
   position: sticky;
-  top: 96px;
+  /* `.topbar` 와 **같은 변수**를 소비한다 — 상수 중복이 만들던 sticky offset 불일치 해소. */
+  top: calc(var(--apply-topbar-height) + 16px);
 }
 
 .formPane {
   min-width: 0;
+}
+
+/* 네이티브 체크박스는 UA 기본 폰트(Arial)를 쓴다 — 공유 `Checkbox` 도 `font-family` 를
+   라벨 래퍼에만 걸어 두어 인풋 자체는 상속받지 못한다. 글자를 그리지 않는 위젯이지만
+   DoD 19 의 측정 대상(폼 컨트롤)이므로 어드민 폼 패널 안에서 상속시킨다(기준 11).
+   **`.previewPane` 이 아니라 `.formPane` 에만 건다** — 폰 미리보기 안은 뷰어 소유다. */
+.formPane input[type='checkbox'] {
+  font-family: inherit;
 }
 
 .placeholder {
@@ -86,6 +121,35 @@
 
 /* ── 반응형: ≤768px에서 2단 → 세로 스택 + 탭 토글 ── */
 @media (max-width: 768px) {
+  /* 좁은 폭에서는 타이틀을 **흐름에서 완전히 뺀다.** §0.9-V3 의 1행화 시뮬레이션은
+     `needed 328 == available 328` 로 여유가 정확히 0 이었고 그 측정은 타이틀이 없는
+     상태였다 — 여기서 흐름에 남기면 기준 23 이 반드시 실패한다(기준 23-c). */
+  .pageTitle {
+    display: none;
+  }
+
+  /* 상단바를 한 행으로 고정한다(QA_FINDINGS_3 §8-8).
+     `flex-wrap: wrap` 이 남아 있으면 스텝퍼가 줄어들 수 있는데도 브라우저가 먼저 줄을 바꾼다.
+     `nowrap` 으로 두고 스텝퍼 쪽에서 축소·말줄임을 처리한다(Stepper.module.css).
+     `min-height: var(--apply-topbar-height)` 는 그대로 두어 높이는 데스크톱과 같은 73px 이다. */
+  .topbar {
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .stepNav {
+    flex: none;
+    gap: 4px;
+  }
+
+  /* 360px 스텝②(활성 라벨 `영상·이미지 등록`)가 폭 예산의 경계다 — 여기서 아낀 몇 px 이
+     활성 라벨을 말줄임 없이 온전히 보이게 한다. */
+  .navButton {
+    padding: 6px 8px;
+    font-size: var(--font-size-13);
+  }
+
   .mobileTabs {
     display: flex;
     gap: 8px;

@@ -1,0 +1,28 @@
+/* 폴백 플레이스홀더 — 색은 전부 기존 토큰(raw HEX/rgba 없음). */
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px;
+  overflow: hidden;
+  text-align: center;
+  border: 1px solid var(--color-line-200);
+  border-radius: 8px;
+  background: var(--color-bg-150);
+}
+
+.fallback[data-state='empty'] {
+  border-style: dashed;
+  border-color: var(--color-line-300);
+  background: var(--color-bg-50);
+}
+
+.label {
+  color: var(--color-neutral-500);
+  font-size: var(--font-size-12);
+  line-height: 1.4;
+  word-break: keep-all;
+}

@@ -1,6 +1,7 @@
 import * as DialogPrimitives from '@radix-ui/react-dialog';
 import { clsx } from 'clsx';
 import * as React from 'react';
+import { usePortalContainer } from '../PortalContainer';
 
 import styles from './BottomSheet.module.css';
 
@@ -20,7 +21,9 @@ export function Content({
   onInteractOutside,
   ...contentProps
 }: React.PropsWithChildren<BottomSheetContentProps>) {
-  const Container = usePortal ? DialogPrimitives.Portal : React.Fragment;
+  // provider 가 없으면 `null` → `undefined` 로 넘겨 Radix 기본값(`document.body`)을 그대로 쓴다.
+  // 즉 뷰어의 코드 경로는 변경 전과 완전히 동일하다(계약 3 §4.1-1).
+  const portalContainer = usePortalContainer();
   const resolvedHeight = typeof height === 'number' ? `${height}px` : height;
 
   const sheetStyle = React.useMemo<React.CSSProperties | undefined>(() => {
@@ -32,8 +35,8 @@ export function Content({
     };
   }, [style, resolvedHeight]);
 
-  return (
-    <Container>
+  const content = (
+    <>
       {dimmed && <DialogPrimitives.Overlay className={clsx(styles.overlay, styles.overlayFade)} />}
       <DialogPrimitives.Content
         {...contentProps}
@@ -46,6 +49,14 @@ export function Content({
       >
         {children}
       </DialogPrimitives.Content>
-    </Container>
+    </>
+  );
+
+  if (!usePortal) return content;
+
+  return (
+    <DialogPrimitives.Portal container={portalContainer ?? undefined}>
+      {content}
+    </DialogPrimitives.Portal>
   );
 }

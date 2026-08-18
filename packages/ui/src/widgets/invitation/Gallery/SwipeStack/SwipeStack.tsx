@@ -8,7 +8,8 @@ import speechBubble from '@shared/assets/images/gallery-speech-bubble.png';
 import purpleCat from '@shared/assets/images/purple-cat.png';
 import { useScrollLock } from './useScrollLock';
 import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
-import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { SafeImage } from '@shared/ui/SafeImage';
+import { useInvitation, useIsPreviewMode } from '@entities/WeddingInvitation/Context';
 import { getThemeHue } from '@shared/styles/utils';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 import { buildImageUrl } from '@shared/lib/imageUrl';
@@ -29,6 +30,7 @@ export function SwipeStack({
   renderRange = 3,
 }: SwipeStackProps) {
   const { customization } = useInvitation();
+  const isPreview = useIsPreviewMode();
   const themeHue = getThemeHue(customization?.themeColor);
   const speechBubbleImg = useImageHueShift(speechBubble, themeHue);
 
@@ -316,11 +318,12 @@ export function SwipeStack({
               style={{ transform, opacity, zIndex: Math.round(zIndex) }}
               aria-hidden={Math.abs(deltaToActive) > 1.6 ? true : undefined}
             >
-              <img
+              <SafeImage
                 className={styles.media}
                 src={buildImageUrl(image.url)}
                 alt={image.alt ?? ''}
                 draggable={false}
+                fallback={isPreview}
               />
               <p
                 className={styles.count}

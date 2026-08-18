@@ -4,14 +4,18 @@
    CSS @import 안에서는 해석이 보장되지 않으므로 상대경로를 사용한다. */
 @import '../../../packages/ui/src/index.css';
 
+/* 포커스 링 토큰(`--color-focus-ring`)은 `packages/ui/src/shared/styles/theme.css` 의 `:root`
+   에 있다 — 값의 출처가 뷰어 `Button` 의 `:focus-visible` 이므로 토큰 SSOT 가 그 자리다.
+   여기서는 이름으로만 참조한다(DoD 20: 어드민 모듈 CSS 에 raw HEX/rgba 0건). */
+
 html,
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   font-family: var(--font-PyeongChang);
-  color: #222;
-  background-color: #fff;
+  color: var(--color-neutral-870);
+  background-color: var(--color-bg-100);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

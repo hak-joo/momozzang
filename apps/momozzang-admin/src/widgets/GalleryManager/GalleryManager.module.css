@@ -1,15 +1,30 @@
+/* 표면(면·보더·그림자·패딩)은 호스트가 준다 — /admin 은 Panel, /apply 는 .section.
+   자체 Box 를 갖고 있던 것이 /apply 스텝②의 "카드 안 카드" 원인이었다(계약 §4.4). */
+.manager {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
 .header {
-  margin: 0 0 16px 0;
-  font-size: var(--font-size-18);
+  margin: 0;
+  font-size: var(--font-size-16);
+  font-weight: 700;
+  color: var(--color-neutral-900);
 }
 
-.controls {
-  margin-bottom: 16px;
+/* 카드 제목 바로 아래 보조 설명(N4). `.manager` 의 gap 16 은 제목과의 간격으로는 넓어
+   음수 마진 대신 gap 을 흡수하는 방식으로 붙인다. */
+.description {
+  margin: -8px 0 0;
+  font-size: var(--font-size-13);
+  line-height: 1.5;
+  color: var(--color-neutral-700);
 }
 
-.hiddenInput {
-  display: none;
-}
+/* 파일 추가 조작면(`.controls` / `.hiddenInput`)은 FileDropField 가 담당한다(F6).
+   `display:none` 이던 인풋이 clip 숨김으로 바뀌어 키보드 포커스가 살아났다(계약 3 §4.2). */
 
 .grid {
   display: grid;
@@ -23,7 +38,8 @@
   aspect-ratio: 1/1;
   border-radius: 8px;
   overflow: hidden;
-  background-color: var(--color-neutral-850);
+  /* P2-5: 어두운 박스 대신 중립 배경 토큰 — 로드 전/실패 시에도 어드민 표면과 어울린다. */
+  background-color: var(--color-bg-150);
   touch-action: none;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -36,12 +52,17 @@
   pointer-events: none;
 }
 
+/* 앨범 0장일 때의 점선 빈 상태 슬롯(F2). 그리드 첫 칸 크기를 그대로 차지한다. */
+.emptySlot {
+  max-width: 160px;
+}
+
 .deleteButton {
   position: absolute;
   top: 4px;
   right: 4px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  background: var(--color-scrim-600);
+  color: var(--color-basic-white);
   border: none;
   border-radius: 50%;
   width: 24px;
@@ -56,5 +77,5 @@
 }
 
 .deleteButton:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--color-scrim-800);
 }

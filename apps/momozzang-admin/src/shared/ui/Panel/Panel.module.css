@@ -1,0 +1,27 @@
+/* 어드민 표면 SSOT. /apply 의 `.section` 과 **같은 토큰**을 소비한다(DoD 14).
+   `align-items` 를 주지 않는다 — 종전 A8(섹션 제목 어긋남)의 원인이 Box.board{align-items:center} 였다. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  padding: var(--admin-surface-padding);
+  background: var(--admin-surface-bg);
+  border: var(--admin-surface-border);
+  border-radius: var(--admin-surface-radius);
+  box-shadow: var(--admin-surface-shadow);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-16);
+  font-weight: 700;
+  color: var(--color-neutral-900);
+}
+
+/* 한 행 툴바(A7). 세 요소의 높이가 달라도 세로 중심이 맞도록 center 정렬한다. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

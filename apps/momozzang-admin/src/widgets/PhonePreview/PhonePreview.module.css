@@ -1,14 +1,16 @@
 .frame {
   position: relative;
-  width: 375px;
+  /* 1440 에서 `.previewPane` 트랙은 minmax(399px, 440px) 이라 min() 이 375 로 해석된다 —
+     넓은 폭의 프레임 크기는 불변이다. 좁은 폭(360/390)에서만 컨테이너를 따라 줄어든다(§6 R8). */
+  width: min(375px, 100%);
   max-width: 100%;
   aspect-ratio: 375 / 780;
   background: var(--color-bg-dark);
   border-radius: 44px;
   padding: 12px;
   box-shadow:
-    0 18px 48px rgba(0, 0, 0, 0.28),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+    0 18px 48px var(--color-scrim-280),
+    inset 0 0 0 2px var(--color-basic-white08);
   box-sizing: border-box;
 }
 
@@ -35,6 +37,13 @@
   /* 새 containing block 생성:
      청첩장 내부의 position:fixed(Header)와 100vh 기반 레이아웃이 이 프레임 안에 갇히게 한다. */
   transform: translateZ(0);
+  /* 노치 safe-area(F3). 실기기와 동일하게 노치는 베젤에 남고 콘텐츠가 그 아래에서 시작한다.
+     노치 bottom 은 .screen 기준 28px(frame top 14 + height 26 - frame padding 12)이므로
+     헤더 top 을 30px 로 내리면 겹침이 0 이 된다. left 0 은 헤더 박스를 .screen 폭에 정확히 맞춰
+     마지막 탭이 프레임 밖으로 나가지 않게 한다. 67px = 30 + (뷰어의 header top 13 -> 본문 50 간격 37). */
+  --invitation-header-top: 30px;
+  --invitation-header-left: 0px;
+  --invitation-content-top: 67px;
   /* 청첩장 본문 폰트(PyeongChang)를 프레임 안에서만 적용 — 폼/스텝퍼 오염 방지 */
   font-family: var(--font-PyeongChang, 'PyeongChang', 'Noto Sans KR', sans-serif);
   color: var(--color-neutral-870);
@@ -43,4 +52,21 @@
 /* 미리보기 내부 스크롤바 숨김(청첩장 본래 UX) */
 .screen::-webkit-scrollbar {
   display: none;
+}
+
+/* 프레임 안으로 들어온 시트/다이얼로그(F3-b)의 크기를 컨테이너(.screen) 상대로 재해석한다.
+   포털 컨테이너 주입만으로는 부족하다 — BottomSheet 는 `width: min(430px, 100vw)`,
+   Dialog 는 `width: 90vw; max-width: 430px`, 호출부는 인라인 `height: 80~92vh` 를 쓰므로
+   전부 **뷰포트**를 본다(폭 430 > .screen 폭 351). `.screen{overflow:hidden}` 이 잘라낸
+   영역은 히트테스트에서도 사라지므로, 이 규칙이 없으면 시트를 **닫을 수도 없다**(계약 3 §6 R4).
+
+   `max-height` 는 인라인 `height` 를 사후에 자르므로 호출부 수정 없이 세로도 갇힌다.
+   특이도 (0,2,0) 이라 `.sheet`/`.dialog`(0,1,0)를 !important 없이 이긴다.
+   이 파일은 **어드민 번들에만** 들어간다 — 뷰어는 로드조차 하지 않으므로 무회귀가 구조적이다.
+   CSS Modules 는 클래스 이름만 해시하므로 `[role='dialog']` 는 그대로 남는다(계약 3 §4.7). */
+.screen [role='dialog'] {
+  width: min(430px, 100%);
+  max-width: 100%;
+  min-width: 0;
+  max-height: 100%;
 }
