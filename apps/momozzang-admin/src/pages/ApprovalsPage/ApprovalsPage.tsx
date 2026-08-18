@@ -185,6 +185,11 @@ export function ApprovalsPage() {
                   <th scope="col">내용</th>
                   <th scope="col">상태</th>
                   <th scope="col">신청일</th>
+                  {/* T12: 삽입 지점은 독립성 기준 — 스프린트 3 계약 §5.1.
+                      `신랑·신부` 가 `신청일` 뒤에 오는 것은 서술 흐름이 아니라, 같은 파일을
+                      만지는 T3 의 삽입 지점(연락처 뒤)과 공통 문맥을 남기기 위한 배치다. */}
+                  <th scope="col">신랑·신부</th>
+                  <th scope="col">예식일</th>
                   <th scope="col">처리</th>
                 </tr>
               </thead>
@@ -230,6 +235,22 @@ export function ApprovalsPage() {
                       </span>
                     </td>
                     <td>{formatDateTime(row.createdAt)}</td>
+                    {/* T12: 삽입 지점은 독립성 기준 — 스프린트 3 계약 §5.1.
+                        헤더와 같은 컬럼 인덱스(신청일 뒤)라 정렬이 어긋나지 않는다.
+                        예식일은 toLocaleDateString 을 쓰지 않는다 — 로케일에 따라 표기가
+                        달라지면 값 판정이 흔들린다. YYYY-MM-DD 를 직접 잘라 쓴다. */}
+                    <td data-testid="approvals-couple-cell">
+                      {row.groomName && row.brideName
+                        ? `${row.groomName} · ${row.brideName}`
+                        : '-'}
+                    </td>
+                    <td data-testid="approvals-date-cell">
+                      {row.weddingDate
+                        ? `${Number(row.weddingDate.slice(0, 4))}년 ${Number(
+                            row.weddingDate.slice(5, 7),
+                          )}월 ${Number(row.weddingDate.slice(8, 10))}일`
+                        : '-'}
+                    </td>
                     <td>
                       <div className={styles.rowActions}>
                         <Button

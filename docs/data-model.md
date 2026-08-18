@@ -88,7 +88,9 @@ Supabase 경로에서는 이 테이블이 관리자 판정의 정본이고, 로�
 
 - `InvitationStatus` — `'pending' | 'approved' | 'rejected'`.
 - `InvitationRecord` — `slug`, `status`, `data`, `applicantContact`, `createdAt`, `approvedAt`.
-- `InvitationSummary` — `Omit<InvitationRecord, 'data'>` (목록 조회용, 본문 제외).
+- `InvitationSummary` — `Omit<InvitationRecord, 'data'>` 에 `groomName` · `brideName` · `weddingDate` 세 필드를 더한 타입(목록 조회용, 본문 제외).
+  - 세 값은 `/admin` 승인 목록 표의 `신랑·신부` · `예식일` 컬럼을 채웁니다. 본문 `data` 는 여전히 내려오지 않습니다.
+  - 로컬 구현은 `toSummary` 가 본문에서 옮겨 담고, Supabase 구현은 `select` 의 JSON 경로 추출(`data->couple->groom->>name` 등)로 세 값만 가져옵니다 — 목록 진입 시 슬러그별 본문 조회가 생기지 않습니다.
 - `CreateInvitationInput` — `slug`, `data`, `editPassword`(평문, 저장 시 반드시 해시), `applicantContact`.
 
 ### Repository 메서드

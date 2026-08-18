@@ -213,6 +213,20 @@
   color: var(--color-neutral-900);
 }
 
+/* T12: 커플·예식일 컬럼. 삽입 지점은 주제 순서가 아니라 병합 독립성 기준이다(계약 §5.2) —
+   .table th/.table td 블록이 닫힌 직후이며 T2(위)·T4(아래) 블록과 스무 줄 이상 떨어져 있다.
+   클래스가 아니라 data-testid 속성 선택자를 쓴다: 마크업에 className 을 더하지 않아야
+   T1(슬러그 셀)·T3(연락처 셀 뒤)과 접점이 생기지 않는다. */
+.table td[data-testid='approvals-couple-cell'] {
+  color: var(--color-neutral-900);
+  white-space: nowrap;
+}
+
+.table td[data-testid='approvals-date-cell'] {
+  color: var(--color-neutral-700);
+  white-space: nowrap;
+}
+
 .table th {
   font-weight: var(--font-weight-bold);
   color: var(--color-neutral-700);
