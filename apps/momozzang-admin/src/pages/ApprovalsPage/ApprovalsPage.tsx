@@ -7,7 +7,8 @@ import type {
   InvitationSummary,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { Panel } from '../../shared/ui/Panel';
-import { useAdminSession, useSignOutMutation } from '../../features/auth/useAdminSession';
+import { AdminTopBar } from '../../widgets/AdminTopBar/AdminTopBar';
+import { useAdminSession } from '../../features/auth/useAdminSession';
 import { useInvitationListQuery } from '../../features/invitation/api/useInvitationListQuery';
 import { useInvitationStatusMutation } from '../../features/invitation/api/useInvitationStatusMutation';
 import styles from './ApprovalsPage.module.css';
@@ -39,7 +40,6 @@ function formatDateTime(iso: string): string {
 export function ApprovalsPage() {
   const queryClient = useQueryClient();
   const sessionQuery = useAdminSession();
-  const signOut = useSignOutMutation();
   const [filter, setFilter] = useState<StatusFilter>('all');
 
   const listQuery = useInvitationListQuery(filter === 'all' ? undefined : filter, {
@@ -63,21 +63,12 @@ export function ApprovalsPage() {
 
   return (
     <div className={styles.page}>
+      {/* 화면 사이 이동·로그아웃은 상단바 한 곳으로 모은다 — 두 보호 화면이 같은 탈출구를 갖는다.
+          `RequireAdmin` 의 children 안쪽이므로 세션 판정 전에는 마운트되지 않는다. */}
+      <AdminTopBar />
+
       <header className={styles.header}>
         <h1 className={styles.heading}>신청 관리</h1>
-        <div className={styles.headerActions}>
-          <Link className={styles.link} to="/admin/edit">
-            청첩장 편집
-          </Link>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => signOut.mutate()}
-            disabled={signOut.isPending}
-          >
-            로그아웃
-          </Button>
-        </div>
       </header>
 
       <Panel className={styles.wide}>
@@ -127,7 +118,20 @@ export function ApprovalsPage() {
                     data-created-at={row.createdAt}
                     data-approved-at={row.approvedAt ?? ''}
                   >
-                    <td>{row.slug}</td>
+                    <td>
+                      {/* `편집` 은 `처리` 셀이 아니라 슬러그 셀에 둔다 — 승인/반려 버튼 영역과
+                          hunk 가 겹치지 않고, 슬러그를 눈으로 읽어 다시 입력할 필요가 사라진다. */}
+                      <div className={styles.slugCell}>
+                        <span className={styles.slugText}>{row.slug}</span>
+                        <Link
+                          className={styles.editLink}
+                          to={`/admin/edit?slug=${encodeURIComponent(row.slug)}`}
+                          data-testid="approvals-edit-link"
+                        >
+                          편집
+                        </Link>
+                      </div>
+                    </td>
                     <td>{row.applicantContact ? row.applicantContact : '-'}</td>
                     <td>
                       <span className={styles.badge} data-badge={row.status}>

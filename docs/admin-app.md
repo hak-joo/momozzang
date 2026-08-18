@@ -12,17 +12,22 @@
 
 라우터 정의는 `src/App.tsx`에 있습니다.
 
-| 라우트 | 컴포넌트 | 접근 조건 |
-|--------|----------|-----------|
-| `/` | `<Navigate to="/admin" replace />` | 공개(리다이렉트만) |
-| `/login` | `LoginPage` (`src/pages/LoginPage/LoginPage.tsx`) | 공개 |
-| `/admin` | `ApprovalsPage` (`src/pages/ApprovalsPage/ApprovalsPage.tsx`) | `RequireAdmin` (관리자 로그인) |
-| `/admin/edit` | `AdminPage` (`src/pages/AdminPage.tsx`) | `RequireAdmin` (관리자 로그인) |
-| `/apply` | `ApplyPage` (`src/pages/ApplyPage/ApplyPage.tsx`) | 공개 |
-| `/edit` | `EditPage` (`src/pages/EditPage/EditPage.tsx`) | 공개 라우트 + 슬러그+비밀번호 게이트 |
+| 라우트 | 컴포넌트 | 접근 조건 | 화면 이동 |
+|--------|----------|-----------|-----------|
+| `/` | `<Navigate to="/admin" replace />` | 공개(리다이렉트만) | — |
+| `/login` | `LoginPage` (`src/pages/LoginPage/LoginPage.tsx`) | 공개 | — |
+| `/admin` | `ApprovalsPage` (`src/pages/ApprovalsPage/ApprovalsPage.tsx`) | `RequireAdmin` (관리자 로그인) | 공통 상단바(`data-testid="admin-topbar"`)로 `/admin/edit` 과 상호 이동합니다. 목록의 각 행에는 그 슬러그를 실은 `편집` 딥링크가 있습니다 |
+| `/admin/edit` | `AdminPage` (`src/pages/AdminPage.tsx`) | `RequireAdmin` (관리자 로그인) | 공통 상단바(`data-testid="admin-topbar"`)로 `/admin` 과 상호 이동합니다. `?slug=` 쿼리를 마운트 시 슬러그 입력·조회의 **초기값으로 수용**하며, 쿼리가 없으면 종전 기본값(`demo-captain-luna`)입니다 |
+| `/apply` | `ApplyPage` (`src/pages/ApplyPage/ApplyPage.tsx`) | 공개 | — |
+| `/edit` | `EditPage` (`src/pages/EditPage/EditPage.tsx`) | 공개 라우트 + 슬러그+비밀번호 게이트 | — |
 
 `/admin` 은 신청 목록·승인/반려 화면(`ApprovalsPage`)이고, 슬러그를 불러와 이미지·갤러리를 고치는
 관리자 편집 화면은 `/admin/edit`(`AdminPage`)로 옮겨졌습니다.
+
+두 보호 화면은 `AdminTopBar`(`src/widgets/AdminTopBar/AdminTopBar.tsx`)를 공유합니다. 상단바는
+`신청 관리` / `청첩장 편집` 링크(현재 화면에 `aria-current="page"`), 로그인한 관리자 이메일,
+`로그아웃` 버튼을 갖습니다. 상단바는 라우터의 공통 레이아웃이 아니라 **각 보호 페이지의 최상단**에서
+렌더합니다 — `RequireAdmin` 바깥으로 올리면 세션 판정 전에 마운트되어 가드 불변식이 깨집니다.
 
 ## 신청자 수정 흐름 (`/edit`)
 
