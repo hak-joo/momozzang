@@ -25,6 +25,9 @@ import type { CreateInvitationInput, InvitationRepository } from './types';
  */
 const STORAGE_PREFIX = 'momozzang:invitation:';
 
+/** 1회 조회당 최대 행 수. Supabase 구현의 `.limit(100)` 과 같은 상한을 로컬에도 적용한다. */
+const LIST_LIMIT = 100;
+
 /** 저장 전용 내부 타입. `editPasswordHash` 는 외부로 절대 반환하지 않는다. */
 type StoredInvitation = {
   slug: string;
@@ -120,7 +123,13 @@ function readStored(slug: string): StoredInvitation | null {
     return null;
   }
 
-  writeStored(promoted);
+  try {
+    writeStored(promoted);
+  } catch {
+    // 쿼터 초과·프라이빗 모드에서 write-back 이 실패해도 승격 결과는 돌려준다.
+    // 레거시 레코드 1건 때문에 목록/뷰어 전체가 죽지 않게 한다.
+  }
+
   return promoted;
 }
 
@@ -232,8 +241,9 @@ export class LocalInvitationRepository implements InvitationRepository {
       .filter((stored) => (status ? stored.status === status : true))
       .map(toSummary);
 
-    // 최신 신청이 위로 오도록 created_at 내림차순 정렬한다.
-    return summaries.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    // 최신 신청이 위로 오도록 created_at 내림차순 정렬한 **뒤에** 상한을 적용한다.
+    // 먼저 자르면 최신순 상위 100건이 아니라 임의 100건이 된다.
+    return summaries.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, LIST_LIMIT);
   }
 
   async setInvitationStatus(slug: string, status: InvitationStatus): Promise<void> {
