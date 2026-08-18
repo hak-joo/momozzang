@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { clsx } from 'clsx';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
@@ -17,8 +17,14 @@ import {
   type ValidationIssue,
 } from '../../features/apply/validateInvitation';
 import { useEditGateMutation, useEditSaveMutation } from '../../features/apply/useEditGate';
+import { getSlugError } from '../../features/apply/validateSlug';
 import styles from './EditPage.module.css';
 import '@momozzang/ui/src/index.css';
+
+/** 게이트 화면의 안내 문구. JSX 안에 여러 줄로 적으면 공백이 접혀 문자열이 흔들린다. */
+const GATE_RECOVERY_MESSAGE =
+  '주소나 편집 비밀번호가 기억나지 않으면, 신청할 때 입력하신 연락처로 운영자에게 문의해 주세요.';
+const GATE_REFRESH_NOTE = '보안을 위해 새로고침하면 주소와 편집 비밀번호를 다시 입력해야 해요.';
 
 const STEPS: StepItem[] = [
   { id: 1, label: '정보입력' },
@@ -37,7 +43,15 @@ const STEPS: StepItem[] = [
  */
 export function EditPage() {
   const [slugInput, setSlugInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
+  /**
+   * 편집 비밀번호 입력은 **비제어(uncontrolled)** 로 둔다.
+   *
+   * React 는 제어 입력의 `value` 를 DOM 의 `value` **속성**에도 반영하기 때문에, 제어로 두면
+   * `document.body.innerHTML` 에 편집 비밀번호 평문이 그대로 직렬화된다(표시 토글을 켜지 않아도
+   * 마찬가지다 — 실측 확인). 표시 토글을 붙이는 이 화면에서는 그 노출을 남길 이유가 없다.
+   * 값은 제출 시점에 ref 로 한 번 읽고, 통과하면 입력칸을 즉시 비운다.
+   */
+  const passwordRef = useRef<HTMLInputElement>(null);
   /** 게이트를 통과한 슬러그/비밀번호. 저장 때 함께 보내며 화면에는 다시 표시하지 않는다. */
   const [gate, setGate] = useState<{ slug: string; editPassword: string } | null>(null);
   const [step, setStep] = useState(1);
@@ -47,6 +61,9 @@ export function EditPage() {
     text: string;
   } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  /** 게이트 폼 보조 상태. 선언은 이 블록 **끝에** 덧붙인다 — 같은 파일을 만지는 뒤 태스크와
+      hunk 가 인접하되 겹치지 않게 하기 위한 규칙이다. */
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
 
   const gateMutation = useEditGateMutation();
   const saveMutation = useEditSaveMutation();
@@ -55,14 +72,19 @@ export function EditPage() {
 
   const handleGateSubmit = (event: FormEvent) => {
     event.preventDefault();
+    // fieldset disabled 와 별개로 한 번 더 막는다 — Enter 연타는 같은 프레임 안에서 여러 번
+    // submit 을 발생시킬 수 있고, 그때는 아직 isPending 이 DOM 에 반영되기 전이다.
+    if (gateMutation.isPending) return;
+
+    const editPassword = passwordRef.current?.value ?? '';
     gateMutation.mutate(
-      { slug: slugInput.trim(), editPassword: passwordInput },
+      { slug: slugInput.trim(), editPassword },
       {
         onSuccess: (data) => {
           // 폼 교체를 먼저 부른다 — 같은 핸들러 안이라 React 배치로 데모 데이터가 한 프레임도 보이지 않는다.
           loadInvitation(data);
-          setGate({ slug: slugInput.trim(), editPassword: passwordInput });
-          setPasswordInput('');
+          setGate({ slug: slugInput.trim(), editPassword });
+          if (passwordRef.current) passwordRef.current.value = '';
         },
       },
     );
@@ -129,54 +151,103 @@ export function EditPage() {
   ]);
 
   if (!gate) {
+    // 실시간 피드백은 `/apply` 와 **같은 규칙**을 재사용한다(문자셋만 본다 — 길이는 저장 시점 검증).
+    // 새 규칙을 발명하면 두 화면의 판정이 갈린다.
+    const slugError = getSlugError(slugInput);
+
     return (
       <PanelScreen>
         <Panel title="청첩장 수정">
           <p className={styles.notice}>
             신청할 때 정한 주소(슬러그)와 편집 비밀번호를 입력해 주세요.
           </p>
-          <form className={styles.form} onSubmit={handleGateSubmit}>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="edit-slug">
-                주소(슬러그)
-              </label>
-              <Input
-                id="edit-slug"
-                aria-required="true"
-                value={slugInput}
-                onChange={(event) => setSlugInput(event.target.value)}
-              />
-            </div>
+          <form className={styles.form} onSubmit={handleGateSubmit} data-testid="edit-gate-form">
+            {/* 제출 중에는 fieldset 하나로 두 입력과 버튼을 한꺼번에 잠근다 —
+                버튼만 disabled 로 두면 입력에서 Enter 를 눌러 중복 제출이 나간다. */}
+            <fieldset className={styles.fieldset} disabled={gateMutation.isPending}>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="edit-slug">
+                  주소(슬러그)
+                </label>
+                <Input
+                  id="edit-slug"
+                  aria-required="true"
+                  aria-invalid={slugError ? 'true' : 'false'}
+                  aria-describedby={slugError ? 'edit-slug-error' : undefined}
+                  value={slugInput}
+                  onChange={(event) => setSlugInput(event.target.value)}
+                />
+                {slugError ? (
+                  <p
+                    className={styles.error}
+                    id="edit-slug-error"
+                    role="alert"
+                    data-testid="edit-slug-error"
+                  >
+                    {slugError}
+                  </p>
+                ) : null}
+              </div>
 
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="edit-password">
-                편집 비밀번호
-              </label>
-              <Input
-                id="edit-password"
-                type="password"
-                aria-required="true"
-                autoComplete="current-password"
-                value={passwordInput}
-                onChange={(event) => setPasswordInput(event.target.value)}
-              />
-            </div>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="edit-password">
+                  편집 비밀번호
+                </label>
+                <div className={styles.passwordRow}>
+                  <Input
+                    ref={passwordRef}
+                    id="edit-password"
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    aria-required="true"
+                    autoComplete="current-password"
+                    className={styles.passwordInput}
+                  />
+                  {/* 접근 가능한 이름은 두 상태에서 고정하고, 눌림 상태는 aria-pressed 로 노출한다. */}
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    className={styles.passwordToggle}
+                    aria-pressed={isPasswordVisible}
+                    aria-label="편집 비밀번호 표시 전환"
+                    aria-controls="edit-password"
+                    onClick={() => setPasswordVisible((visible) => !visible)}
+                    data-testid="edit-password-toggle"
+                  >
+                    {isPasswordVisible ? '숨김' : '표시'}
+                  </Button>
+                </div>
+              </div>
 
-            {gateMutation.isError ? (
-              <p className={styles.error} role="alert" data-testid="edit-gate-error">
-                {gateMutation.error.message}
-              </p>
-            ) : null}
+              {/* 자격증명 오류 문구는 한 문장 그대로 둔다 — 슬러그 존재 여부가 새면 안 된다. */}
+              {gateMutation.isError ? (
+                <p className={styles.error} role="alert" data-testid="edit-gate-error">
+                  {gateMutation.error.message}
+                </p>
+              ) : null}
 
-            <Button
-              type="submit"
-              fullWidth
-              disabled={gateMutation.isPending}
-              data-testid="edit-gate-submit"
-            >
-              {gateMutation.isPending ? '확인 중...' : '편집 시작하기'}
-            </Button>
+              {/* 회복 안내는 오류 요소와 **별개 요소**다. 두 실패 케이스에서 완전히 동일하다. */}
+              {gateMutation.isError ? (
+                <p className={styles.recovery} data-testid="edit-gate-recovery">
+                  {GATE_RECOVERY_MESSAGE}
+                </p>
+              ) : null}
+
+              <Button
+                type="submit"
+                fullWidth
+                disabled={gateMutation.isPending}
+                data-testid="edit-gate-submit"
+              >
+                {gateMutation.isPending ? '확인 중...' : '편집 시작하기'}
+              </Button>
+            </fieldset>
           </form>
+
+          {/* 새로고침하면 게이트로 되돌아가는 것은 의도된 설계다. 그 사실을 화면에서 고지한다. */}
+          <p className={styles.refreshNote} data-testid="edit-gate-refresh-note">
+            {GATE_REFRESH_NOTE}
+          </p>
         </Panel>
       </PanelScreen>
     );

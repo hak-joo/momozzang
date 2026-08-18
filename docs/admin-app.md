@@ -31,7 +31,7 @@
 
 ## 신청자 수정 흐름 (`/edit`)
 
-1. **게이트** — 신청할 때 정한 주소(슬러그)와 편집 비밀번호를 입력해 `getInvitationForEdit(slug, editPassword)` 로 잠금을 해제합니다. 슬러그 미존재·비밀번호 불일치·해시 없는 레거시 행 세 경우 모두 `슬러그 또는 비밀번호가 올바르지 않습니다.` 한 문장으로 끝나 존재 여부가 새지 않고, 잠금 전에는 편집 폼을 마운트조차 하지 않습니다.
+1. **게이트** — 신청할 때 정한 주소(슬러그)와 편집 비밀번호를 입력해 `getInvitationForEdit(slug, editPassword)` 로 잠금을 해제합니다. 슬러그 미존재·비밀번호 불일치·해시 없는 레거시 행 세 경우 모두 `슬러그 또는 비밀번호가 올바르지 않습니다.` 한 문장으로 끝나 존재 여부가 새지 않고, 잠금 전에는 편집 폼을 마운트조차 하지 않습니다. 게이트 폼은 다음 넷을 함께 제공합니다 — ① 편집 비밀번호 **표시/숨김 토글**(`data-testid="edit-password-toggle"`, `aria-pressed` 로 상태 노출, 접근 이름은 두 상태 모두 `편집 비밀번호 표시 전환`), ② 슬러그 입력의 **실시간 문자셋 피드백**(`/apply` 와 같은 `getSlugError` 를 재사용하고 `aria-invalid` 를 갱신, 앵커 `data-testid="edit-slug-error"`), ③ 실패 시 **회복 안내**(`data-testid="edit-gate-recovery"`) — 자격증명 오류 문구와는 **별개 요소**이며 슬러그 존재 여부와 무관하게 항상 같은 문장입니다, ④ **새로고침 고지**(`data-testid="edit-gate-refresh-note"`) — 새로고침하면 게이트로 되돌아가는 것은 의도된 설계이고 그 사실을 진입 직후부터 알립니다. 두 입력과 제출 버튼은 하나의 `fieldset` 에 묶여 제출 중 함께 잠기므로 Enter 연타로도 조회가 한 번만 나갑니다. 편집 비밀번호 입력은 **비제어 입력**입니다 — 제어 입력으로 두면 React 가 값을 DOM `value` 속성에 반영해 평문이 직렬화된 마크업에 남습니다.
 2. **폼 재사용** — 잠금이 풀리면 `/apply` 와 같은 `useApplyForm`·`ApplyForm`·`ImageStep`·`Stepper`·`PhonePreview` 를 그대로 쓰고, 불러온 청첩장으로 폼 전체를 교체합니다. 저장에 반영되지 않는 `신청 정보`(신청자 연락처·편집 비밀번호) 섹션은 이 화면에서 렌더하지 않습니다.
 3. **저장** — 게이트에서 받은 비밀번호를 함께 실어 `updateInvitationWithPassword(slug, editPassword, data)` 로만 저장합니다(무인증 `updateInvitation` 을 쓰지 않습니다). 저장 대상 행은 게이트로 연 슬러그로 고정되며, 공개 상태(`status`)·신청 메타는 그대로 보존됩니다. 데이터 접점은 `src/features/apply/useEditGate.ts` 하나입니다.
 

@@ -185,3 +185,51 @@
   line-height: var(--line-height-13-multi);
   color: var(--color-danger-600);
 }
+
+/* ── T7: 게이트 폼 보조 요소 ─────────────────────────────────────────────────
+   기존 규칙 사이에 끼워넣지 않고 파일 끝에 새 블록으로 붙인다 — 같은 파일을 만지는
+   뒤 태스크(T8)의 hunk 와 겹치지 않게 하기 위한 규칙이다. */
+.fieldset {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.passwordRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.passwordInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.passwordToggle {
+  flex: none;
+}
+
+.recovery {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-line-200);
+  border-radius: var(--button-radius);
+  background: var(--color-bg-100);
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13-multi);
+  color: var(--color-neutral-700);
+}
+
+.refreshNote {
+  margin: 12px 0 0;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  color: var(--color-neutral-700);
+}
