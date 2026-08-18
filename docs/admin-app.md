@@ -47,7 +47,7 @@ flowchart LR
     M --> SB[(Supabase momozzang 테이블)]
 ```
 
-1. **슬러그 입력 → Load** — 입력 필드 기본값은 `demo-captain-luna`. `Load` 버튼(또는 Enter)으로 `slug` 상태를 확정하면 `useInvitationQuery(slug)`가 청첩장 데이터를 조회합니다. 조회 성공 시 로컬 편집 상태(`invitation`)에 반영하고, 실패 시 에러 메시지를 표시합니다.
+1. **슬러그 입력 → Load** — 입력 필드 기본값은 `demo-captain-luna`. `Load` 버튼(또는 Enter)으로 `slug` 상태를 확정하면 `useInvitationQuery(slug)`가 청첩장 데이터를 조회합니다. 조회 성공 시 로컬 편집 상태(`invitation`)에 반영하고, 실패 시 에러 메시지를 표시합니다. <!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. --> `768px` 이하에서는 청첩장 주소 툴바가 여러 행으로 접히고 입력칸이 한 행을 통째로 씁니다(`Panel.module.css` 의 `.toolbar { flex-wrap: wrap }` + `AdminPage.module.css` 의 `.slugInput { flex: 1 1 100% }`). 좁은 폭에서 주소가 앞 몇 글자만 보이던 문제를 막습니다.
 2. **편집** — 메인 이미지, 공유 썸네일(카카오), 신랑/신부 이미지, 그리고 갤러리 앨범을 수정합니다. 모든 편집은 로컬 상태에만 반영되고, 저장 전까지 서버에 반영되지 않습니다.
 3. **저장(Save Changes)** — `useInvitationMutation`으로 `updateInvitation(slug, data)`를 호출해 `momozzang` 테이블의 해당 행 `data` 컬럼을 갱신합니다. 성공/실패 시 `alert`로 결과를 알립니다.
 
