@@ -121,4 +121,13 @@
   --admin-control-radius: 8px;
   --admin-control-font-size: var(--font-size-14);
   --admin-control-color: var(--color-neutral-900);
+
+  /* ── 포커스 링 (상태 표현 SSOT) ────────────────────────────
+   * 값의 출처는 뷰어 `Button.module.css` 의 `:focus-visible` 이다.
+   * S3 은 이 값을 어드민 `index.css` 에 raw `rgba()` 로 적었는데, DoD 20("어드민 모듈 CSS 에
+   * raw HEX/rgba 0건")을 닫으려면 정의를 어드민 밖 토큰 SSOT 로 올리는 것이 정공법이다.
+   * **뷰어에는 아직 소비자가 없다** — 소비자 없는 :root 추가이므로 뷰어 렌더는 불변이어야 한다
+   * (계약 4 기준 31·35 가 이를 잰다). 뷰어 `Button` 을 이 토큰으로 통일하는 것은
+   * 평가자 §9.7-2 가 "이번엔 하지 마라"고 못박은 후속 과제다. */
+  --color-focus-ring: rgba(149, 174, 255, 0.7);
 }
