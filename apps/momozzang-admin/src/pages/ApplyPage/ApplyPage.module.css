@@ -30,6 +30,20 @@
   min-height: var(--apply-topbar-height);
 }
 
+/* 페이지 타이틀(DoD 19). 상단바의 자연 높이는 스텝 pill 40px 이 결정한다 —
+   타이틀 줄높이를 그보다 낮게(18px * 1.2 = 21.6) 두면 --apply-topbar-height: 73px 이
+   그대로 유지된다(기준 12·33). */
+.pageTitle {
+  flex: none;
+  margin: 0;
+  font-family: var(--font-DungGeunMo);
+  font-size: var(--font-size-18);
+  line-height: 1.2;
+  font-weight: 400;
+  color: var(--color-neutral-900);
+  white-space: nowrap;
+}
+
 .stepNav {
   display: flex;
   gap: 8px;
@@ -99,6 +113,13 @@
 
 /* ── 반응형: ≤768px에서 2단 → 세로 스택 + 탭 토글 ── */
 @media (max-width: 768px) {
+  /* 좁은 폭에서는 타이틀을 **흐름에서 완전히 뺀다.** §0.9-V3 의 1행화 시뮬레이션은
+     `needed 328 == available 328` 로 여유가 정확히 0 이었고 그 측정은 타이틀이 없는
+     상태였다 — 여기서 흐름에 남기면 기준 23 이 반드시 실패한다(기준 23-c). */
+  .pageTitle {
+    display: none;
+  }
+
   .mobileTabs {
     display: flex;
     gap: 8px;

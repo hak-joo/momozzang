@@ -15,8 +15,11 @@
   margin-bottom: 32px;
 }
 
+/* 브랜드 시그니처(SPEC F11 · DoD 19). 페이지 헤더 타이틀만 픽셀 폰트를 입고,
+   본문·폼·버튼은 PyeongChang 을 유지한다 — 어드민 크롬의 가독성이 우선이다. */
 .title {
   margin: 0;
+  font-family: var(--font-DungGeunMo);
   font-size: 24px;
   font-weight: bold;
 }
