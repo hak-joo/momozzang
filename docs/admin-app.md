@@ -72,6 +72,26 @@ flowchart LR
 - 사진은 최대 **20장**까지 업로드 가능하며, 초과 시 경고를 표시합니다. 개별 사진 삭제(`confirm` 확인 후 배열에서 제거)도 지원합니다.
 - 항목 컴포넌트는 `src/widgets/GalleryManager/SortableImage.tsx`입니다.
 
+## 승인 콘솔 (`/admin`)
+
+> 이 절의 **위치**는 서술 순서가 아니라 **독립성**으로 정해졌다. 같은 문서를 여러 태스크가 만지므로
+> 각 태스크의 삽입 지점을 6줄 이상 떼어 놓는다(`.harness/runs/ux-diff-picks/APPLY.md` §2.1).
+
+`ApprovalsPage`(`src/pages/ApprovalsPage/ApprovalsPage.tsx`)가 신청 목록과 승인/반려를 담당합니다.
+
+- **확인 대화** — `승인`/`반려`는 되돌리기 어려운 공개 상태 변경이라 `useAdminConfirm`(`src/shared/ui/ConfirmDialog`)
+  의 확인 대화를 먼저 띄웁니다. `승인`은 그 청첩장이 **공개**되어 주소를 아는 누구나 볼 수 있게 된다는 사실을,
+  `반려`는 공개되지 않고 하객에게 안내 화면만 보인다는 사실을 설명에 적습니다. 반려 대화의 확인 버튼은
+  `destructive` 표기입니다. **취소하면 요청을 만들지 않습니다**(`mutate` 를 호출하지 않습니다).
+  `Esc`·오버레이 클릭은 취소와 같습니다.
+- **결과 피드백** — 성공/실패를 **토스트**(`useAdminToast`, `src/shared/ui/Toast`)로 알립니다. `승인 대기` 필터에서
+  승인하면 그 행이 목록에서 사라지므로 토스트 문구에 슬러그를 넣어 무엇이 처리됐는지 잃지 않게 합니다.
+- **행 인라인 오류** — 실패는 토스트만으로 끝내지 않습니다. 그 행의 `처리` 셀에 `role="alert"` 인
+  `처리하지 못했습니다. 잠시 후 다시 시도해 주세요.` 를 남겨, 토스트가 사라진 뒤에도 어느 행이 실패했는지 보입니다.
+  이때 행의 상태는 바뀌지 않습니다.
+- 판정 앵커: `approvals-approve` · `approvals-reject` · `approvals-row-error` ·
+  `admin-confirm-dialog` / `-title` / `-description` / `-accept` / `-cancel`.
+
 ## 데이터/환경변수
 
 - 데이터 접근은 공유 패키지의 Repository 팩토리(`getInvitationRepository`)를 사용합니다. `VITE_DATA_SOURCE === 'supabase'`일 때 Supabase로 분기합니다. 상세는 [`data-model.md`](./data-model.md), [`shared-ui.md`](./shared-ui.md) 참조.

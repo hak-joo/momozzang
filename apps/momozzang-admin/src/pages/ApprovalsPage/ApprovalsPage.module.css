@@ -67,6 +67,25 @@
   color: var(--color-neutral-700);
 }
 
+/* T2: 승인·반려 실패의 행 인라인 오류. 삽입 지점(`.notice` 규칙 뒤)은 "논리적 순서"가 아니라
+   **독립성 우선**으로 정해졌다 — T1 은 EOF, T3 은 `.filterButton[aria-pressed]` 뒤를 쓴다
+   (계약 §5.2). 색은 전부 디자인 토큰이다. */
+/* 기존 `.rowActions` 규칙(BASE 137-141)은 건드리지 않는다 — 그 줄은 T1 의 EOF append 와 맞닿아
+   있어 hunk 가 겹친다. 겹치지 않는 속성 하나만 여기서 더한다(선언 충돌 0). */
+.rowActions {
+  flex-wrap: wrap;
+}
+
+.rowError {
+  flex-basis: 100%;
+  max-width: 240px;
+  margin: 0;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-13-multi);
+  color: var(--color-danger-600);
+  white-space: normal;
+}
+
 .tableScroll {
   width: 100%;
   max-width: 100%;

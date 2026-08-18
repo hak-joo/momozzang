@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
+import { useAdminConfirm } from '../../shared/ui/ConfirmDialog';
+import { useAdminToast } from '../../shared/ui/Toast';
 import type {
   InvitationStatus,
   InvitationSummary,
@@ -41,6 +43,10 @@ export function ApprovalsPage() {
   const queryClient = useQueryClient();
   const sessionQuery = useAdminSession();
   const [filter, setFilter] = useState<StatusFilter>('all');
+  /** 인라인 오류는 **행 단위**로 남는다. 토스트가 사라져도 무엇이 실패했는지 화면에 남아야 한다. */
+  const [failedSlug, setFailedSlug] = useState<string | null>(null);
+  const askConfirm = useAdminConfirm();
+  const toast = useAdminToast();
 
   const listQuery = useInvitationListQuery(filter === 'all' ? undefined : filter, {
     enabled: sessionQuery.data?.isAdmin === true,
@@ -51,6 +57,49 @@ export function ApprovalsPage() {
 
   const isRowBusy = (slug: string) =>
     statusMutation.isPending && statusMutation.variables?.slug === slug;
+
+  /**
+   * 승인·반려는 되돌리기 어려운 공개 상태 변경이다. 확인 대화를 먼저 띄우고,
+   * 취소하면 **요청을 만들지 않는다**(mutate 를 부르지 않는다).
+   *
+   * 결과는 두 겹으로 알린다 — 비차단 토스트(즉시 눈에 띔) + 행 인라인 오류(토스트가 사라져도 남음).
+   * `승인 대기` 필터에서는 성공하면 그 행이 목록에서 사라지므로, 토스트 문구에 슬러그를 넣어
+   * "무엇이 처리됐는지"를 잃지 않게 한다.
+   */
+  const handleDecision = async (slug: string, status: InvitationStatus) => {
+    const approving = status === 'approved';
+    const accepted = await askConfirm({
+      title: approving ? '승인하시겠어요?' : '반려하시겠어요?',
+      description: approving
+        ? `${slug} 청첩장이 공개됩니다. 주소를 아는 누구나 볼 수 있게 됩니다.`
+        : `${slug} 청첩장은 공개되지 않습니다. 하객이 주소로 접속해도 안내 화면만 보입니다.`,
+      confirmText: approving ? '승인' : '반려',
+      destructive: !approving,
+    });
+    if (!accepted) return;
+
+    setFailedSlug((prev) => (prev === slug ? null : prev));
+    statusMutation.mutate(
+      { slug, status },
+      {
+        onSuccess: () => {
+          toast.success({
+            title: approving ? '승인했습니다.' : '반려했습니다.',
+            description: approving
+              ? `${slug} 청첩장이 공개되었습니다.`
+              : `${slug} 청첩장은 공개되지 않습니다.`,
+          });
+        },
+        onError: () => {
+          setFailedSlug(slug);
+          toast.error({
+            title: '처리하지 못했습니다.',
+            description: '잠시 후 다시 시도해 주세요.',
+          });
+        },
+      },
+    );
+  };
 
   /** 이미 선택된 필터를 다시 누르면 목록을 재조회한다(저장소가 바뀐 뒤의 수동 갱신 경로). */
   const handleFilter = (value: StatusFilter) => {
@@ -143,23 +192,30 @@ export function ApprovalsPage() {
                       <div className={styles.rowActions}>
                         <Button
                           size="sm"
+                          data-testid="approvals-approve"
                           disabled={isRowBusy(row.slug)}
-                          onClick={() =>
-                            statusMutation.mutate({ slug: row.slug, status: 'approved' })
-                          }
+                          onClick={() => void handleDecision(row.slug, 'approved')}
                         >
                           승인
                         </Button>
                         <Button
                           size="sm"
                           variant="secondary"
+                          data-testid="approvals-reject"
                           disabled={isRowBusy(row.slug)}
-                          onClick={() =>
-                            statusMutation.mutate({ slug: row.slug, status: 'rejected' })
-                          }
+                          onClick={() => void handleDecision(row.slug, 'rejected')}
                         >
                           반려
                         </Button>
+                        {failedSlug === row.slug ? (
+                          <p
+                            className={styles.rowError}
+                            role="alert"
+                            data-testid="approvals-row-error"
+                          >
+                            처리하지 못했습니다. 잠시 후 다시 시도해 주세요.
+                          </p>
+                        ) : null}
                       </div>
                     </td>
                   </tr>
