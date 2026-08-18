@@ -95,6 +95,12 @@ export function ImageStep({
   const { bgm, customization } = invitation;
   const selectedTrackId = bgm?.selectedTrackId;
   const selectedTrack = bgm?.library.find((t) => t.id === selectedTrackId);
+  /**
+   * 종전에는 `library.length === 0` 만 보고 `bgm.enabled` 를 보지 않아, `BGM 사용` 을 꺼도
+   * 트랙 목록·편집 필드가 그대로 남았다 — 체크박스가 아무 것도 하지 않는 것처럼 보였다
+   * (QA_FINDINGS_3 N6). 끄면 트랙 영역을 접고, 다시 켜면 원래대로 돌아온다.
+   */
+  const bgmEnabled = bgm?.enabled ?? false;
 
   return (
     <div className={styles.step}>
@@ -141,7 +147,11 @@ export function ImageStep({
           label="BGM 사용"
         />
 
-        {(bgm?.library?.length ?? 0) === 0 ? (
+        {!bgmEnabled ? (
+          <p className={styles.hint}>
+            BGM 사용을 켜면 트랙 목록과 편집 항목이 나타납니다. 지금 설정은 그대로 보관됩니다.
+          </p>
+        ) : (bgm?.library?.length ?? 0) === 0 ? (
           <p className={styles.hint}>등록된 트랙이 없습니다.</p>
         ) : (
           <ul className={styles.trackList}>
@@ -177,7 +187,7 @@ export function ImageStep({
           </ul>
         )}
 
-        {selectedTrack && (
+        {bgmEnabled && selectedTrack && (
           <div className={styles.grid2}>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="bgm-edit-title">
