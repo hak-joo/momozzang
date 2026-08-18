@@ -17,7 +17,11 @@ export function validateInvitation(data: WeddingInvitation): ValidationIssue[] {
   const { invitationInfo, couple, weddingHallInfo } = data;
 
   if (!invitationInfo.url.trim()) {
-    issues.push({ field: 'slug', label: '초대장 주소(슬러그)', message: '슬러그를 입력해 주세요.' });
+    issues.push({
+      field: 'slug',
+      label: '초대장 주소(슬러그)',
+      message: '슬러그를 입력해 주세요.',
+    });
   } else {
     const slugErr = getSlugError(invitationInfo.url);
     if (slugErr) {
@@ -41,7 +45,11 @@ export function validateInvitation(data: WeddingInvitation): ValidationIssue[] {
     issues.push({ field: 'date', label: '예식 날짜', message: '예식 날짜를 입력해 주세요.' });
   }
 
-  if (!Number.isFinite(weddingHallInfo.hour) || weddingHallInfo.hour < 1 || weddingHallInfo.hour > 12) {
+  if (
+    !Number.isFinite(weddingHallInfo.hour) ||
+    weddingHallInfo.hour < 1 ||
+    weddingHallInfo.hour > 12
+  ) {
     issues.push({ field: 'hour', label: '예식 시각(시)', message: '시는 1~12 범위여야 합니다.' });
   }
 

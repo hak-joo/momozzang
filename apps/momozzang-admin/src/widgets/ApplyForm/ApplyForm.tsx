@@ -16,12 +16,7 @@ import {
   type AboutUs,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { getSlugError } from '../../features/apply/validateSlug';
-import type {
-  AccountOwner,
-  EtcField,
-  EtcKey,
-  ParentSlot,
-} from '../../features/apply/useApplyForm';
+import type { AccountOwner, EtcField, EtcKey, ParentSlot } from '../../features/apply/useApplyForm';
 import { PhoneField } from './PhoneField';
 import { EmailField } from './EmailField';
 import { AccountEditor } from './AccountEditor';
@@ -208,9 +203,7 @@ function ParentBlock({
             id={`apply-${slot}-deceasetype`}
             className={styles.select}
             value={person?.deceasedType ?? 'none'}
-            onChange={(e) =>
-              onPersonChange(slot, { deceasedType: e.target.value as DeceaseType })
-            }
+            onChange={(e) => onPersonChange(slot, { deceasedType: e.target.value as DeceaseType })}
           >
             {DECEASE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -612,9 +605,7 @@ export function ApplyForm(props: Props) {
           <input
             type="checkbox"
             checked={weddingHallInfo.lineBreakBetweenNameAndHall}
-            onChange={(e) =>
-              onWeddingHallChange({ lineBreakBetweenNameAndHall: e.target.checked })
-            }
+            onChange={(e) => onWeddingHallChange({ lineBreakBetweenNameAndHall: e.target.checked })}
           />
           <span>예식장명과 홀 사이 줄바꿈</span>
         </label>
@@ -660,9 +651,7 @@ export function ApplyForm(props: Props) {
               {isGeocoding ? '검색 중…' : '주소 검색'}
             </Button>
           </div>
-          {isGeocoding && (
-            <p className={styles.geocodeHintLoading}>좌표 변환 중입니다…</p>
-          )}
+          {isGeocoding && <p className={styles.geocodeHintLoading}>좌표 변환 중입니다…</p>}
           {geocodeError && !isGeocoding && (
             <p className={styles.geocodeHintError}>{geocodeError}</p>
           )}

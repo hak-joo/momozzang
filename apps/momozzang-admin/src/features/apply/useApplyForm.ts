@@ -19,10 +19,7 @@ import {
   type Customization,
   type ImageAsset,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
-import {
-  usePendingImages,
-  type ApplyUploadedKey,
-} from '../invitation/usePendingImages';
+import { usePendingImages, type ApplyUploadedKey } from '../invitation/usePendingImages';
 import { createPhotoId } from '../invitation/galleryHelpers';
 
 /** 혼주 4인 슬롯 키 (Parents의 Person 필드) */
@@ -399,30 +396,30 @@ export function useApplyForm() {
   );
 
   // ── F9: 축의금 옵션 (congratulatoryMoneyInfo) ──────────────────────────────
-  const setGiftMoney = useCallback((patch: Partial<WeddingInvitation['congratulatoryMoneyInfo']>) => {
-    setInvitation((prev) => ({
-      ...prev,
-      congratulatoryMoneyInfo: { ...prev.congratulatoryMoneyInfo, ...patch },
-    }));
-  }, []);
+  const setGiftMoney = useCallback(
+    (patch: Partial<WeddingInvitation['congratulatoryMoneyInfo']>) => {
+      setInvitation((prev) => ({
+        ...prev,
+        congratulatoryMoneyInfo: { ...prev.congratulatoryMoneyInfo, ...patch },
+      }));
+    },
+    [],
+  );
 
   // ── F8: 교통/기타 안내 (etcInfo) ───────────────────────────────────────────
   const setEtcEnabled = useCallback((enabled: boolean) => {
     setInvitation((prev) => ({ ...prev, etcInfo: { ...prev.etcInfo, enabled } }));
   }, []);
 
-  const updateEtcItem = useCallback(
-    (key: EtcKey, updater: (item: EtcItem) => EtcItem) => {
-      setInvitation((prev) => {
-        const current: EtcItem = prev.etcInfo[key] ?? { info: [], subInfo: [] };
-        return {
-          ...prev,
-          etcInfo: { ...prev.etcInfo, [key]: updater(current) },
-        };
-      });
-    },
-    [],
-  );
+  const updateEtcItem = useCallback((key: EtcKey, updater: (item: EtcItem) => EtcItem) => {
+    setInvitation((prev) => {
+      const current: EtcItem = prev.etcInfo[key] ?? { info: [], subInfo: [] };
+      return {
+        ...prev,
+        etcInfo: { ...prev.etcInfo, [key]: updater(current) },
+      };
+    });
+  }, []);
 
   const addEtcLine = useCallback(
     (key: EtcKey, field: EtcField) => {
@@ -463,18 +460,15 @@ export function useApplyForm() {
     }));
   }, []);
 
-  const setRsvpInclude = useCallback(
-    (patch: Partial<RsvpSettings['include']>) => {
-      setInvitation((prev) => {
-        const base = prev.rsvpRequest ?? DEFAULT_RSVP;
-        return {
-          ...prev,
-          rsvpRequest: { ...base, include: { ...base.include, ...patch } },
-        };
-      });
-    },
-    [],
-  );
+  const setRsvpInclude = useCallback((patch: Partial<RsvpSettings['include']>) => {
+    setInvitation((prev) => {
+      const base = prev.rsvpRequest ?? DEFAULT_RSVP;
+      return {
+        ...prev,
+        rsvpRequest: { ...base, include: { ...base.include, ...patch } },
+      };
+    });
+  }, []);
 
   const setRsvpPerSide = useCallback(
     (side: Side, patch: Partial<NonNullable<RsvpSettings['perSide']>[Side]>) => {
@@ -570,18 +564,15 @@ export function useApplyForm() {
     }));
   }, []);
 
-  const setMiniRoom = useCallback(
-    (patch: Partial<NonNullable<Customization['miniRoom']>>) => {
-      setInvitation((prev) => {
-        const base = defaultCustomization(prev.customization);
-        return {
-          ...prev,
-          customization: { ...base, miniRoom: { ...base.miniRoom, ...patch } },
-        };
-      });
-    },
-    [],
-  );
+  const setMiniRoom = useCallback((patch: Partial<NonNullable<Customization['miniRoom']>>) => {
+    setInvitation((prev) => {
+      const base = defaultCustomization(prev.customization);
+      return {
+        ...prev,
+        customization: { ...base, miniRoom: { ...base.miniRoom, ...patch } },
+      };
+    });
+  }, []);
 
   // ── F14: 불러오기 — 폼 전체를 불러온 데이터로 교체 ──────────────────────────
   const loadInvitation = useCallback((data: WeddingInvitation) => {
@@ -645,8 +636,9 @@ export function useApplyForm() {
   // PublishStep 이 호출한다. 원자성(F6): 한 장이라도 실패하면 throw → 호출부가 저장 미수행 + pending 유지.
   const commitPendingUploads = useCallback((): Promise<WeddingInvitation> => {
     // 이번 commit 대상 slot(단일 5슬롯 중 pending + 갤러리 album 항목 중 pending) 기록.
-    const singleSlots = (['main', 'share', 'representative', 'aboutGroom', 'aboutBride'] as const)
-      .filter((s) => hasPending(s));
+    const singleSlots = (
+      ['main', 'share', 'representative', 'aboutGroom', 'aboutBride'] as const
+    ).filter((s) => hasPending(s));
     const gallerySlots = (invitation.album ?? [])
       .map((item) => item.id)
       .filter((id) => hasPending(id));

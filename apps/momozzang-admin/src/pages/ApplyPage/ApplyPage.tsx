@@ -142,51 +142,51 @@ export default function ApplyPage() {
             <InvitationProvider data={displayInvitation} previewMode>
               {step === 1 && (
                 <ApplyForm
-              invitation={invitation}
-              onInvitationInfoChange={setInvitationInfo}
-              onGroomNameChange={setGroomName}
-              onBrideNameChange={setBrideName}
-              onWeddingHallChange={setWeddingHall}
-              onThemeChange={setTheme}
-              onThemeColorChange={setThemeColor}
-              onOrderChange={setOrder}
-              onOrderPhoneChange={setOrderPhone}
-              onCouplePersonChange={setCouplePerson}
-              onCouplePhoneChange={setCouplePhone}
-              onParentsEnabledChange={setParentsEnabled}
-              onParentPersonChange={setParentPerson}
-              onParentPhoneChange={setParentPhone}
-              onAddAccount={addAccount}
-              onRemoveAccount={removeAccount}
-              onUpdateAccount={updateAccount}
-              onGiftMoneyChange={setGiftMoney}
-              onEtcEnabledChange={setEtcEnabled}
-              onAddEtcLine={addEtcLine}
-              onUpdateEtcLine={updateEtcLine}
-              onRemoveEtcLine={removeEtcLine}
-              onRsvpChange={setRsvp}
-              onRsvpIncludeChange={setRsvpInclude}
-              onRsvpPerSideChange={setRsvpPerSide}
-              onRsvpPerSideIncludeChange={setRsvpPerSideInclude}
-              onAboutUsChange={setAboutUs}
-            />
-          )}
-          {step === 2 && (
-            <ImageStep
-              invitation={invitation}
-              onSingleImagePending={setSingleImagePending}
-              getSinglePreviewUrl={getSinglePreviewUrl}
-              onGalleryAddFiles={onGalleryAddFiles}
-              onGalleryRemoveItem={onGalleryRemoveItem}
-              getGalleryThumbnailUrl={getGalleryThumbnailUrl}
-              onAlbumChange={setAlbum}
-              onBgmChange={setBgm}
-              onSelectTrack={selectTrack}
-              onUpdateTrack={updateTrack}
-              onCustomizationChange={setCustomization}
-              onMiniRoomChange={setMiniRoom}
-            />
-          )}
+                  invitation={invitation}
+                  onInvitationInfoChange={setInvitationInfo}
+                  onGroomNameChange={setGroomName}
+                  onBrideNameChange={setBrideName}
+                  onWeddingHallChange={setWeddingHall}
+                  onThemeChange={setTheme}
+                  onThemeColorChange={setThemeColor}
+                  onOrderChange={setOrder}
+                  onOrderPhoneChange={setOrderPhone}
+                  onCouplePersonChange={setCouplePerson}
+                  onCouplePhoneChange={setCouplePhone}
+                  onParentsEnabledChange={setParentsEnabled}
+                  onParentPersonChange={setParentPerson}
+                  onParentPhoneChange={setParentPhone}
+                  onAddAccount={addAccount}
+                  onRemoveAccount={removeAccount}
+                  onUpdateAccount={updateAccount}
+                  onGiftMoneyChange={setGiftMoney}
+                  onEtcEnabledChange={setEtcEnabled}
+                  onAddEtcLine={addEtcLine}
+                  onUpdateEtcLine={updateEtcLine}
+                  onRemoveEtcLine={removeEtcLine}
+                  onRsvpChange={setRsvp}
+                  onRsvpIncludeChange={setRsvpInclude}
+                  onRsvpPerSideChange={setRsvpPerSide}
+                  onRsvpPerSideIncludeChange={setRsvpPerSideInclude}
+                  onAboutUsChange={setAboutUs}
+                />
+              )}
+              {step === 2 && (
+                <ImageStep
+                  invitation={invitation}
+                  onSingleImagePending={setSingleImagePending}
+                  getSinglePreviewUrl={getSinglePreviewUrl}
+                  onGalleryAddFiles={onGalleryAddFiles}
+                  onGalleryRemoveItem={onGalleryRemoveItem}
+                  getGalleryThumbnailUrl={getGalleryThumbnailUrl}
+                  onAlbumChange={setAlbum}
+                  onBgmChange={setBgm}
+                  onSelectTrack={selectTrack}
+                  onUpdateTrack={updateTrack}
+                  onCustomizationChange={setCustomization}
+                  onMiniRoomChange={setMiniRoom}
+                />
+              )}
               {step === 3 && (
                 <PublishStep
                   invitation={invitation}

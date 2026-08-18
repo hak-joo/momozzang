@@ -5,10 +5,7 @@ import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { type WeddingInvitation } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { useInvitationQuery } from '../../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../../features/invitation/api/useInvitationMutation';
-import {
-  validateInvitation,
-  type ValidationIssue,
-} from '../../features/apply/validateInvitation';
+import { validateInvitation, type ValidationIssue } from '../../features/apply/validateInvitation';
 import type { useApplyForm } from '../../features/apply/useApplyForm';
 import styles from './PublishStep.module.css';
 
@@ -42,9 +39,10 @@ export function PublishStep({
   const [activeLoadSlug, setActiveLoadSlug] = useState('');
   const loadQuery = useInvitationQuery(activeLoadSlug);
 
-  const [loadMessage, setLoadMessage] = useState<{ kind: 'success' | 'error'; text: string } | null>(
-    null,
-  );
+  const [loadMessage, setLoadMessage] = useState<{
+    kind: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   // 불러오기 결과가 도착하면 폼 전체를 교체한다(F14).
   const [pendingLoad, setPendingLoad] = useState(false);
@@ -76,9 +74,10 @@ export function PublishStep({
   // ── 저장(제작 완료) ──
   const mutation = useInvitationMutation();
   const [issues, setIssues] = useState<ValidationIssue[]>([]);
-  const [saveMessage, setSaveMessage] = useState<
-    { kind: 'success' | 'error'; text: string } | null
-  >(null);
+  const [saveMessage, setSaveMessage] = useState<{
+    kind: 'success' | 'error';
+    text: string;
+  } | null>(null);
   const [savedSlug, setSavedSlug] = useState<string | null>(null);
   // F3: commit(업로드) 단계 진행 상태. mutation.isPending(저장 단계)와 합쳐 버튼/라벨을 제어한다.
   const [isUploading, setIsUploading] = useState(false);
@@ -156,7 +155,8 @@ export function PublishStep({
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>기존 청첩장 불러오기</h3>
         <p className={styles.hint}>
-          검증 전용 슬러그(예: <code>harness-qa-3</code>)로 저장한 데이터를 다시 불러와 폼을 채웁니다.
+          검증 전용 슬러그(예: <code>harness-qa-3</code>)로 저장한 데이터를 다시 불러와 폼을
+          채웁니다.
         </p>
         <div className={styles.loadRow}>
           <Input
