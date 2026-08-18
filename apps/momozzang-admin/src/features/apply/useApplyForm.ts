@@ -19,10 +19,7 @@ import {
   type Customization,
   type ImageAsset,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
-import {
-  usePendingImages,
-  type ApplyUploadedKey,
-} from '../invitation/usePendingImages';
+import { usePendingImages, type ApplyUploadedKey } from '../invitation/usePendingImages';
 import { createPhotoId } from '../invitation/galleryHelpers';
 import { toDateInputValue } from '../../shared/lib/dateInput';
 
@@ -231,6 +228,14 @@ export function useApplyForm() {
     withNormalizedDate(structuredClone(exampleWeddingInvitation)),
   );
 
+  // ── 신청 메타데이터(F3) — `invitation` 과 절대 섞지 않는다 ────────────────────
+  // editPassword/applicantContact 는 청첩장 본문(WeddingInvitation)이 아니라 신청 정보다.
+  // invitation state 에 섞으면 PhonePreview(뷰어 렌더)와 commitPendingUploads 의 데이터 경로에
+  // 평문 비밀번호가 흘러 들어가고, 저장 시 data JSON 에 그대로 박힌다.
+  // 별도 state 로 두는 것이 평문 미노출의 구조적 방어선이다.
+  const [editPassword, setEditPassword] = useState('');
+  const [applicantContact, setApplicantContact] = useState('');
+
   // ── 지연 업로드 pending 레이어(F1·F2·F5·F7·F8) ──────────────────────────────
   // 신청 폼 전체에서 단 1개의 인스턴스를 보유한다(F8). ImageStep(스텝②)·PublishStep(스텝③)이
   // 이 동일 인스턴스의 콜백을 주입받으므로, 스텝을 오가며 ImageStep 이 언마운트돼도 pending 은
@@ -412,30 +417,30 @@ export function useApplyForm() {
   );
 
   // ── F9: 축의금 옵션 (congratulatoryMoneyInfo) ──────────────────────────────
-  const setGiftMoney = useCallback((patch: Partial<WeddingInvitation['congratulatoryMoneyInfo']>) => {
-    setInvitation((prev) => ({
-      ...prev,
-      congratulatoryMoneyInfo: { ...prev.congratulatoryMoneyInfo, ...patch },
-    }));
-  }, []);
+  const setGiftMoney = useCallback(
+    (patch: Partial<WeddingInvitation['congratulatoryMoneyInfo']>) => {
+      setInvitation((prev) => ({
+        ...prev,
+        congratulatoryMoneyInfo: { ...prev.congratulatoryMoneyInfo, ...patch },
+      }));
+    },
+    [],
+  );
 
   // ── F8: 교통/기타 안내 (etcInfo) ───────────────────────────────────────────
   const setEtcEnabled = useCallback((enabled: boolean) => {
     setInvitation((prev) => ({ ...prev, etcInfo: { ...prev.etcInfo, enabled } }));
   }, []);
 
-  const updateEtcItem = useCallback(
-    (key: EtcKey, updater: (item: EtcItem) => EtcItem) => {
-      setInvitation((prev) => {
-        const current: EtcItem = prev.etcInfo[key] ?? { info: [], subInfo: [] };
-        return {
-          ...prev,
-          etcInfo: { ...prev.etcInfo, [key]: updater(current) },
-        };
-      });
-    },
-    [],
-  );
+  const updateEtcItem = useCallback((key: EtcKey, updater: (item: EtcItem) => EtcItem) => {
+    setInvitation((prev) => {
+      const current: EtcItem = prev.etcInfo[key] ?? { info: [], subInfo: [] };
+      return {
+        ...prev,
+        etcInfo: { ...prev.etcInfo, [key]: updater(current) },
+      };
+    });
+  }, []);
 
   const addEtcLine = useCallback(
     (key: EtcKey, field: EtcField) => {
@@ -476,18 +481,15 @@ export function useApplyForm() {
     }));
   }, []);
 
-  const setRsvpInclude = useCallback(
-    (patch: Partial<RsvpSettings['include']>) => {
-      setInvitation((prev) => {
-        const base = prev.rsvpRequest ?? DEFAULT_RSVP;
-        return {
-          ...prev,
-          rsvpRequest: { ...base, include: { ...base.include, ...patch } },
-        };
-      });
-    },
-    [],
-  );
+  const setRsvpInclude = useCallback((patch: Partial<RsvpSettings['include']>) => {
+    setInvitation((prev) => {
+      const base = prev.rsvpRequest ?? DEFAULT_RSVP;
+      return {
+        ...prev,
+        rsvpRequest: { ...base, include: { ...base.include, ...patch } },
+      };
+    });
+  }, []);
 
   const setRsvpPerSide = useCallback(
     (side: Side, patch: Partial<NonNullable<RsvpSettings['perSide']>[Side]>) => {
@@ -583,20 +585,19 @@ export function useApplyForm() {
     }));
   }, []);
 
-  const setMiniRoom = useCallback(
-    (patch: Partial<NonNullable<Customization['miniRoom']>>) => {
-      setInvitation((prev) => {
-        const base = defaultCustomization(prev.customization);
-        return {
-          ...prev,
-          customization: { ...base, miniRoom: { ...base.miniRoom, ...patch } },
-        };
-      });
-    },
-    [],
-  );
+  const setMiniRoom = useCallback((patch: Partial<NonNullable<Customization['miniRoom']>>) => {
+    setInvitation((prev) => {
+      const base = defaultCustomization(prev.customization);
+      return {
+        ...prev,
+        customization: { ...base, miniRoom: { ...base.miniRoom, ...patch } },
+      };
+    });
+  }, []);
 
   // ── F14: 불러오기 — 폼 전체를 불러온 데이터로 교체 ──────────────────────────
+  // 신청 메타데이터(editPassword·applicantContact)는 건드리지 않는다. 저장 성공 후 폼 동기화에도
+  // 쓰이는 함수라, 여기서 비밀번호를 덮으면 화면 상태가 사용자가 입력한 값과 어긋난다.
   const loadInvitation = useCallback((data: WeddingInvitation) => {
     setInvitation(withNormalizedDate(structuredClone(data)));
   }, []);
@@ -658,8 +659,9 @@ export function useApplyForm() {
   // PublishStep 이 호출한다. 원자성(F6): 한 장이라도 실패하면 throw → 호출부가 저장 미수행 + pending 유지.
   const commitPendingUploads = useCallback((): Promise<WeddingInvitation> => {
     // 이번 commit 대상 slot(단일 5슬롯 중 pending + 갤러리 album 항목 중 pending) 기록.
-    const singleSlots = (['main', 'share', 'representative', 'aboutGroom', 'aboutBride'] as const)
-      .filter((s) => hasPending(s));
+    const singleSlots = (
+      ['main', 'share', 'representative', 'aboutGroom', 'aboutBride'] as const
+    ).filter((s) => hasPending(s));
     const gallerySlots = (invitation.album ?? [])
       .map((item) => item.id)
       .filter((id) => hasPending(id));
@@ -762,6 +764,11 @@ export function useApplyForm() {
     setMiniRoom,
     // 불러오기 (F14)
     loadInvitation,
+    // 신청 메타데이터 (F3) — invitation 본문과 분리된 값
+    editPassword,
+    applicantContact,
+    setEditPassword,
+    setApplicantContact,
   };
 }
 

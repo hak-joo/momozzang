@@ -5,7 +5,9 @@ import type { WeddingInvitation } from '@momozzang/ui/entities/WeddingInvitation
 import styles from './style.module.css';
 import { InvitationProvider } from '@momozzang/ui/entities/WeddingInvitation/Context';
 
-const WeddingInvitation = lazy(async () => {
+// 같은 파일 4행의 `WeddingInvitation` 타입 import 와 이름이 겹쳐 no-redeclare /
+// no-import-assign 이 발생했다. lazy 컴포넌트 상수만 개명한다(렌더 결과 무변경).
+const WeddingInvitationPage = lazy(async () => {
   const module = await import('@momozzang/ui/pages/WeddingInvitation');
   return { default: module.WeddingInvitation };
 });
@@ -39,7 +41,7 @@ export function InvitationExperience({
         className={clsx(styles.pageRoot, showIntro ? styles.appHidden : styles.appVisible)}
       >
         <Suspense fallback={null}>
-          <WeddingInvitation metadata={metadata} />
+          <WeddingInvitationPage metadata={metadata} />
         </Suspense>
       </div>
     </InvitationProvider>

@@ -40,17 +40,6 @@
   color: var(--color-neutral-700);
 }
 
-.loadRow {
-  display: flex;
-  gap: 8px;
-  align-items: stretch;
-}
-
-.loadInput {
-  flex: 1;
-  min-width: 0;
-}
-
 .actions {
   display: flex;
   gap: 8px;
@@ -89,22 +78,7 @@
   font-size: var(--font-size-13);
 }
 
-.completeLink {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.linkRow {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.linkText {
-  font-size: var(--font-size-14);
-  font-weight: 600;
-  color: var(--color-main-600);
-  word-break: break-all;
+/* 완료 패널(신청 접수 안내)의 문단 간격 — bannerInfo 안에서만 쓰인다. */
+.banner p {
+  margin: 6px 0 0;
 }

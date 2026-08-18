@@ -25,3 +25,21 @@
   align-items: center;
   gap: 8px;
 }
+
+/* 단일 카드 화면(로그인·권한 확인·청첩장 수정) 래퍼.
+   이 저장소에는 전역 box-sizing 리셋이 없어 패딩이 폭에 더해지므로 명시한다. */
+.screen {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: var(--color-bg-100);
+}
+
+/* 화면 래퍼 안의 카드만 폭을 제한한다. 어드민 본문(/admin·/apply)의 Panel 은 영향받지 않는다. */
+.screen > [data-admin-panel] {
+  width: 100%;
+  max-width: 420px;
+}

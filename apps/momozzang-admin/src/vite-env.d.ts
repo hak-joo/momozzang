@@ -11,6 +11,14 @@ interface ImportMetaEnv {
    * R2 Access Key/Secret 같은 고위험 자격증명과 동급이 아니다(그쪽은 Worker 바인딩 사용으로 부재).
    */
   readonly VITE_UPLOAD_TOKEN?: string;
+  /**
+   * 쉼표로 구분한 관리자 이메일 목록.
+   * Supabase 경로에서는 public.admin_users 테이블이 정본이고,
+   * 이 변수는 로컬 데이터소스(VITE_DATA_SOURCE!=supabase)에서만 쓰인다.
+   */
+  readonly VITE_ADMIN_EMAILS?: string;
+  /** 로컬 데이터소스 전용 관리자 비밀번호. supabase 경로에서는 사용하지 않는다. */
+  readonly VITE_LOCAL_ADMIN_PASSWORD?: string;
 }
 
 interface ImportMeta {

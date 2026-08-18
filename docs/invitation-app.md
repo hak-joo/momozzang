@@ -14,24 +14,37 @@
 
 | 라우트 | 컴포넌트 | 동작 |
 |--------|----------|------|
-| `/` | `Invitation` (`src/page/Invitation.tsx`) | 기본 화면. 현재 하드코딩 슬러그 `demo-captain-luna`를 `useInvitation` 훅으로 로드합니다(코드에 TODO 주석 존재). 로딩 중 `Loading...`, 실패 시 `Error loading invitation` 텍스트를 노출합니다. |
-| `/:invitationId` | `InvitationById` (`src/page/InvitationById.tsx`) | URL 슬러그(`invitationId`)를 react-query로 조회합니다. 로딩 중 전체화면 `Loading...`, 조회 실패/데이터 없음이면 `/`로 리다이렉트(`<Navigate to="/" replace />`). |
+| `/` | `OnboardingPage` (`src/page/OnboardingPage.tsx`) | 서비스 소개 랜딩. 신청 → 승인 → 공개 3단계를 안내하고 `청첩장 신청하기` CTA 앵커를 보여줍니다. CTA 의 `href` 는 환경변수 `VITE_APPLY_URL` 값이며, 값이 비어 있으면 앵커를 렌더하지 않고 `신청 주소가 아직 설정되지 않았습니다. 운영자에게 문의해 주세요.` 만 표시합니다(죽은 링크를 만들지 않습니다). 청첩장 본문 데이터는 쓰지 않습니다. |
+| `/:invitationId` | `InvitationById` (`src/page/InvitationById.tsx`) | URL 슬러그(`invitationId`)로 `getInvitationRecord` 를 react-query 로 조회하고 공개 상태(`status`)에 따라 분기합니다(아래 표). |
 | `*` | — | 정의되지 않은 모든 경로를 `/`로 리다이렉트. |
 
-> 주의: `/` 라우트의 `Invitation`은 데이터 레이어를 `useInvitation('demo-captain-luna')` 훅으로 직접 호출하고, `/:invitationId`의 `InvitationById`는 `getInvitationRepository()` + `useQuery`로 호출합니다. 두 경로의 로딩/에러 처리 방식이 서로 다릅니다.
+### `/:invitationId` 의 status 게이트
+
+조회는 본문만 주는 `getInvitation` 이 아니라 `getInvitationRecord` 로 합니다 — 공개 여부를 볼 수 없으면 게이트가 성립하지 않습니다. 판정은 아래 순서의 early return 이며, 승인되지 않은 화면에서는 `InvitationExperience` 를 **아예 렌더하지 않습니다**(본문을 그린 뒤 안내 배너만 얹으면 인트로 뒤에 실명·예식장 주소가 DOM 에 남아 비공개가 아닙니다).
+
+| 조건 | 화면 문구 | 앵커 |
+|------|-----------|------|
+| 조회 중 | `불러오는 중입니다.` | `data-testid="invitation-loading"` |
+| 조회 실패 | `청첩장을 불러오지 못했습니다.` | `data-testid="invitation-error"` |
+| 저장된 행 없음 | `존재하지 않는 청첩장입니다.` (보조: `주소를 다시 확인해 주세요.`) | `data-testid="invitation-notice-missing"` |
+| `status='pending'` | `승인 대기 중인 청첩장입니다.` (보조: `승인이 완료되면 청첩장이 공개됩니다.`) | `data-testid="invitation-notice-pending"` |
+| `status='rejected'` | `공개되지 않은 청첩장입니다.` (보조: `자세한 내용은 신청 시 입력하신 연락처로 안내드립니다.`) | `data-testid="invitation-notice-rejected"` |
+| `status='approved'` | 안내 문구 없이 `InvitationExperience` 본문 렌더 | — |
+
+저장된 행이 없을 때는 예외가 아니라 정상 경로이며 `/` 로 리다이렉트하지 않습니다.
 
 ## 화면 흐름
 
 ```mermaid
 flowchart LR
-    R["/  또는  /:invitationId"] --> L[데이터 로드]
-    L -->|성공| EXP[InvitationExperience]
-    L -->|실패| RED["/ 로 리다이렉트 또는 에러 텍스트"]
+    R["/:invitationId"] --> L[getInvitationRecord 조회]
+    L -->|"status=approved"| EXP[InvitationExperience]
+    L -->|"pending · rejected · 행 없음"| NOTICE[안내 문구 화면]
     EXP --> INTRO[Intro 오버레이]
     INTRO -->|next 클릭| BODY[WeddingInvitation 본문]
 ```
 
-1. **데이터 로드** — 라우트가 슬러그로 청첩장(`WeddingInvitation`)을 조회합니다.
+1. **데이터 로드** — `/:invitationId` 가 슬러그로 청첩장 레코드(`InvitationRecord`)를 조회하고, `status='approved'` 일 때만 아래 흐름으로 넘어갑니다.
 2. **InvitationExperience** (`src/page/InvitationExperience.tsx`) — 로드된 `metadata`를 `InvitationProvider`로 감싸 컨텍스트에 주입합니다.
 3. **인트로 오버레이** — `Intro` 위젯(`@momozzang/ui` widgets)을 먼저 띄웁니다. `next` 콜백이 호출되면 인트로가 사라지고 본문이 보입니다(`showIntro` 상태로 토글). 인트로가 떠 있는 동안 본문은 `inert` + `aria-hidden`으로 비활성화됩니다.
 4. **본문 (Suspense lazy 로드)** — 본문 페이지 `WeddingInvitation`은 `React.lazy`로 `@momozzang/ui/pages/WeddingInvitation`을 동적 import 하며 `Suspense`로 감쌉니다. `usePreloadWeddingChunk`가 마운트 시 본문 청크를 미리 불러옵니다.

@@ -1,0 +1,141 @@
+.page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 20px 48px;
+  background: var(--color-bg-100);
+  color: var(--color-neutral-900);
+  font-family: var(--font-PyeongChang);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--font-size-22);
+  line-height: var(--line-height-22);
+  letter-spacing: var(--letter-spacing-22);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.link {
+  padding: 8px 14px;
+  border: 1px solid var(--color-line-300);
+  border-radius: 8px;
+  background: var(--color-basic-white);
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13);
+  color: var(--color-neutral-900);
+  text-decoration: none;
+}
+
+/* Panel 의 기본 max-width(420px) 를 확실히 이기도록 같은 클래스를 두 번 겹쳐 특이성을 올린다.
+   번들 내 CSS 순서에 의존하지 않는다.
+   min-width:0 이 없으면 표의 min-content 너비가 flex 자식을 밀어 패널이 화면 밖으로 넘친다. */
+.wide.wide {
+  max-width: none;
+  min-width: 0;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filterButton {
+  padding: 8px 16px;
+  border: 1px solid var(--color-line-300);
+  border-radius: 999px;
+  background: var(--color-basic-white);
+  font-family: var(--font-PyeongChang);
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13);
+  color: var(--color-neutral-700);
+  cursor: pointer;
+}
+
+.filterButton[aria-pressed='true'] {
+  border-color: var(--color-neutral-900);
+  background: var(--color-bg-200);
+  color: var(--color-neutral-900);
+  font-weight: var(--font-weight-bold);
+}
+
+.notice {
+  margin: 0;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  color: var(--color-neutral-700);
+}
+
+.tableScroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13);
+  white-space: nowrap;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-line-200);
+  text-align: left;
+  color: var(--color-neutral-900);
+}
+
+.table th {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-700);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1px solid var(--color-line-300);
+  border-radius: 999px;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  color: var(--color-neutral-700);
+}
+
+.badge[data-badge='approved'] {
+  border-color: var(--color-success-200);
+  background: var(--color-success-100);
+  color: var(--color-success-600);
+}
+
+.badge[data-badge='rejected'] {
+  border-color: var(--color-danger-200);
+  background: var(--color-danger-50);
+  color: var(--color-danger-600);
+}
+
+.rowActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

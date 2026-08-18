@@ -1,0 +1,101 @@
+/* 서비스 소개(온보딩) 화면 전용 스타일.
+   신규 색상 리터럴을 만들지 않고 기존 디자인 토큰만 조합한다.
+   전역(html/body/.app-frame)이 overflow-y: hidden 이라 이 화면은 자체 스크롤 컨테이너를 갖는다 —
+   없으면 430x900 보다 긴 내용이 잘려 CTA 에 도달할 수 없다. */
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 24px 48px;
+  font-family: var(--font-PyeongChang);
+  background: var(--color-basic-white);
+  color: var(--color-neutral-900);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-22);
+  line-height: var(--line-height-22);
+  letter-spacing: var(--letter-spacing-22);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-main-600);
+}
+
+.intro {
+  margin: 0;
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  letter-spacing: var(--letter-spacing-16);
+  color: var(--color-neutral-700);
+}
+
+.steps {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step {
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+  color: var(--color-neutral-700);
+}
+
+.stepName {
+  display: block;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+}
+
+/* 공유 Button 은 <button> 전용이라 href 를 가질 수 없다.
+   CTA 는 앵커로 직접 만들되 스타일은 기존 버튼 토큰만 조합한다. */
+.cta {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: var(--button-radius);
+  box-shadow: var(--button-shadow);
+  font-weight: var(--button-font-weight);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  letter-spacing: var(--letter-spacing-16);
+  text-decoration: none;
+  background: var(--color-main-500);
+  color: var(--color-basic-white);
+}
+
+.cta:hover {
+  background: var(--color-main-600);
+}
+
+.unavailable {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--color-line-300);
+  border-radius: var(--button-radius);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+  background: var(--color-bg-100);
+  color: var(--color-neutral-700);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  letter-spacing: var(--letter-spacing-12);
+  color: var(--color-neutral-500);
+}

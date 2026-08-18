@@ -66,6 +66,10 @@ export default function ApplyPage() {
     setCustomization,
     setMiniRoom,
     loadInvitation,
+    editPassword,
+    applicantContact,
+    setEditPassword,
+    setApplicantContact,
   } = useApplyForm();
 
   // 어드민 크롬(스텝퍼/폼 패널)의 폼 컨트롤을 admin 시각 언어로 세운다.
@@ -152,57 +156,63 @@ export default function ApplyPage() {
             <InvitationProvider data={displayInvitation} previewMode>
               {step === 1 && (
                 <ApplyForm
-              invitation={invitation}
-              onInvitationInfoChange={setInvitationInfo}
-              onGroomNameChange={setGroomName}
-              onBrideNameChange={setBrideName}
-              onWeddingHallChange={setWeddingHall}
-              onThemeChange={setTheme}
-              onThemeColorChange={setThemeColor}
-              onOrderChange={setOrder}
-              onOrderPhoneChange={setOrderPhone}
-              onCouplePersonChange={setCouplePerson}
-              onCouplePhoneChange={setCouplePhone}
-              onParentsEnabledChange={setParentsEnabled}
-              onParentPersonChange={setParentPerson}
-              onParentPhoneChange={setParentPhone}
-              onAddAccount={addAccount}
-              onRemoveAccount={removeAccount}
-              onUpdateAccount={updateAccount}
-              onGiftMoneyChange={setGiftMoney}
-              onEtcEnabledChange={setEtcEnabled}
-              onAddEtcLine={addEtcLine}
-              onUpdateEtcLine={updateEtcLine}
-              onRemoveEtcLine={removeEtcLine}
-              onRsvpChange={setRsvp}
-              onRsvpIncludeChange={setRsvpInclude}
-              onRsvpPerSideChange={setRsvpPerSide}
-              onRsvpPerSideIncludeChange={setRsvpPerSideInclude}
-              onAboutUsChange={setAboutUs}
-            />
-          )}
-          {step === 2 && (
-            <ImageStep
-              invitation={invitation}
-              onSingleImagePending={setSingleImagePending}
-              getSinglePreviewUrl={getSinglePreviewUrl}
-              onGalleryAddFiles={onGalleryAddFiles}
-              onGalleryRemoveItem={onGalleryRemoveItem}
-              getGalleryThumbnailUrl={getGalleryThumbnailUrl}
-              onAlbumChange={setAlbum}
-              onBgmChange={setBgm}
-              onSelectTrack={selectTrack}
-              onUpdateTrack={updateTrack}
-              onCustomizationChange={setCustomization}
-              onMiniRoomChange={setMiniRoom}
-            />
-          )}
+                  invitation={invitation}
+                  onInvitationInfoChange={setInvitationInfo}
+                  onGroomNameChange={setGroomName}
+                  onBrideNameChange={setBrideName}
+                  onWeddingHallChange={setWeddingHall}
+                  onThemeChange={setTheme}
+                  onThemeColorChange={setThemeColor}
+                  onOrderChange={setOrder}
+                  onOrderPhoneChange={setOrderPhone}
+                  onCouplePersonChange={setCouplePerson}
+                  onCouplePhoneChange={setCouplePhone}
+                  onParentsEnabledChange={setParentsEnabled}
+                  onParentPersonChange={setParentPerson}
+                  onParentPhoneChange={setParentPhone}
+                  onAddAccount={addAccount}
+                  onRemoveAccount={removeAccount}
+                  onUpdateAccount={updateAccount}
+                  onGiftMoneyChange={setGiftMoney}
+                  onEtcEnabledChange={setEtcEnabled}
+                  onAddEtcLine={addEtcLine}
+                  onUpdateEtcLine={updateEtcLine}
+                  onRemoveEtcLine={removeEtcLine}
+                  onRsvpChange={setRsvp}
+                  onRsvpIncludeChange={setRsvpInclude}
+                  onRsvpPerSideChange={setRsvpPerSide}
+                  onRsvpPerSideIncludeChange={setRsvpPerSideInclude}
+                  onAboutUsChange={setAboutUs}
+                  applicantContact={applicantContact}
+                  editPassword={editPassword}
+                  onApplicantContactChange={setApplicantContact}
+                  onEditPasswordChange={setEditPassword}
+                />
+              )}
+              {step === 2 && (
+                <ImageStep
+                  invitation={invitation}
+                  onSingleImagePending={setSingleImagePending}
+                  getSinglePreviewUrl={getSinglePreviewUrl}
+                  onGalleryAddFiles={onGalleryAddFiles}
+                  onGalleryRemoveItem={onGalleryRemoveItem}
+                  getGalleryThumbnailUrl={getGalleryThumbnailUrl}
+                  onAlbumChange={setAlbum}
+                  onBgmChange={setBgm}
+                  onSelectTrack={selectTrack}
+                  onUpdateTrack={updateTrack}
+                  onCustomizationChange={setCustomization}
+                  onMiniRoomChange={setMiniRoom}
+                />
+              )}
               {step === 3 && (
                 <PublishStep
                   invitation={invitation}
                   onLoad={loadInvitation}
                   commitPendingUploads={commitPendingUploads}
                   clearCommittedPending={clearCommittedPending}
+                  editPassword={editPassword}
+                  applicantContact={applicantContact}
                 />
               )}
             </InvitationProvider>
