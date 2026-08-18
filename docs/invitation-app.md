@@ -78,6 +78,22 @@ flowchart LR
 
 그 외 `@momozzang/ui`의 invitation 위젯으로 `Header`, `Music`, `IntroOverlay` 등이 있습니다(`packages/ui/src/widgets/invitation/`). 헤더는 현재 메뉴 하이라이트와 메뉴 클릭 스크롤을 담당합니다.
 
+### 지도 앱 이동 안내
+
+> 이 절은 위 표의 `Direction` 행을 **한 글자도 고치지 않고** 뒤에 덧붙인다. 같은 문서를 여러 태스크가
+> 만지므로, 기존 줄을 고치면 그 줄을 보존해야 하는 다른 태스크와 diff 가 부딪힌다.
+
+`Direction` 의 지도 버튼은 `useMapNavigation` 으로 네이티브 앱(안드로이드 `intent://` · iOS 커스텀 스킴)을 열고,
+실패하면 웹 대체 주소로 넘어갑니다. **티맵만 웹 대체 주소가 없어** PC 브라우저에서는 열 수 있는 경로가 없습니다.
+
+이때 훅은 UI 를 그리지 않습니다 — 사실(`providerKey`·`label`·`reason`)만 `onNotice` 콜백으로 넘기고,
+`Direction` 이 기존 `MessageDialog` 의 **알림 모드**(`hideCancel: true`, 확인 버튼 하나)로 안내합니다.
+네이티브 `alert` 는 쓰지 않습니다 — 브라우저 크롬이라 청첩장 디자인과 이질적이고, 스크린샷·자동화에서는
+화면에 남지 않아 사용자가 아무 반응도 못 받은 것으로 읽힙니다.
+
+판정 앵커: `message-dialog` · `message-dialog-title` · `message-dialog-message` · `message-dialog-confirm` ·
+`message-dialog-cancel`(알림 모드에서는 DOM 에 없습니다).
+
 ## 데이터/환경변수
 
 - 청첩장 데이터는 Repository 팩토리(`getInvitationRepository`)를 통해 조회합니다. `VITE_DATA_SOURCE === 'supabase'`면 Supabase, 아니면 로컬 구현으로 분기합니다. 자세한 내용은 [`data-model.md`](./data-model.md), [`shared-ui.md`](./shared-ui.md) 참조.

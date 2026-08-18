@@ -15,7 +15,7 @@ import { PixelBadge } from '@shared/ui/PixelBadge';
 import { useToast } from '@shared/ui/Toast';
 import { useMessageDialog } from '@shared/ui/MessageDialog';
 import { Decoration } from '@shared/ui/Decoration/Decoration';
-import { useMapNavigation } from './useMapNavigation';
+import { useMapNavigation, type MapNavigationNotice } from './useMapNavigation';
 import { useParams } from 'react-router-dom';
 import { useIsPreviewMode } from '@entities/WeddingInvitation/Context';
 import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
@@ -24,6 +24,17 @@ import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 type TransportationType = 'busInfo' | 'carInfo' | 'metroInfo' | 'shuttleInfo';
 
 const transportationKeys: TransportationType[] = ['busInfo', 'carInfo', 'metroInfo', 'shuttleInfo'];
+
+/**
+ * 지도 앱을 열 수 없을 때의 안내 문구. **문구는 훅이 아니라 화면이 갖는다.**
+ * 줄바꿈(`\n`)을 쓰지 않는다 — `MessageDialog.module.css` 에 `white-space` 선언이 없어 접힌다.
+ */
+const MAP_NOTICE: Partial<Record<MapProviderKey, { title: string; message: string }>> = {
+  tmap: {
+    title: '티맵은 앱에서 열 수 있어요',
+    message: 'PC 브라우저에서는 티맵 길찾기를 열 수 없어요. 휴대폰에서 티맵 앱으로 열어 주세요.',
+  },
+};
 
 export function Direction() {
   const { invitationId } = useParams();
@@ -81,6 +92,19 @@ export function Direction() {
     }
   };
 
+  /**
+   * 종전에는 훅이 네이티브 `alert` 를 직접 띄웠다. 브라우저 크롬이라 청첩장 디자인과 이질적이고,
+   * 스크린샷·자동화에서는 화면에 남지도 않아 "아무 일도 안 일어난" 것으로 읽힌다.
+   * 이미 이 화면이 쓰고 있는 `MessageDialog` 의 **알림 모드**(확인 1버튼)로 대체한다.
+   */
+  const handleMapNotice = ({ providerKey, label }: MapNavigationNotice) => {
+    const notice = MAP_NOTICE[providerKey] ?? {
+      title: `${label}는 앱에서 열 수 있어요`,
+      message: 'PC 브라우저에서는 이 길찾기를 열 수 없어요. 휴대폰에서 앱으로 열어 주세요.',
+    };
+    void confirm({ ...notice, confirmText: '확인', hideCancel: true });
+  };
+
   const mapProviders = useMemo<Record<MapProviderKey, MapProviderSpec> | null>(() => {
     if (typeof latitude !== 'number' || typeof longitude !== 'number') return null;
     return createMapProviders({ latitude, longitude, name: hallName ?? '웨딩홀' });
@@ -89,6 +113,7 @@ export function Direction() {
   const handleClickMapLink = useMapNavigation(mapProviders, {
     isMock,
     onFallback: handleFallback,
+    onNotice: handleMapNotice,
   });
 
   return (

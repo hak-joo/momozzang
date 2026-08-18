@@ -10,14 +10,29 @@ type MapProviders = Record<MapProviderKey, MapProviderSpec> | null;
 // For this snippet, we keep the existing "try scheme -> timeout -> fallback" logic for iOS,
 // while using the cleaner "intent://" approach for Android.
 
+/** 지도 앱으로 이동할 수단이 없을 때 훅이 호출자에게 넘기는 사실. 문구는 담지 않는다. */
+export interface MapNavigationNotice {
+  providerKey: MapProviderKey;
+  /** provider 선언의 표시 이름(예: `티맵 지도`). */
+  label: string;
+  /** 지금은 한 가지뿐이다 — 데스크톱에서 열 웹 대체 주소가 없다. */
+  reason: 'no-desktop-fallback';
+}
+
 export function useMapNavigation(
   mapProviders: MapProviders,
   options?: {
     isMock?: boolean;
     onFallback?: (fallbackUrl: string) => void;
+    /**
+     * 지도 앱을 열 수 없을 때의 안내 경로. **훅은 UI 를 모른다** — 네이티브 `alert` 로 직접
+     * 그리지 않고 사실만 넘긴다. 넘기지 않으면 사용자가 아무 피드백도 받지 못하는 조용한
+     * 실패가 되므로 호출부는 반드시 준다(`Direction.tsx`).
+     */
+    onNotice?: (notice: MapNavigationNotice) => void;
   },
 ) {
-  const { isMock = false, onFallback } = options ?? {};
+  const { isMock = false, onFallback, onNotice } = options ?? {};
 
   return useCallback(
     (providerKey: MapProviderKey) =>
@@ -88,7 +103,11 @@ export function useMapNavigation(
           window.open(desktopFallback, '_blank', 'noopener,noreferrer');
         } else {
           if (providerKey === 'tmap') {
-            alert('티맵은 모바일 앱에서만 이용 가능합니다.');
+            onNotice?.({
+              providerKey,
+              label: provider.label,
+              reason: 'no-desktop-fallback',
+            });
             return;
           }
 
@@ -98,6 +117,6 @@ export function useMapNavigation(
           }
         }
       },
-    [mapProviders, isMock, onFallback],
+    [mapProviders, isMock, onFallback, onNotice],
   );
 }
