@@ -5,6 +5,7 @@ import { type WeddingInvitation } from '@momozzang/ui/src/entities/WeddingInvita
 import { useInvitationCreateMutation } from '../../features/invitation/api/useInvitationCreateMutation';
 import { validateInvitation, type ValidationIssue } from '../../features/apply/validateInvitation';
 import type { useApplyForm } from '../../features/apply/useApplyForm';
+import { useAdminToast } from '../../shared/ui/Toast';
 import styles from './PublishStep.module.css';
 
 type Form = ReturnType<typeof useApplyForm>;
@@ -45,6 +46,9 @@ export function PublishStep({
   editPassword,
   applicantContact,
 }: Props) {
+  // 인라인 배너(`saveMessage`)는 **유지**한다 — 필수값 누락 목록처럼 오래 남아야 하는 정보는
+  // 토스트로 옮기지 않는다. 토스트는 "방금 무슨 일이 일어났는가"만 겹쳐 알린다.
+  const toast = useAdminToast();
   const createMutation = useInvitationCreateMutation();
   const [issues, setIssues] = useState<ValidationIssue[]>([]);
   const [saveMessage, setSaveMessage] = useState<{
@@ -62,6 +66,12 @@ export function PublishStep({
     const found = validateInvitation(invitation, { editPassword, applicantContact });
     setIssues(found);
     if (found.length > 0) {
+      // F14 필수값 누락 안내 — commit/저장 모두 호출하지 않음.
+      // 목록 자체는 인라인 배너에 남기고, 토스트는 "왜 저장이 안 됐는지"만 겹쳐 알린다.
+      toast.error({
+        title: '아직 저장할 수 없어요.',
+        description: `확인이 필요한 항목이 ${found.length}건 있어요. 아래 안내를 확인해주세요.`,
+      });
       return;
     }
 
@@ -78,6 +88,10 @@ export function PublishStep({
           err instanceof Error ? err.message : '알 수 없는 오류'
         }. 다시 시도해 주세요.`,
       });
+      toast.error({
+        title: '이미지 업로드에 실패했어요.',
+        description: '선택한 이미지는 그대로 남아 있어요. 잠시 후 다시 저장해주세요.',
+      });
       return; // pending 유지(clearCommittedPending 미호출).
     } finally {
       setIsUploading(false);
@@ -92,6 +106,7 @@ export function PublishStep({
       {
         onSuccess: () => {
           setSavedSlug(slug);
+          toast.success({ title: '신청을 접수했어요.', description: `'${slug}' 주소로 접수됐어요.` });
           // 키 치환된 결과로 폼 state 갱신(blob→키, 미리보기 깨짐 방지) + commit blob revoke+clear(F7-b).
           onLoad(toSave);
           clearCommittedPending();
@@ -103,6 +118,10 @@ export function PublishStep({
             text: raw.includes(DUPLICATE_SLUG_MESSAGE)
               ? DUPLICATE_SLUG_MESSAGE
               : `신청 저장에 실패했습니다: ${raw || '알 수 없는 오류'}`,
+          });
+          toast.error({
+            title: '저장에 실패했어요.',
+            description: '잠시 후 저장을 다시 눌러주세요.',
           });
         },
       },
@@ -116,6 +135,7 @@ export function PublishStep({
     onLoad,
     editPassword,
     applicantContact,
+    toast,
   ]);
 
   // F3: 저장 버튼 라벨/비활성 — 업로드 중 → 저장 중 → 평시.

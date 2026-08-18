@@ -38,3 +38,28 @@
   color: var(--color-main-600);
   background: var(--color-basic-white);
 }
+
+/* ── 어드민 중립 variant (opt-in) ─────────────────────────────
+ * 위의 기존 `.field` 선언은 한 줄도 바꾸지 않는다. 셰브론만 테마색 → 중립 회색으로 교체한다.
+ * `:focus-visible` 규칙은 이미 위에 있으므로 손대지 않는다. */
+.field.admin {
+  color: var(--admin-control-color);
+  font-family: inherit;
+  font-size: var(--admin-control-font-size);
+  line-height: 1.5;
+  letter-spacing: normal;
+  border: var(--admin-control-border);
+  border-radius: var(--admin-control-radius);
+  background-color: var(--admin-control-bg);
+  padding: 10px 40px 10px 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%235b606b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 12px center;
+  /* 호출부가 `background` 단축 속성을 쓰면 `.field` 의 no-repeat 가 리셋돼 셰브론이 타일링된다.
+     admin variant 안에서 다시 못 박아 호출부 CSS 순서와 무관하게 한 개만 그린다. */
+  background-repeat: no-repeat;
+}
+
+.field.admin option {
+  color: var(--admin-control-color);
+  background: var(--admin-control-bg);
+}

@@ -5,14 +5,17 @@
   font-family: var(--font-PyeongChang);
 }
 
+/* 표면 값은 /admin 의 Panel 과 **같은 토큰**에서 온다(DoD 14 — 두 화면 카드 표면 SSOT). */
 .section {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 20px;
-  border: 1px solid var(--color-line-200);
-  border-radius: 12px;
-  background: var(--color-basic-white);
+  box-sizing: border-box;
+  padding: var(--admin-surface-padding);
+  border: var(--admin-surface-border);
+  border-radius: var(--admin-surface-radius);
+  background: var(--admin-surface-bg);
+  box-shadow: var(--admin-surface-shadow);
 }
 
 .sectionTitle {
@@ -34,6 +37,13 @@
   color: var(--color-neutral-700);
 }
 
+/* 필수 입력 표식(DoD 23). `aria-hidden="true"` 라 접근 가능한 이름에 섞이지 않는다 —
+   필수 정보는 컨트롤의 `aria-required` 가 전달한다(§6 R9). */
+.requiredMark {
+  margin-left: 2px;
+  color: var(--color-danger-600);
+}
+
 .hint {
   margin: 0;
   font-size: var(--font-size-12);
@@ -46,63 +56,25 @@
   color: var(--color-danger-500);
 }
 
-.textarea {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid var(--color-line-300);
-  border-radius: 8px;
-  font-size: var(--font-size-14);
-  font-family: inherit;
-  resize: vertical;
-  line-height: 1.5;
-}
+/* `.textarea` · `.select` 로컬 클래스는 삭제됐다 — 공유 Textarea/Select 의 admin variant 가 SSOT 다(P1-9). */
 
-.textarea:focus {
-  outline: none;
-  border-color: var(--color-main-600);
-}
-
-.select {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid var(--color-line-300);
-  border-radius: 8px;
-  font-size: var(--font-size-14);
-  font-family: inherit;
-  background: var(--color-basic-white);
-  cursor: pointer;
-}
-
-.select:focus {
-  outline: none;
-  border-color: var(--color-main-600);
-}
-
+/* 슬러그 행: 보더 없는 flex. 접두사는 필드 밖 정적 안내로 내렸다.
+   (종전의 `border:none !important` / `border-radius:0 !important` 가 카드 1 의 radius 0px 원인이었다.) */
 .slugRow {
   display: flex;
-  align-items: stretch;
-  border: 1px solid var(--color-line-300);
-  border-radius: 8px;
-  overflow: hidden;
+  align-items: center;
+  gap: 8px;
 }
 
 .slugPrefix {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 10px;
-  background: var(--color-bg-150);
   color: var(--color-neutral-500);
   font-size: var(--font-size-13);
   white-space: nowrap;
-  border-right: 1px solid var(--color-line-300);
 }
 
 .slugInput {
   flex: 1;
-  border: none !important;
-  border-radius: 0 !important;
+  min-width: 0;
 }
 
 .grid2 {
@@ -201,16 +173,9 @@
   box-sizing: border-box;
 }
 
+/* 표면(면·보더·라운드·글자)은 공유 Select 의 admin variant 가 SSOT 다 — 여기서는 배치만 준다. */
 .emailDomainSelect {
   flex: 0 0 auto;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid var(--color-line-300);
-  border-radius: 8px;
-  font-size: var(--font-size-14);
-  font-family: inherit;
-  background: var(--color-basic-white);
-  cursor: pointer;
 }
 
 /* 주소 검색 행 */

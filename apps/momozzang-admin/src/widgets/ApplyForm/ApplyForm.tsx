@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
+import { Textarea } from '@momozzang/ui/src/shared/ui/Input/Textarea';
+import { Select } from '@momozzang/ui/src/shared/ui/Select';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { openPostcodeSearch } from '@momozzang/ui/src/shared/lib/daumPostcode';
 import { geocodeAddress } from '@momozzang/ui/src/shared/lib/naverMaps';
@@ -16,12 +18,34 @@ import {
   type AboutUs,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { getSlugError } from '../../features/apply/validateSlug';
-import type { AccountOwner, EtcField, EtcKey, ParentSlot } from '../../features/apply/useApplyForm';
+import { toDateInputValue } from '../../shared/lib/dateInput';
+import type {
+  AccountOwner,
+  EtcField,
+  EtcKey,
+  ParentSlot,
+} from '../../features/apply/useApplyForm';
 import { PhoneField } from './PhoneField';
 import { EmailField } from './EmailField';
 import { AccountEditor } from './AccountEditor';
 import { EtcInfoEditor } from './EtcInfoEditor';
 import styles from './ApplyForm.module.css';
+
+/**
+ * 필수 입력 표식(DoD 23 · 계약 3 기준 24).
+ *
+ * `validateInvitation` 이 발행 시 필수로 취급하는 7필드에만 붙인다 —
+ * `slug` · `title` · `groomName` · `brideName` · `date` · `hour` · `minute`.
+ * `aria-hidden="true"` 인 이유는 §6 R9 다: 표식이 접근 가능한 이름에 섞이면 스크린리더가
+ * `초대장 제목 별표` 로 읽는다. 필수 정보는 컨트롤의 `aria-required` 가 전달한다.
+ */
+function RequiredMark() {
+  return (
+    <span className={styles.requiredMark} data-required-mark="" aria-hidden="true">
+      *
+    </span>
+  );
+}
 
 interface Props {
   invitation: WeddingInvitation;
@@ -210,9 +234,8 @@ function ParentBlock({
           <label className={styles.label} htmlFor={`apply-${slot}-deceasetype`}>
             고인 표기
           </label>
-          <select
+          <Select
             id={`apply-${slot}-deceasetype`}
-            className={styles.select}
             value={person?.deceasedType ?? 'none'}
             onChange={(e) => onPersonChange(slot, { deceasedType: e.target.value as DeceaseType })}
           >
@@ -221,7 +244,7 @@ function ParentBlock({
                 {opt.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       )}
       <AccountEditor
@@ -348,9 +371,11 @@ export function ApplyForm(props: Props) {
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-title">
             초대장 제목
+            <RequiredMark />
           </label>
           <Input
             id="apply-title"
+            aria-required="true"
             value={invitationInfo.title}
             onChange={(e) => onInvitationInfoChange({ title: e.target.value })}
             placeholder="예: OO ♥ OO 결혼합니다"
@@ -363,9 +388,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-message">
             청첩장 문구
           </label>
-          <textarea
+          <Textarea
             id="apply-message"
-            className={styles.textarea}
             value={invitationInfo.message}
             onChange={(e) => onInvitationInfoChange({ message: e.target.value })}
             rows={5}
@@ -377,11 +401,13 @@ export function ApplyForm(props: Props) {
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-slug">
             초대장 주소(슬러그)
+            <RequiredMark />
           </label>
           <div className={styles.slugRow}>
             <span className={styles.slugPrefix}>https://.../m/</span>
             <Input
               id="apply-slug"
+              aria-required="true"
               className={styles.slugInput}
               value={invitationInfo.url}
               onChange={(e) => onInvitationInfoChange({ url: e.target.value })}
@@ -473,9 +499,11 @@ export function ApplyForm(props: Props) {
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-groom">
               신랑 이름
+              <RequiredMark />
             </label>
             <Input
               id="apply-groom"
+              aria-required="true"
               value={couple.groom.name}
               onChange={(e) => onGroomNameChange(e.target.value)}
               placeholder="신랑 이름"
@@ -485,9 +513,11 @@ export function ApplyForm(props: Props) {
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-bride">
               신부 이름
+              <RequiredMark />
             </label>
             <Input
               id="apply-bride"
+              aria-required="true"
               value={couple.bride.name}
               onChange={(e) => onBrideNameChange(e.target.value)}
               placeholder="신부 이름"
@@ -573,11 +603,14 @@ export function ApplyForm(props: Props) {
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-date">
             예식 날짜
+            <RequiredMark />
           </label>
           <Input
             id="apply-date"
+            aria-required="true"
             type="date"
-            value={weddingHallInfo.date}
+            /* 렌더 시점 2차 방어(F1): 상태에 비정규 값이 들어와도 입력이 빈칸이 되지 않는다. */
+            value={toDateInputValue(weddingHallInfo.date)}
             onChange={(e) => onWeddingHallChange({ date: e.target.value })}
           />
         </div>
@@ -587,23 +620,23 @@ export function ApplyForm(props: Props) {
             <label className={styles.label} htmlFor="apply-ampm">
               오전/오후
             </label>
-            <select
+            <Select
               id="apply-ampm"
-              className={styles.select}
               value={weddingHallInfo.ampm}
               onChange={(e) => onWeddingHallChange({ ampm: e.target.value as AmPm })}
             >
               <option value="AM">오전</option>
               <option value="PM">오후</option>
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-hour">
               시
+              <RequiredMark />
             </label>
-            <select
+            <Select
               id="apply-hour"
-              className={styles.select}
+              aria-required="true"
               value={weddingHallInfo.hour}
               onChange={(e) => onWeddingHallChange({ hour: Number(e.target.value) })}
             >
@@ -612,15 +645,16 @@ export function ApplyForm(props: Props) {
                   {h}시
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-minute">
               분
+              <RequiredMark />
             </label>
-            <select
+            <Select
               id="apply-minute"
-              className={styles.select}
+              aria-required="true"
               value={weddingHallInfo.minute}
               onChange={(e) => onWeddingHallChange({ minute: Number(e.target.value) })}
             >
@@ -629,7 +663,7 @@ export function ApplyForm(props: Props) {
                   {m}분
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 
@@ -808,9 +842,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-rsvp-content">
             공통 내용
           </label>
-          <textarea
+          <Textarea
             id="apply-rsvp-content"
-            className={styles.textarea}
             value={rsvpRequest.content ?? ''}
             onChange={(e) => onRsvpChange({ content: e.target.value })}
             rows={3}
@@ -857,9 +890,8 @@ export function ApplyForm(props: Props) {
                   <label className={styles.label} htmlFor={`apply-rsvp-${side}-content`}>
                     내용
                   </label>
-                  <textarea
+                  <Textarea
                     id={`apply-rsvp-${side}-content`}
-                    className={styles.textarea}
                     value={sideData?.content ?? ''}
                     onChange={(e) => onRsvpPerSideChange(side, { content: e.target.value })}
                     rows={2}
@@ -908,9 +940,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-about-groom">
             신랑 소개
           </label>
-          <textarea
+          <Textarea
             id="apply-about-groom"
-            className={styles.textarea}
             value={aboutUs?.groomDesc ?? ''}
             onChange={(e) => onAboutUsChange({ groomDesc: e.target.value })}
             rows={3}
@@ -922,9 +953,8 @@ export function ApplyForm(props: Props) {
           <label className={styles.label} htmlFor="apply-about-bride">
             신부 소개
           </label>
-          <textarea
+          <Textarea
             id="apply-about-bride"
-            className={styles.textarea}
             value={aboutUs?.brideDesc ?? ''}
             onChange={(e) => onAboutUsChange({ brideDesc: e.target.value })}
             rows={3}
@@ -942,29 +972,27 @@ export function ApplyForm(props: Props) {
             <label className={styles.label} htmlFor="apply-theme">
               테마
             </label>
-            <select
+            <Select
               id="apply-theme"
-              className={styles.select}
               value={theme}
               onChange={(e) => onThemeChange(e.target.value as ThemeKind)}
             >
               <option value="CYWORLD">CYWORLD</option>
               <option value="RETRO">RETRO</option>
-            </select>
+            </Select>
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="apply-themecolor">
               테마색
             </label>
-            <select
+            <Select
               id="apply-themecolor"
-              className={styles.select}
               value={themeColor}
               onChange={(e) => onThemeColorChange(e.target.value as ThemeColorOptions)}
             >
               <option value="PURPLE">PURPLE</option>
               <option value="PINK">PINK</option>
-            </select>
+            </Select>
           </div>
         </div>
       </section>

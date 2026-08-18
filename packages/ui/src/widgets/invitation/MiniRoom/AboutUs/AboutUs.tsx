@@ -1,4 +1,4 @@
-import { useInvitation } from '@entities/WeddingInvitation/Context';
+import { useInvitation, useIsPreviewMode } from '@entities/WeddingInvitation/Context';
 import styles from './AboutUs.module.css';
 import clsx from 'clsx';
 import * as BottomSheet from '@shared/ui/BottomSheet';
@@ -8,12 +8,14 @@ import { getThemeHue, PURPLE_HUE } from '@shared/styles/utils';
 import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
 import { useImageHueShift } from '@shared/hooks/useImageHueShift';
 import { buildImageUrl } from '@shared/lib/imageUrl';
+import { SafeImage } from '@shared/ui/SafeImage';
 
 interface Props {
   className?: string;
 }
 export function AboutUs({ className }: Props) {
   const { aboutUs, couple, customization } = useInvitation();
+  const isPreview = useIsPreviewMode();
 
   const themeHue = getThemeHue(customization?.themeColor);
   const themedPhotoBookCover = useImageHueShift(photoBookCover, themeHue);
@@ -66,18 +68,20 @@ export function AboutUs({ className }: Props) {
             />
             <div className={styles.photoGrid}>
               <figure className={styles.photoSlot}>
-                <img
+                <SafeImage
                   src={buildImageUrl(aboutUs.groomImageUrl)}
                   alt={couple.groom.name}
                   className={styles.photoImage}
+                  fallback={isPreview}
                 />
               </figure>
 
               <figure className={styles.photoSlot}>
-                <img
+                <SafeImage
                   src={buildImageUrl(aboutUs.brideImageUrl)}
                   alt={couple.bride.name}
                   className={styles.photoImage}
+                  fallback={isPreview}
                 />
               </figure>
             </div>

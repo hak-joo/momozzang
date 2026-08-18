@@ -3,6 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { clsx } from 'clsx';
 import { CSS } from '@dnd-kit/utilities';
 import { AlbumPhoto } from '@momozzang/ui/src/entities/WeddingInvitation/model';
+import { ImageThumb } from '../../shared/ui/ImageThumb';
 import styles from './GalleryManager.module.css';
 
 interface SortableImageProps {
@@ -34,9 +35,11 @@ export const PhotoItem = memo(
           {...props}
           {...dragOverlayParams}
         >
-          <img
-            src={thumbnailUrl ?? ''}
-            alt="Gallery"
+          <ImageThumb
+            src={thumbnailUrl}
+            alt="사진첩 이미지"
+            size="sm"
+            ratio="square"
             className={styles.image}
             loading={isOverlay ? 'eager' : 'lazy'}
             draggable={false}

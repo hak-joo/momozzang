@@ -1,5 +1,8 @@
+/* `width: 100%` 이던 것을 `auto` 로 바꾼다.
+   상단바(`.topbar`)는 `flex-wrap: wrap` 인 flex 컨테이너라 스텝퍼가 100% 를 차지하면
+   이전/다음 내비가 반드시 둘째 줄로 밀려 상단바가 127px 이 됐다(계약 3 §0.4 · DoD 8). */
 .stepper {
-  width: 100%;
+  width: auto;
 }
 
 .list {
@@ -26,7 +29,10 @@
   border: 1px solid var(--color-line-300);
   border-radius: 999px;
   background: var(--color-basic-white);
-  color: var(--color-neutral-500);
+  /* 흰 표면 대비 6.31:1. 종전 --color-neutral-500 은 3.25:1 로 WCAG AA(4.5) 미달이었다
+     — S2·S3 이 공유 Button 만 보느라 놓친 3번째 대비 결함이다(계약 4 §0.5-a).
+     같은 값을 /admin 의 .toolbarLabel 이 이미 쓴다(DoD 17). */
+  color: var(--color-neutral-700);
   font-size: var(--font-size-14);
   font-weight: 600;
   cursor: pointer;
@@ -48,7 +54,8 @@
   height: 22px;
   border-radius: 50%;
   background: var(--color-bg-200);
-  color: var(--color-neutral-500);
+  /* 라벨과 같은 중립값으로 맞춘다 — bg-200 대비 5.24:1(종전 neutral-500 은 2.70:1). */
+  color: var(--color-neutral-700);
   font-size: var(--font-size-12);
   font-weight: 700;
 }
@@ -60,7 +67,7 @@
 }
 
 .step.active .index {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--color-basic-white25);
   color: var(--color-basic-white);
 }
 
@@ -81,11 +88,54 @@
 }
 
 @media (max-width: 768px) {
-  .label {
+  /* 종전에는 세 라벨을 **전부** 숨겨서 보이는 텍스트가 `"1"` 뿐이었다 — 사용자가 지금 어느
+     단계인지 알 수 없었다(DoD 10). 활성 단계의 이름만 남기면 폭도 줄고 맥락도 남는다. */
+  .step:not(.active) .label {
     display: none;
   }
 
+  /* ── 좁은 폭 1행화(QA_FINDINGS_3 §8-8) ──────────────────────────────
+   * S3 은 상단바에 `flex-wrap: wrap` 을 허용하면서 "좁은 폭에서는 활성 라벨만 남으니
+   * 폭이 준다"를 전제했는데, **활성 라벨이 길면 그 전제가 무너진다** — 실측하면
+   * 360px 스텝②는 145px 3행이었다(계약 4 §0.4). 스텝퍼가 줄어들 수 있게 만들고
+   * 마지막 수단으로 활성 라벨을 말줄임한다. 라벨은 계속 보이므로 DoD 10 은 유지된다. */
+  .stepper {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .list {
+    gap: 2px;
+    min-width: 0;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  .item {
+    min-width: 0;
+  }
+
+  .step {
+    padding: 6px 10px;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .index {
+    width: 20px;
+    height: 20px;
+    flex: none;
+  }
+
+  .label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 커넥터는 1행 폭 예산에서 가장 먼저 덜어낼 장식이다. */
   .connector {
-    width: 12px;
+    display: none;
   }
 }

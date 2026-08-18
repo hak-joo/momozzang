@@ -1,9 +1,11 @@
 .header {
   width: 100%;
   position: fixed;
-  top: 13px;
+  /* 오프셋만 opt-in 변수로 분리한다(F3). 변수를 정의하지 않는 뷰어는 fallback 13px/10px 로
+     computed 값이 완전히 동일하다. 값 주입은 어드민 PhonePreview.module.css 의 .screen 에서만 한다. */
+  top: var(--invitation-header-top, 13px);
   z-index: 100;
-  left: 10px;
+  left: var(--invitation-header-left, 10px);
   display: flex;
   justify-content: center;
 }

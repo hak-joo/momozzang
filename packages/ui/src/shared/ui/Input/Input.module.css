@@ -32,3 +32,41 @@
   max-height: 150px;
   resize: none;
 }
+
+/* ── 어드민 중립 variant (opt-in) ─────────────────────────────
+ * 위의 기존 `.field` 선언은 뷰어(청첩장) 자산이므로 한 줄도 바꾸지 않는다(DoD 28).
+ * 여기서는 `.field.admin` 으로 덮어쓰기만 한다 — provider 가 없으면 이 규칙은 붙지 않는다. */
+.field.admin {
+  color: var(--admin-control-color);
+  font-family: inherit;
+  font-size: var(--admin-control-font-size);
+  line-height: 1.5;
+  letter-spacing: normal;
+  border: var(--admin-control-border);
+  border-radius: var(--admin-control-radius);
+  background: var(--admin-control-bg);
+  padding: 10px 12px;
+}
+
+.field.admin::placeholder {
+  color: var(--color-neutral-400);
+  font-size: var(--admin-control-font-size);
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+
+/* 어드민 텍스트영역은 rows 로 높이를 정하던 기존 로컬 `.textarea` 동작을 유지한다. */
+.field.admin.textarea {
+  min-height: 0;
+  max-height: none;
+  resize: vertical;
+}
+
+/* 포커스 표현은 Button(`Button.module.css:48-51`)과 **같은 SSOT** 를 쓴다(SPEC §1.4 "상태 표현").
+ * variant 와 무관하게 적용되므로 뷰어 방명록 입력도 키보드 포커스 시 이 아웃라인을 갖는다
+ * — 계약이 사전 신고하고 기준 32(b)가 측정하는 의도된 변화다.
+ * `.field:focus{outline:none}` 뒤에 와야 이긴다(같은 특이성 → 소스 순서). */
+.field:focus-visible {
+  outline: 3px solid rgba(149, 174, 255, 0.7);
+  outline-offset: 2px;
+}

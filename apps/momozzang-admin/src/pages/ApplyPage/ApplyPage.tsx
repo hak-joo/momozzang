@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
+import { ControlVariantProvider } from '@momozzang/ui/src/shared/ui/ControlVariant';
 import { Stepper, type StepItem } from '../../widgets/Stepper/Stepper';
 import { PhonePreview } from '../../widgets/PhonePreview/PhonePreview';
 import { ApplyForm } from '../../widgets/ApplyForm/ApplyForm';
@@ -71,9 +72,18 @@ export default function ApplyPage() {
     setApplicantContact,
   } = useApplyForm();
 
+  // 어드민 크롬(스텝퍼/폼 패널)의 폼 컨트롤을 admin 시각 언어로 세운다.
+  // 좌측 폰 미리보기 내부는 PhonePreview 가 다시 `invitation` 으로 되돌린다.
   return (
+    <ControlVariantProvider value="admin">
     <div className={styles.page}>
       <header className={styles.topbar}>
+        {/* 브랜드 시그니처(SPEC F11 · DoD 19). 종전 /apply 상단바에는 페이지 타이틀 요소가
+            아예 없었다 — DoD 19 를 닫으려면 "고치는" 게 아니라 "새로 넣어야" 한다.
+            상단바 높이(DoD 8 · 73px)를 밀지 않도록 스텝 pill(40px)보다 낮게 두고,
+            ≤768px 에서는 숨긴다 — 좁은 폭 1행화(기준 23)의 폭 예산이 정확히 0 이라
+            타이틀이 흐름에 남으면 그 근거가 무효가 된다(기준 23-c). */}
+        <h1 className={styles.pageTitle}>청첩장 제작</h1>
         <Stepper steps={STEPS} current={step} onStepClick={setStep} />
         <div className={styles.stepNav}>
           <button
@@ -210,5 +220,6 @@ export default function ApplyPage() {
         </main>
       </div>
     </div>
+    </ControlVariantProvider>
   );
 }
