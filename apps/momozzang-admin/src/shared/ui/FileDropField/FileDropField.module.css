@@ -34,6 +34,9 @@
    `display:none` 은 접근성 트리·탭 순서에서 컨트롤을 제거해 DoD 13 이 그 컨트롤에서
    조용히 공허해진다(계약 3 §4.2 실측 대조표). */
 .input {
+  /* 네이티브 파일 인풋은 UA 기본 폰트(Arial)를 쓴다. 시각적으로 숨겨 글자는 안 보이지만
+     DoD 19("본문·폼·컨트롤은 PyeongChang")의 측정 대상이므로 상속시킨다(기준 11). */
+  font-family: inherit;
   position: absolute;
   width: 1px;
   height: 1px;

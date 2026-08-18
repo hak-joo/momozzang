@@ -97,6 +97,14 @@
   min-width: 0;
 }
 
+/* 네이티브 체크박스는 UA 기본 폰트(Arial)를 쓴다 — 공유 `Checkbox` 도 `font-family` 를
+   라벨 래퍼에만 걸어 두어 인풋 자체는 상속받지 못한다. 글자를 그리지 않는 위젯이지만
+   DoD 19 의 측정 대상(폼 컨트롤)이므로 어드민 폼 패널 안에서 상속시킨다(기준 11).
+   **`.previewPane` 이 아니라 `.formPane` 에만 건다** — 폰 미리보기 안은 뷰어 소유다. */
+.formPane input[type='checkbox'] {
+  font-family: inherit;
+}
+
 .placeholder {
   padding: 40px 20px;
   border: 1px dashed var(--color-line-400);
