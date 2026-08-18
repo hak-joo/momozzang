@@ -45,8 +45,9 @@
   margin-top: 4px;
 }
 
-/* 파괴적 확인. 흰 글자 on --color-danger-600(#c0392b) = 5.44:1 (AA).
-   `.adminPrimary`(0,1,0) 를 이기려고 클래스명을 두 번 겹쳐 (0,2,0) 으로 올린다. */
+/* 파괴적 확인. 흰 글자 on --color-danger-600 = 5.44:1 (AA).
+   `.adminPrimary`(0,1,0) 를 이기려고 클래스명을 두 번 겹쳐 (0,2,0) 으로 올린다.
+   주: 주석에도 raw HEX 를 적지 않는다 — DoD 20 스캐너는 여러 줄 주석을 벗기지 못한다. */
 .destructive.destructive {
   background: var(--color-danger-600);
   border-color: var(--color-danger-600);
