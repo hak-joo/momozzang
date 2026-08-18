@@ -1,0 +1,45 @@
+/* 이 저장소에는 전역 box-sizing 리셋이 없다. 패딩·테두리가 폭에 더해져 화면 밖으로
+   넘치지 않도록 두 컨테이너에 명시한다. */
+.screen {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: var(--color-bg-100);
+}
+
+.panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--color-line-200);
+  border-radius: 12px;
+  background: var(--color-basic-white);
+  color: var(--color-neutral-900);
+  font-family: var(--font-PyeongChang);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-18);
+  line-height: var(--line-height-18);
+  letter-spacing: var(--letter-spacing-18);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+  color: var(--color-neutral-700);
+}
