@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
 import ApplyPage from './pages/ApplyPage/ApplyPage';
 import { AdminToastProvider } from './shared/ui/Toast';
+import { AdminConfirmProvider } from './shared/ui/ConfirmDialog';
 
 /**
  * 어드민 피드백 provider 는 **라우터 바깥의 최상단**에 둔다.
@@ -13,13 +14,15 @@ import { AdminToastProvider } from './shared/ui/Toast';
 function App() {
   return (
     <AdminToastProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/admin" replace />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/apply" element={<ApplyPage />} />
-        </Routes>
-      </BrowserRouter>
+      <AdminConfirmProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/admin" replace />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/apply" element={<ApplyPage />} />
+          </Routes>
+        </BrowserRouter>
+      </AdminConfirmProvider>
     </AdminToastProvider>
   );
 }
