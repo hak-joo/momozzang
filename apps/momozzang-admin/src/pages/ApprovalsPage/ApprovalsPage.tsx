@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
@@ -7,12 +7,14 @@ import { useAdminToast } from '../../shared/ui/Toast';
 import type {
   InvitationStatus,
   InvitationSummary,
+  WeddingInvitation,
 } from '@momozzang/ui/src/entities/WeddingInvitation/model';
 import { Panel } from '../../shared/ui/Panel';
 import { AdminTopBar } from '../../widgets/AdminTopBar/AdminTopBar';
 import { useAdminSession } from '../../features/auth/useAdminSession';
 import { useInvitationListQuery } from '../../features/invitation/api/useInvitationListQuery';
 import { useInvitationStatusMutation } from '../../features/invitation/api/useInvitationStatusMutation';
+import { useInvitationRecordQuery } from '../../features/invitation/api/useInvitationRecordQuery';
 import styles from './ApprovalsPage.module.css';
 
 type StatusFilter = InvitationStatus | 'all';
@@ -54,6 +56,15 @@ export function ApprovalsPage() {
   const statusMutation = useInvitationStatusMutation();
 
   const rows: InvitationSummary[] = listQuery.data ?? [];
+
+  /**
+   * 펼친 행은 한 번에 하나다. 조회는 `enabled` 하나로만 열리므로 "목록 진입 시 N건 일괄 조회"는
+   * 코드 경로 자체가 없다 — 펼치기 전에는 `enabled: false` 라 요청이 만들어지지 않는다.
+   */
+  const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
+  const previewQuery = useInvitationRecordQuery(expandedSlug, {
+    enabled: expandedSlug !== null,
+  });
 
   const isRowBusy = (slug: string) =>
     statusMutation.isPending && statusMutation.variables?.slug === slug;
@@ -110,6 +121,24 @@ export function ApprovalsPage() {
     setFilter(value);
   };
 
+  const handleTogglePreview = (slug: string) => {
+    setExpandedSlug((prev) => (prev === slug ? null : slug));
+  };
+
+  /**
+   * 예식 일시는 `toLocaleString` 을 쓰지 않는다 — 로케일·타임존에 따라 문자열이 흔들려
+   * 화면에 보이는 값이 실행 환경마다 달라진다. 저장된 필드(date/ampm/hour/minute)를 그대로 조립한다.
+   */
+  const formatWeddingDateTime = (hall: WeddingInvitation['weddingHallInfo']) => {
+    const [year, month, day] = (hall.date ?? '').split('-');
+    if (!year || !month || !day) return '';
+    const meridiem = hall.ampm === 'AM' ? '오전' : '오후';
+    return `${Number(year)}년 ${Number(month)}월 ${Number(day)}일 ${meridiem} ${hall.hour}시 ${hall.minute}분`;
+  };
+
+  const previewRecord = previewQuery.data ?? null;
+  const previewFailed = !previewQuery.isPending && (previewQuery.isError || previewRecord === null);
+
   return (
     <div className={styles.page}>
       {/* 화면 사이 이동·로그아웃은 상단바 한 곳으로 모은다 — 두 보호 화면이 같은 탈출구를 갖는다.
@@ -153,6 +182,7 @@ export function ApprovalsPage() {
                 <tr>
                   <th scope="col">슬러그</th>
                   <th scope="col">연락처</th>
+                  <th scope="col">내용</th>
                   <th scope="col">상태</th>
                   <th scope="col">신청일</th>
                   <th scope="col">처리</th>
@@ -160,8 +190,8 @@ export function ApprovalsPage() {
               </thead>
               <tbody>
                 {rows.map((row) => (
+                  <Fragment key={row.slug}>
                   <tr
-                    key={row.slug}
                     data-slug={row.slug}
                     data-status={row.status}
                     data-created-at={row.createdAt}
@@ -182,6 +212,18 @@ export function ApprovalsPage() {
                       </div>
                     </td>
                     <td>{row.applicantContact ? row.applicantContact : '-'}</td>
+                    <td>
+                      <button
+                        type="button"
+                        className={styles.previewToggle}
+                        data-testid="approvals-preview-toggle"
+                        aria-expanded={expandedSlug === row.slug ? 'true' : 'false'}
+                        disabled={isRowBusy(row.slug)}
+                        onClick={() => handleTogglePreview(row.slug)}
+                      >
+                        {expandedSlug === row.slug ? '내용 닫기' : '내용 보기'}
+                      </button>
+                    </td>
                     <td>
                       <span className={styles.badge} data-badge={row.status}>
                         {STATUS_LABEL[row.status]}
@@ -219,6 +261,78 @@ export function ApprovalsPage() {
                       </div>
                     </td>
                   </tr>
+                  {expandedSlug === row.slug ? (
+                    <tr className={styles.previewRow} data-testid="approvals-preview-row">
+                      <td colSpan={6}>
+                        {previewQuery.isPending ? (
+                          <p
+                            className={styles.previewNotice}
+                            data-testid="approvals-preview-loading"
+                          >
+                            내용을 불러오는 중입니다.
+                          </p>
+                        ) : null}
+
+                        {previewFailed ? (
+                          <div className={styles.previewNotice}>
+                            <p role="alert" data-testid="approvals-preview-error">
+                              내용을 불러오지 못했습니다.
+                            </p>
+                            <button
+                              type="button"
+                              className={styles.previewRetry}
+                              data-testid="approvals-preview-retry"
+                              onClick={() => void previewQuery.refetch()}
+                            >
+                              다시 시도
+                            </button>
+                          </div>
+                        ) : null}
+
+                        {previewRecord ? (
+                          <div className={styles.previewCard} data-testid="approvals-preview-card">
+                            {(() => {
+                              const body = previewRecord.data;
+                              const thumb = body.images.find((image) => image.isRepresentative);
+                              return (
+                                <>
+                                  {thumb ? (
+                                    <img
+                                      className={styles.previewThumb}
+                                      data-testid="approvals-preview-thumb"
+                                      src={thumb.url}
+                                      alt="대표 이미지 미리보기"
+                                    />
+                                  ) : null}
+                                  <div className={styles.previewBody}>
+                                    <p
+                                      className={styles.previewTitle}
+                                      data-testid="approvals-preview-title"
+                                    >
+                                      {body.invitationInfo.title}
+                                    </p>
+                                    <p data-testid="approvals-preview-couple">
+                                      {`${body.couple.groom.name} · ${body.couple.bride.name}`}
+                                    </p>
+                                    <p data-testid="approvals-preview-datetime">
+                                      {formatWeddingDateTime(body.weddingHallInfo)}
+                                    </p>
+                                    <p data-testid="approvals-preview-hall">
+                                      {`${body.weddingHallInfo.hallName} ${body.weddingHallInfo.hallDetail} · ${body.weddingHallInfo.address}`}
+                                    </p>
+                                    <p data-testid="approvals-preview-photos">
+                                      {`사진 ${body.album.length}장`}
+                                    </p>
+                                  </div>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        ) : null}
+                      </td>
+                    </tr>
+                  ) : null}
+                  </Fragment>
                 ))}
               </tbody>
             </table>

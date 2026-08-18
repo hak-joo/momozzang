@@ -104,3 +104,21 @@ pnpm dev:admin                          # dev 서버 (port 3002)
 pnpm build:admin                        # 빌드
 pnpm --filter momozzang-admin lint      # lint
 ```
+
+## 승인 콘솔 — 신청 내용 미리보기 (`/admin`)
+
+승인 목록의 `내용` 컬럼(`내용 보기` 토글)으로 그 행을 **펼친 행**에서만 신청 내용을 확인합니다.
+
+- **조회 시점** — 펼친 순간에만 `getInvitationRecord(slug)` 를 부릅니다
+  (`src/features/invitation/api/useInvitationRecordQuery.ts`). 목록 진입 시 N건 일괄 조회는 코드 경로 자체가
+  없습니다 — 훅의 `enabled` 에 기본값이 없고 `expandedSlug === slug` 일 때만 켜집니다. Repository 인터페이스는
+  바꾸지 않았습니다.
+- **카드가 담는 것** — 초대장 제목 · 신랑·신부 · 예식 일시 · 예식장명/주소 · 사진 수 · 대표 이미지 썸네일.
+  예식 일시는 `toLocaleString` 없이 저장된 필드로 조립해 로케일·타임존에 흔들리지 않습니다.
+- **조회 중·실패** — `내용을 불러오는 중입니다.` / `내용을 불러오지 못했습니다.`(`role="alert"`) + `다시 시도`.
+  실패해도 **목록 자체는 정상**입니다(목록은 `listInvitations`, 미리보기는 `getInvitationRecord` 로 경로가 다릅니다).
+- **표 컬럼** — 목록 조회가 돌려주는 `InvitationSummary` 는 본문(`data`)을 담지 않아
+  **신랑·신부**·**예식일** 을 모든 행에 항상 그릴 수 없습니다. 그 컬럼은 요약 타입을 넓히는 별도 작업(T12)에서
+  되살립니다. 이 절의 미리보기는 어드민 앱 안에서만 끝납니다(`packages/ui/` 무변경).
+- 판정 앵커: `approvals-preview-toggle` · `-row` · `-card` · `-title` · `-couple` · `-datetime` · `-hall` ·
+  `-photos` · `-thumb` · `-loading` · `-error` · `-retry`.

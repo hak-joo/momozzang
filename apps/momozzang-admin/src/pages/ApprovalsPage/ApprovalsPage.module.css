@@ -60,6 +60,110 @@
   font-weight: var(--font-weight-bold);
 }
 
+/* T3: 신청 내용 미리보기(펼침 행). 삽입 지점(`.filterButton[aria-pressed]` 뒤)은 "논리적 순서"가
+   아니라 **독립성 우선**으로 정해졌다 — T1 은 EOF, T2 는 `.notice` 뒤를 쓴다(계약 §5.2).
+   색·간격은 전부 디자인 토큰이다. */
+.previewToggle {
+  padding: 4px 10px;
+  border: 1px solid var(--color-line-300);
+  border-radius: var(--button-radius);
+  background: var(--color-basic-white);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-13);
+  color: var(--color-neutral-700);
+  cursor: pointer;
+}
+
+.previewToggle[aria-expanded='true'] {
+  border-color: var(--color-neutral-900);
+  background: var(--color-bg-200);
+  color: var(--color-neutral-900);
+  font-weight: var(--font-weight-bold);
+}
+
+.previewToggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.previewRow > td {
+  padding: 0 12px 12px;
+  background: var(--color-bg-100);
+}
+
+.previewCard {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--color-line-200);
+  border-radius: 12px;
+  background: var(--color-basic-white);
+  white-space: normal;
+}
+
+.previewThumb {
+  width: 64px;
+  height: 84px;
+  object-fit: cover;
+  border: 1px solid var(--color-line-200);
+  border-radius: 8px;
+  flex: none;
+}
+
+.previewBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13-multi);
+  color: var(--color-neutral-700);
+}
+
+.previewBody p {
+  margin: 0;
+}
+
+.previewTitle {
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+}
+
+.previewNotice {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--color-line-200);
+  border-radius: 12px;
+  background: var(--color-basic-white);
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13-multi);
+  color: var(--color-neutral-700);
+  white-space: normal;
+}
+
+.previewNotice p {
+  margin: 0;
+}
+
+.previewNotice p[role='alert'] {
+  color: var(--color-danger-600);
+}
+
+.previewRetry {
+  padding: 4px 10px;
+  border: 1px solid var(--color-line-300);
+  border-radius: var(--button-radius);
+  background: var(--color-basic-white);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-13);
+  color: var(--color-neutral-900);
+  cursor: pointer;
+}
+
 .notice {
   margin: 0;
   font-size: var(--font-size-14);
