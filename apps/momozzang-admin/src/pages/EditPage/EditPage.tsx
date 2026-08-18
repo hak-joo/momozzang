@@ -10,6 +10,7 @@ import { Stepper, type StepItem } from '../../widgets/Stepper/Stepper';
 import { PhonePreview } from '../../widgets/PhonePreview/PhonePreview';
 import { ApplyForm } from '../../widgets/ApplyForm/ApplyForm';
 import { ImageStep } from '../../widgets/ImageStep/ImageStep';
+import { useSearchParams } from 'react-router-dom';
 import { ErrorBoundary } from '../../widgets/ErrorBoundary/ErrorBoundary';
 import { useApplyForm } from '../../features/apply/useApplyForm';
 import {
@@ -56,6 +57,19 @@ export function EditPage() {
   const [gate, setGate] = useState<{ slug: string; editPassword: string } | null>(null);
   const [step, setStep] = useState(1);
   const [issues, setIssues] = useState<ValidationIssue[]>([]);
+  /*
+    T6: /apply 접수 완료 카드의 `내용 수정하러 가기` 가 넘긴 ?slug= 를 게이트 입력에 채운다.
+    effect 를 쓰지 않는다 — useEffect/useRef 를 들이면 이 파일 1행의 react import 를
+    건드려야 하는데 그 줄은 다른 태스크가 점유했다(계약 §5.4). 렌더 중 상태 조정은
+    React 공식 패턴이며, 한 번만 채우므로 사용자가 지운 뒤 다시 채우지 않는다.
+  */
+  const [searchParams] = useSearchParams();
+  const prefillSlug = (searchParams.get('slug') ?? '').trim();
+  const [hasPrefilled, setHasPrefilled] = useState(false);
+  if (!hasPrefilled && prefillSlug) {
+    setHasPrefilled(true);
+    setSlugInput(prefillSlug);
+  }
   const [saveMessage, setSaveMessage] = useState<{
     kind: 'success' | 'error';
     text: string;

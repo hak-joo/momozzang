@@ -104,6 +104,7 @@ momozzang/
 | `VITE_APPLY_URL` | invitation | 온보딩 CTA 가 가리킬 신청 페이지 절대 URL. 비어 있으면 CTA 앵커를 렌더하지 않음 |
 | `VITE_ADMIN_EMAILS` | admin | 쉼표로 구분한 관리자 이메일 목록(로컬 데이터소스 전용. Supabase 경로는 `admin_users` 테이블이 정본) |
 | `VITE_LOCAL_ADMIN_PASSWORD` | admin | 로컬 데이터소스 전용 관리자 비밀번호 |
+| `VITE_INVITATION_BASE_URL` | admin | 신청 접수 완료 카드가 안내할 공개 청첩장 베이스 URL. 비어 있으면 절대 URL 대신 `/<슬러그>` 경로만 안내 |
 
 `.env` 위치: 루트 `.env`, `apps/momozzang-invitation/.env`, `apps/momozzang-admin/.env`. `.gitignore`에 `.env*`가 등록되어 있어 커밋되지 않습니다.
 

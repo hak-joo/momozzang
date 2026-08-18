@@ -6,6 +6,7 @@ import { useInvitationCreateMutation } from '../../features/invitation/api/useIn
 import { validateInvitation, type ValidationIssue } from '../../features/apply/validateInvitation';
 import type { useApplyForm } from '../../features/apply/useApplyForm';
 import { useAdminToast } from '../../shared/ui/Toast';
+import { Link } from 'react-router-dom';
 import styles from './PublishStep.module.css';
 
 type Form = ReturnType<typeof useApplyForm>;
@@ -195,19 +196,73 @@ export function PublishStep({
           /*
             접수 완료 후에는 저장 섹션을 감춘다. 같은 슬러그로 한 번 더 누르면 이제
             '이미 사용 중인 슬러그입니다.' 로 튕기므로, 방금 자기가 만든 행 때문에 실패하는
-            화면을 신청자에게 보여주지 않는다. 수정 경로는 /edit 이다.
-            /edit 는 링크가 아니라 텍스트로만 안내한다.
+            화면을 신청자에게 보여주지 않는다.
+            수정 경로는 /edit 이며, 텍스트가 아니라 **누를 수 있는 링크**로 안내한다.
           */
-          <div className={clsx(styles.banner, styles.bannerInfo)} data-testid="publish-complete">
-            <strong>신청이 접수되었습니다.</strong>
-            <p>
-              확정된 주소(슬러그): <strong data-testid="publish-complete-slug">{savedSlug}</strong>
-            </p>
-            <p>관리자 승인 후 공개됩니다. 승인 결과는 입력하신 연락처로 안내드립니다.</p>
-            <p>
-              내용을 수정하려면 <code>/edit</code> 에서 슬러그와 편집 비밀번호로 진입해 주세요.
-            </p>
-          </div>
+          /*
+            아래 즉시실행 함수는 공개 주소 문자열을 <code> 와 복사 버튼이 **같은 값**으로
+            쓰게 하려는 것이다. 컴포넌트 본문에 const 로 올리면 이 파일에서 만지는 영역이
+            늘어나는데, 이 삼항의 else 가지는 하나의 식이어야 해서 지역 변수를 둘 자리가 없다.
+          */
+          (() => {
+            // VITE_INVITATION_BASE_URL 이 비면 절대 URL 을 지어내지 않고 경로만 안내한다.
+            // (VITE_APPLY_URL 과 같은 규칙 — 값이 없을 때 가짜 링크를 만들지 않는다.)
+            const base = (import.meta.env.VITE_INVITATION_BASE_URL ?? '').trim().replace(/\/+$/, '');
+            const publicUrl = `${base}/${savedSlug}`;
+            const copy = (text: string, title: string) => {
+              void navigator.clipboard
+                .writeText(text)
+                .then(() => toast.success({ title, description: text }))
+                .catch(() =>
+                  toast.error({
+                    title: '복사하지 못했습니다.',
+                    description: '주소를 길게 눌러 직접 복사해 주세요.',
+                  }),
+                );
+            };
+            return (
+              <div className={clsx(styles.banner, styles.bannerInfo)} data-testid="publish-complete">
+                <strong>신청이 접수되었습니다.</strong>
+                <p>
+                  확정된 주소(슬러그):{' '}
+                  <strong data-testid="publish-complete-slug">{savedSlug}</strong>
+                  <button
+                    type="button"
+                    className={styles.completeAction}
+                    data-testid="publish-complete-copy-slug"
+                    onClick={() => copy(savedSlug, '주소를 복사했어요.')}
+                  >
+                    주소 복사
+                  </button>
+                </p>
+                <p>관리자 승인 후 공개됩니다. 승인 결과는 입력하신 연락처로 안내드립니다.</p>
+                <p>
+                  공개 주소:{' '}
+                  <code data-testid="publish-complete-public-url">{publicUrl}</code>
+                  <button
+                    type="button"
+                    className={styles.completeAction}
+                    data-testid="publish-complete-copy-url"
+                    onClick={() => copy(publicUrl, '공개 주소를 복사했어요.')}
+                  >
+                    공개 주소 복사
+                  </button>
+                </p>
+                <p>
+                  <Link
+                    className={styles.completeLink}
+                    data-testid="publish-complete-edit-link"
+                    to={`/edit?slug=${encodeURIComponent(savedSlug)}`}
+                  >
+                    내용 수정하러 가기
+                  </Link>
+                </p>
+                <p className={styles.completeWarning} data-testid="publish-complete-warning">
+                  편집 비밀번호는 다시 볼 수 없고 재발급도 되지 않습니다. 지금 안전한 곳에 보관해 주세요.
+                </p>
+              </div>
+            );
+          })()
         )}
       </section>
     </div>
