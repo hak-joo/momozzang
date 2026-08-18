@@ -40,17 +40,6 @@
   color: var(--color-neutral-700);
 }
 
-.loadRow {
-  display: flex;
-  gap: 8px;
-  align-items: stretch;
-}
-
-.loadInput {
-  flex: 1;
-  min-width: 0;
-}
-
 .actions {
   display: flex;
   gap: 8px;

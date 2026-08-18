@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { clsx } from 'clsx';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
 import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { type WeddingInvitation } from '@momozzang/ui/src/entities/WeddingInvitation/model';
-import { useInvitationQuery } from '../../features/invitation/api/useInvitationQuery';
 import { useInvitationMutation } from '../../features/invitation/api/useInvitationMutation';
 import { validateInvitation, type ValidationIssue } from '../../features/apply/validateInvitation';
 import type { useApplyForm } from '../../features/apply/useApplyForm';
@@ -24,11 +23,11 @@ interface Props {
 }
 
 /**
- * 스텝 ③ — 불러오기 / 저장(제작 완료) / 라운드트립 (F14·F15).
+ * 스텝 ③ — 신청 접수(F3).
  *
- * - 저장은 반드시 `useInvitationMutation`(=`getInvitationRepository().updateInvitation`) 경유([G2]).
- * - 불러오기는 `useInvitationQuery`(=`getInvitation`) 경유. 검증 전용 슬러그 사용 권장([G2]).
- * - 필수값/형식 검증은 `validateInvitation`로 저장 전 차단(F14·F15).
+ * - 슬러그 문자열만 알면 남의 청첩장을 폼으로 통째 불러오던 **무인증 조회 UI 를 제거**했다.
+ *   신청자의 수정 경로는 편집 비밀번호 게이트가 있는 `/edit` 이고, 관리자 경로는 `/admin/edit` 이다.
+ * - 필수값/형식 검증은 `validateInvitation` 로 저장 전 차단한다.
  */
 export function PublishStep({
   invitation,
@@ -38,44 +37,6 @@ export function PublishStep({
   editPassword,
   applicantContact,
 }: Props) {
-  // ── 불러오기 슬러그(폼의 url과 별개 입력) ──
-  const [loadSlug, setLoadSlug] = useState('');
-  // useInvitationQuery로 트리거하기 위한 활성 슬러그
-  const [activeLoadSlug, setActiveLoadSlug] = useState('');
-  const loadQuery = useInvitationQuery(activeLoadSlug);
-
-  const [loadMessage, setLoadMessage] = useState<{
-    kind: 'success' | 'error';
-    text: string;
-  } | null>(null);
-
-  // 불러오기 결과가 도착하면 폼 전체를 교체한다(F14).
-  const [pendingLoad, setPendingLoad] = useState(false);
-  useEffect(() => {
-    if (!pendingLoad) return;
-    if (loadQuery.isLoading) return;
-    if (loadQuery.data) {
-      onLoad(loadQuery.data);
-      setLoadMessage({ kind: 'success', text: `'${activeLoadSlug}' 청첩장을 불러왔습니다.` });
-    } else if (loadQuery.isError || loadQuery.data === null) {
-      setLoadMessage({ kind: 'error', text: '해당 슬러그의 청첩장을 불러오지 못했습니다.' });
-    }
-    setPendingLoad(false);
-  }, [pendingLoad, loadQuery.isLoading, loadQuery.data, loadQuery.isError, onLoad, activeLoadSlug]);
-
-  const handleLoad = useCallback(() => {
-    const slug = loadSlug.trim();
-    if (!slug) {
-      setLoadMessage({ kind: 'error', text: '불러올 슬러그를 입력해 주세요.' });
-      return;
-    }
-    setLoadMessage(null);
-    setActiveLoadSlug(slug);
-    setPendingLoad(true);
-    // 동일 슬러그 재불러오기(라운드트립 검증)에서도 최신값을 받도록 무효화 후 재조회.
-    loadQuery.refetch();
-  }, [loadSlug, loadQuery]);
-
   // ── 저장(제작 완료) ──
   const mutation = useInvitationMutation();
   const [issues, setIssues] = useState<ValidationIssue[]>([]);
@@ -165,38 +126,6 @@ export function PublishStep({
 
   return (
     <div className={styles.step}>
-      {/* F14 불러오기 */}
-      <section className={styles.section}>
-        <h3 className={styles.sectionTitle}>기존 청첩장 불러오기</h3>
-        <p className={styles.hint}>
-          검증 전용 슬러그(예: <code>harness-qa-3</code>)로 저장한 데이터를 다시 불러와 폼을
-          채웁니다.
-        </p>
-        <div className={styles.loadRow}>
-          <Input
-            className={styles.loadInput}
-            value={loadSlug}
-            onChange={(e) => setLoadSlug(e.target.value)}
-            placeholder="불러올 슬러그"
-            data-testid="publish-load-slug"
-          />
-          <Button onClick={handleLoad} disabled={pendingLoad && loadQuery.isLoading}>
-            불러오기
-          </Button>
-        </div>
-        {loadMessage && (
-          <div
-            className={clsx(
-              styles.banner,
-              loadMessage.kind === 'success' ? styles.bannerSuccess : styles.bannerError,
-            )}
-            data-testid="publish-load-message"
-          >
-            {loadMessage.text}
-          </div>
-        )}
-      </section>
-
       {/* F14 저장 / 제작 완료 */}
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>저장 / 제작 완료</h3>
