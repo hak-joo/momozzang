@@ -12,12 +12,25 @@
 
 라우터 정의는 `src/App.tsx`에 있습니다.
 
-| 라우트 | 동작 |
-|--------|------|
-| `/` | `/admin`으로 리다이렉트(`<Navigate to="/admin" replace />`) |
-| `/admin` | `AdminPage` (`src/pages/AdminPage.tsx`) 렌더 |
+| 라우트 | 컴포넌트 | 접근 조건 |
+|--------|----------|-----------|
+| `/` | `<Navigate to="/admin" replace />` | 공개(리다이렉트만) |
+| `/login` | `LoginPage` (`src/pages/LoginPage/LoginPage.tsx`) | 공개 |
+| `/admin` | `ApprovalsPage` (`src/pages/ApprovalsPage/ApprovalsPage.tsx`) | `RequireAdmin` (관리자 로그인) |
+| `/admin/edit` | `AdminPage` (`src/pages/AdminPage.tsx`) | `RequireAdmin` (관리자 로그인) |
+| `/apply` | `ApplyPage` (`src/pages/ApplyPage/ApplyPage.tsx`) | 공개 |
+| `/edit` | `EditPage` (`src/pages/EditPage/EditPage.tsx`) | 공개 라우트 + 슬러그+비밀번호 게이트 |
 
-## 편집 흐름
+`/admin` 은 신청 목록·승인/반려 화면(`ApprovalsPage`)이고, 슬러그를 불러와 이미지·갤러리를 고치는
+관리자 편집 화면은 `/admin/edit`(`AdminPage`)로 옮겨졌습니다.
+
+## 신청자 수정 흐름 (`/edit`)
+
+1. **게이트** — 신청할 때 정한 주소(슬러그)와 편집 비밀번호를 입력해 `getInvitationForEdit(slug, editPassword)` 로 잠금을 해제합니다. 슬러그 미존재·비밀번호 불일치·해시 없는 레거시 행 세 경우 모두 `슬러그 또는 비밀번호가 올바르지 않습니다.` 한 문장으로 끝나 존재 여부가 새지 않고, 잠금 전에는 편집 폼을 마운트조차 하지 않습니다.
+2. **폼 재사용** — 잠금이 풀리면 `/apply` 와 같은 `useApplyForm`·`ApplyForm`·`ImageStep`·`Stepper`·`PhonePreview` 를 그대로 쓰고, 불러온 청첩장으로 폼 전체를 교체합니다. 저장에 반영되지 않는 `신청 정보`(신청자 연락처·편집 비밀번호) 섹션은 이 화면에서 렌더하지 않습니다.
+3. **저장** — 게이트에서 받은 비밀번호를 함께 실어 `updateInvitationWithPassword(slug, editPassword, data)` 로만 저장합니다(무인증 `updateInvitation` 을 쓰지 않습니다). 저장 대상 행은 게이트로 연 슬러그로 고정되며, 공개 상태(`status`)·신청 메타는 그대로 보존됩니다. 데이터 접점은 `src/features/apply/useEditGate.ts` 하나입니다.
+
+## 관리자 편집 흐름 (`/admin/edit`)
 
 `AdminPage`(`src/pages/AdminPage.tsx`)가 화면 전체를 담당합니다.
 

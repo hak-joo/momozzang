@@ -63,10 +63,61 @@
 
 ### `momozzang` (청첩장)
 
-- 조회 키: `slug` 컬럼.
-- JSON `data` 컬럼에 `WeddingInvitation` 객체 전체를 저장.
+조회 키는 `slug` 컬럼이고, JSON `data` 컬럼에 `WeddingInvitation` 객체 전체가 저장됩니다. 신청→승인→공개 흐름을 위해 수명주기 컬럼 4개가 추가되어 있습니다(DDL: `apps/momozzang-invitation/supabase/business_flow.sql`).
+
+| 컬럼 | 타입 | 설명 |
+|------|------|------|
+| `slug` | `text` | 조회 키(청첩장 주소) |
+| `data` | `jsonb` | `WeddingInvitation` 객체 전체 |
+| `status` | `text` (`pending` \| `approved` \| `rejected`, 기본 `pending`) | 신청 수명주기. 뷰어는 `approved` 일 때만 본문을 렌더합니다. |
+| `edit_password_hash` | `text` | 편집 비밀번호 해시(pgcrypto bf). **클라이언트로 절대 내려보내지 않습니다** — 조회 select 목록에 넣지 않고, 대조는 서버(RPC) 안에서만 합니다. |
+| `applicant_contact` | `text` (기본 `''`) | 신청자 연락처. 관리자만 봅니다. |
+| `approved_at` | `timestamptz` | 승인 시각. 반려/승인 취소 시 `null` 로 되돌립니다. |
+
+### `admin_users` (관리자 화이트리스트)
+
+| 컬럼 | 타입 | 설명 |
+|------|------|------|
+| `email` | `text` (PK) | 관리자 이메일. `anon` 은 읽을 수 없고 `authenticated` 는 자기 행만 읽습니다. |
+
+Supabase 경로에서는 이 테이블이 관리자 판정의 정본이고, 로컬 데이터소스에서만 `VITE_ADMIN_EMAILS` 를 씁니다.
+
+### 수명주기 타입
+
+`packages/ui/src/entities/WeddingInvitation/model.ts` · `.../repositories/types.ts`
+
+- `InvitationStatus` — `'pending' | 'approved' | 'rejected'`.
+- `InvitationRecord` — `slug`, `status`, `data`, `applicantContact`, `createdAt`, `approvedAt`.
+- `InvitationSummary` — `Omit<InvitationRecord, 'data'>` (목록 조회용, 본문 제외).
+- `CreateInvitationInput` — `slug`, `data`, `editPassword`(평문, 저장 시 반드시 해시), `applicantContact`.
+
+### Repository 메서드
+
+`InvitationRepository`(`packages/ui/src/entities/WeddingInvitation/repositories/types.ts`)는 기존 2개(`getInvitation`·`updateInvitation`)에 더해 아래 6개를 가집니다. 로컬·Supabase 두 구현이 같은 인터페이스를 만족합니다.
+
+| 메서드 | 용도 | Supabase 구현 |
+|--------|------|----------------|
+| `getInvitationRecord(slug)` | 뷰어 status 게이트용 레코드 조회 | `select('slug, data, status, created_at, approved_at')` (해시 컬럼 제외) |
+| `createInvitation(input)` | `/apply` 신청 접수(`status='pending'` + 해시 저장) | `rpc('create_invitation')` |
+| `listInvitations(status?)` | `/admin` 신청 목록 | `select` + 관리자 RLS |
+| `setInvitationStatus(slug, status)` | 승인/반려 | `update` + 관리자 RLS |
+| `getInvitationForEdit(slug, editPassword)` | `/edit` 게이트. 미존재·불일치·해시 없음 모두 `null` | `rpc('get_invitation_for_edit')` |
+| `updateInvitationWithPassword(slug, editPassword, data)` | `/edit` 저장(본문 `data` 만 갱신) | `rpc('save_invitation_edit')` |
+
+### RPC 3종 (`security definer`)
+
+| 함수 | 하는 일 |
+|------|---------|
+| `public.create_invitation(...)` | 슬러그 중복을 원자적으로 선검사하고 `status='pending'` 행을 만들며 비밀번호를 해시해 저장 |
+| `public.get_invitation_for_edit(slug, edit_password)` | 서버에서 bcrypt 대조 후 본문 `data` 만 반환(실패 시 `null`) |
+| `public.save_invitation_edit(slug, edit_password, data)` | 서버에서 대조 후 `data` 만 갱신. `status`·해시·신청 메타는 건드리지 않음 |
+
+전체 DDL·RLS 정책·RPC 정의는 `apps/momozzang-invitation/supabase/business_flow.sql` 한 파일에 있습니다.
+
+기존 2메서드는 그대로입니다.
+
 - 조회: `SupabaseInvitationRepository.getInvitation(slug)` → `.from('momozzang').select('data').eq('slug', id).single()`.
-- 저장: `updateInvitation(slug, data)` → `.from('momozzang').update({ data }).eq('slug', id)`.
+- 저장: `updateInvitation(slug, data)` → `.from('momozzang').update({ data }).eq('slug', id)` — 관리자 편집(`/admin/edit`) 경로 전용입니다.
 
 ### `guestbooks` (방명록)
 
