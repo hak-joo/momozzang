@@ -82,3 +82,40 @@
 .banner p {
   margin: 6px 0 0;
 }
+
+/* T6: 접수 완료 카드의 복사 버튼·수정 링크·분실 경고. 이 파일을 만지는 태스크는 T6 뿐이라
+   파일 끝에 append 한다(계약 §5.4). 색은 디자인 토큰만 쓴다. */
+.completeAction {
+  margin-left: 8px;
+  padding: 3px 10px;
+  border: 1px solid var(--color-line-300);
+  border-radius: 999px;
+  background: var(--color-basic-white);
+  color: var(--color-neutral-900);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  cursor: pointer;
+}
+
+.completeAction:hover {
+  border-color: var(--color-neutral-700);
+}
+
+.completeLink {
+  display: inline-block;
+  margin-top: 2px;
+  color: var(--color-neutral-900);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+}
+
+.completeWarning {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-danger-200);
+  border-radius: 6px;
+  background: var(--color-danger-50);
+  color: var(--color-danger-600);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}

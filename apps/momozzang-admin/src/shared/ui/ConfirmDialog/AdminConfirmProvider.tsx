@@ -88,23 +88,35 @@ export function AdminConfirmProvider({ children }: { children: ReactNode }) {
         <Dialog.Content
           useOverlay
           useFadeInOut
+          data-testid="admin-confirm-dialog"
           className={styles.dialog}
           overlayClassName={styles.overlay}
           aria-describedby={description ? descriptionId : undefined}
         >
           <ControlVariantProvider value="admin">
-            <Dialog.Title className={styles.title}>{title}</Dialog.Title>
+            <Dialog.Title className={styles.title} data-testid="admin-confirm-title">
+              {title}
+            </Dialog.Title>
             {description ? (
-              <p className={styles.description} id={descriptionId}>
+              <p
+                className={styles.description}
+                id={descriptionId}
+                data-testid="admin-confirm-description"
+              >
                 {description}
               </p>
             ) : null}
             <div className={styles.actions}>
-              <Button variant="secondary" onClick={() => close(false)}>
+              <Button
+                variant="secondary"
+                data-testid="admin-confirm-cancel"
+                onClick={() => close(false)}
+              >
                 {cancelText}
               </Button>
               <Button
                 variant="primary"
+                data-testid="admin-confirm-accept"
                 className={destructive ? styles.destructive : undefined}
                 onClick={() => close(true)}
               >

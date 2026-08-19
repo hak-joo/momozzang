@@ -26,6 +26,10 @@ interface InvitationSummaryRow {
   applicant_contact: string | null;
   created_at: string;
   approved_at: string | null;
+  /** PostgREST JSON 경로 추출 결과. 본문 전체를 내려받지 않는다. */
+  groom_name: string | null;
+  bride_name: string | null;
+  wedding_date: string | null;
 }
 
 export class SupabaseInvitationRepository implements InvitationRepository {
@@ -115,7 +119,14 @@ export class SupabaseInvitationRepository implements InvitationRepository {
   async listInvitations(status?: InvitationStatus): Promise<InvitationSummary[]> {
     let query = supabase
       .from('momozzang')
-      .select('slug, status, applicant_contact, created_at, approved_at');
+      // 본문(`data`) 전체를 내려받지 않는다. 목록 표가 쓰는 세 값만 PostgREST 의 JSON 경로
+      // 추출로 뽑아 요약에 담는다 — 목록 진입 시 슬러그별 본문 조회를 만들지 않기 위해서다.
+      .select(
+        `slug, status, applicant_contact, created_at, approved_at,
+         groom_name:data->couple->groom->>name,
+         bride_name:data->couple->bride->>name,
+         wedding_date:data->weddingHallInfo->>date`,
+      );
 
     if (status) {
       query = query.eq('status', status);
@@ -133,6 +144,9 @@ export class SupabaseInvitationRepository implements InvitationRepository {
       applicantContact: row.applicant_contact ?? '',
       createdAt: row.created_at,
       approvedAt: row.approved_at ?? null,
+      groomName: row.groom_name ?? '',
+      brideName: row.bride_name ?? '',
+      weddingDate: row.wedding_date ?? '',
     }));
   }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   type WeddingInvitation,
   type AlbumPhoto,
@@ -7,6 +8,7 @@ import { Button } from '@momozzang/ui/src/shared/ui/Button';
 import { Input } from '@momozzang/ui/src/shared/ui/Input/Input';
 import { ControlVariantProvider } from '@momozzang/ui/src/shared/ui/ControlVariant';
 import { GalleryManager } from '../widgets/GalleryManager/GalleryManager';
+import { AdminTopBar } from '../widgets/AdminTopBar/AdminTopBar';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
 import styles from './AdminPage.module.css';
 import { Panel } from '../shared/ui/Panel';
@@ -82,9 +84,20 @@ function savedValueOf(invitation: WeddingInvitation, slot: SingleSlot): string |
   }
 }
 
+/** 쿼리(`?slug=`)가 없을 때의 기본 슬러그. 종전 하드코딩 값을 그대로 유지한다(회귀 0). */
+const DEFAULT_SLUG = 'demo-captain-luna';
+
 export default function AdminPage() {
-  const [inputSlug, setInputSlug] = useState('demo-captain-luna');
-  const [slug, setSlug] = useState('demo-captain-luna');
+  /**
+   * 승인 목록의 `편집` 링크가 넘겨준 `?slug=` 를 마운트 시 1회 읽어 초기값으로 쓴다.
+   * 쿼리가 없으면 종전 기본값 그대로다 — 직접 들어온 관리자의 동작은 바뀌지 않는다.
+   * 이후의 슬러그 변경은 사용자가 툴바에서 하는 것이므로 쿼리를 계속 따라가지 않는다.
+   */
+  const [searchParams] = useSearchParams();
+  const initialSlug = searchParams.get('slug')?.trim() || DEFAULT_SLUG;
+
+  const [inputSlug, setInputSlug] = useState(initialSlug);
+  const [slug, setSlug] = useState(initialSlug);
   const toast = useAdminToast();
   /**
    * 사용자가 `불러오기` 를 누른 요청. 최초 자동 조회에는 피드백을 내지 않기 위해 필요하다.
@@ -263,6 +276,10 @@ export default function AdminPage() {
   return (
     <ControlVariantProvider value="admin">
     <div className={styles.container}>
+      {/* 편집 화면에도 같은 탈출구를 준다 — 종전에는 브라우저 뒤로가기 외에 /admin 으로 돌아갈 길이 없었다.
+          `RequireAdmin` 의 children 안쪽이므로 세션 판정 전에는 마운트되지 않는다. */}
+      <AdminTopBar />
+
       <header className={styles.header}>
         <h1 className={styles.title}>청첩장 관리자</h1>
         {/* A7: 슬러그 입력 + 불러오기 + 저장을 한 행(툴바)에 묶는다. */}
@@ -292,6 +309,14 @@ export default function AdminPage() {
           }
         >
           {statusMessage && <p className={styles.status}>{statusMessage}</p>}
+          {/* 딥링크로 들어왔을 때 "어느 청첩장이 열렸는지" 를 확인할 수단이 필요하다 —
+              종전에는 슬러그 입력칸 말고는 조회 대상을 알려주는 표시가 없었다. */}
+          {invitation && (
+            <p className={styles.loaded} data-testid="admin-loaded-invitation">
+              현재 편집 중: <b>{invitation.couple.groom.name}</b> ·{' '}
+              <b>{invitation.couple.bride.name}</b> <span className={styles.loadedSlug}>({slug})</span>
+            </p>
+          )}
         </Panel>
       </header>
 

@@ -99,3 +99,72 @@
   letter-spacing: var(--letter-spacing-12);
   color: var(--color-neutral-500);
 }
+
+/* T5: 수정 링크와 슬러그 상태 확인 입력. 이 파일을 만지는 태스크는 T5 뿐이라 파일 끝에 append 한다.
+   색·크기는 기존 토큰만 조합한다(신규 색상 리터럴 0건). */
+.editCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 1px solid var(--color-line-300);
+  border-radius: var(--button-radius);
+  background: var(--color-bg-100);
+  color: var(--color-neutral-900);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  letter-spacing: var(--letter-spacing-14);
+  text-decoration: none;
+}
+
+.statusForm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.statusLabel {
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  letter-spacing: var(--letter-spacing-12);
+  color: var(--color-neutral-700);
+}
+
+.statusRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.statusInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--color-line-300);
+  border-radius: var(--button-radius);
+  background: var(--color-basic-white);
+  color: var(--color-neutral-900);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+
+.statusSubmit {
+  flex: none;
+  padding: 10px 16px;
+  border: 1px solid var(--color-line-300);
+  border-radius: var(--button-radius);
+  background: var(--color-bg-100);
+  color: var(--color-neutral-900);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  cursor: pointer;
+}
+
+.statusError {
+  margin: 0;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  letter-spacing: var(--letter-spacing-12);
+  color: var(--color-danger-600);
+}

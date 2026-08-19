@@ -1,0 +1,80 @@
+/* 관리자 공통 상단바. 신규 색상 리터럴 없이 기존 디자인 토큰만 조합한다.
+   이 저장소에는 전역 box-sizing 리셋이 없어 컨테이너에 명시한다. */
+.bar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-line-200);
+  border-radius: var(--button-radius);
+  background: var(--color-basic-white);
+  font-family: var(--font-PyeongChang);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.link {
+  padding: 8px 14px;
+  border: 1px solid var(--color-line-300);
+  border-radius: 999px;
+  background: var(--color-basic-white);
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13);
+  color: var(--color-neutral-700);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* 현재 화면 표시는 aria-current 한 곳에서만 온다 — 클래스와 접근성 상태가 갈라지지 않는다. */
+.link[aria-current='page'] {
+  border-color: var(--color-main-500);
+  background: var(--color-brand-tint-50);
+  color: var(--color-main-600);
+  font-weight: var(--font-weight-bold);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.email {
+  overflow: hidden;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  color: var(--color-neutral-700);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 390px 에서는 링크 줄과 계정 줄이 위아래로 나뉘어 두 링크가 모두 한 화면에 남는다. */
+@media (max-width: 480px) {
+  .bar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .links {
+    justify-content: space-between;
+  }
+
+  .link {
+    flex: 1;
+    text-align: center;
+  }
+
+  .account {
+    justify-content: space-between;
+  }
+}

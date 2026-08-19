@@ -208,8 +208,20 @@ export interface InvitationRecord {
   approvedAt: string | null;
 }
 
-/** 목록 조회용 요약 레코드. 본문(`data`)을 제외한다. */
-export type InvitationSummary = Omit<InvitationRecord, 'data'>;
+/**
+ * 목록 조회용 요약 레코드. 본문(`data`)을 제외하되, 관리자가 목록에서 신청을 분류할 때 필요한
+ * 최소 정보(신랑·신부 이름, 예식일)는 **요약 자체에 담는다**.
+ *
+ * 본문 전체를 목록에 싣지 않는다는 원칙은 그대로다 — 세 필드는 저장소 쪽에서 뽑아 오며
+ * (로컬은 `toSummary`, Supabase 는 select 의 JSON 경로 추출), 목록 진입 시 슬러그별 본문
+ * 조회가 새로 생기지 않는다.
+ */
+export type InvitationSummary = Omit<InvitationRecord, 'data'> & {
+  groomName: string;
+  brideName: string;
+  /** `YYYY-MM-DD`. 본문 `weddingHallInfo.date` 를 그대로 옮긴다. 없으면 빈 문자열. */
+  weddingDate: string;
+};
 
 /** 화면 호환용 평면 모델 (원한다면 사용) */
 export type WeddingInvitationFlat = Omit<WeddingInvitation, 'couple' | 'parents'> & {
