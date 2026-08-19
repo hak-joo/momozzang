@@ -162,7 +162,13 @@ function toRecord(stored: StoredInvitation): InvitationRecord {
   };
 }
 
-/** 목록용 변환. `editPasswordHash` 와 본문 `data` 를 둘 다 제거한다. */
+/**
+ * 목록용 변환. `editPasswordHash` 와 본문 `data` 를 둘 다 제거하되, 목록 표가 쓰는 세 값
+ * (신랑·신부 이름, 예식일)만 본문에서 옮겨 담는다.
+ *
+ * 값이 없는 구 포맷 레코드도 있으므로 옵셔널 체이닝 + `?? ''` 로 빈 문자열까지 내려 준다
+ * — 표 쪽에서 `-` 로 그린다.
+ */
 function toSummary(stored: StoredInvitation): InvitationSummary {
   return {
     slug: stored.slug,
@@ -170,6 +176,9 @@ function toSummary(stored: StoredInvitation): InvitationSummary {
     applicantContact: stored.applicantContact,
     createdAt: stored.createdAt,
     approvedAt: stored.approvedAt,
+    groomName: stored.data?.couple?.groom?.name ?? '',
+    brideName: stored.data?.couple?.bride?.name ?? '',
+    weddingDate: stored.data?.weddingHallInfo?.date ?? '',
   };
 }
 

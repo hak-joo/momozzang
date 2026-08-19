@@ -33,6 +33,21 @@
 
 저장된 행이 없을 때는 예외가 아니라 정상 경로이며 `/` 로 리다이렉트하지 않습니다.
 
+위 표는 **화면 문구·앵커의 정본**이라 행을 고치지 않습니다. 각 조건에서 사용자가 할 수 있는 행동은
+아래 **액션 열**로 덧붙입니다 — 안내 화면은 막다른 골목이 아니어야 합니다.
+
+| 조건 | 액션 |
+|------|------|
+| 조회 중 | 진행 표시(`data-testid="invitation-loading-progress"`, `aria-hidden="true"`). `prefers-reduced-motion: reduce` 에서는 애니메이션을 끄고 정적 막대로 대체합니다 |
+| 조회 실패 | `다시 시도` 버튼(`data-testid="invitation-error-retry"`) → `refetch()`. 재조회 중 라벨은 `다시 시도 중...` |
+| 저장된 행 없음 | `모모짱 홈으로` 링크(`data-testid="invitation-missing-home"`, `href="/"`) |
+| `status='pending'` | `상태 다시 확인` 버튼(`data-testid="invitation-pending-refresh"`) → `refetch()`, 재조회 중 라벨은 `확인 중...`. 함께 놓인 안내 문장(`data-testid="invitation-pending-help"`)이 승인 절차와 결과 통보 경로를 알립니다 |
+| `status='rejected'` | `모모짱 홈으로` 링크(`data-testid="invitation-rejected-home"`, `href="/"`) |
+| `status='approved'` | — (본문이 열립니다) |
+
+조회는 `retry: false` 라 실패해도 자동 재시도가 없습니다. 그래서 실패·대기 화면의 재조회는 **사용자가
+직접 눌러야** 하고, 위 두 버튼이 그 유일한 경로입니다(새로고침을 요구하지 않습니다).
+
 ## 화면 흐름
 
 ```mermaid
@@ -63,12 +78,30 @@ flowchart LR
 
 그 외 `@momozzang/ui`의 invitation 위젯으로 `Header`, `Music`, `IntroOverlay` 등이 있습니다(`packages/ui/src/widgets/invitation/`). 헤더는 현재 메뉴 하이라이트와 메뉴 클릭 스크롤을 담당합니다.
 
+### 지도 앱 이동 안내
+
+> 이 절은 위 표의 `Direction` 행을 **한 글자도 고치지 않고** 뒤에 덧붙인다. 같은 문서를 여러 태스크가
+> 만지므로, 기존 줄을 고치면 그 줄을 보존해야 하는 다른 태스크와 diff 가 부딪힌다.
+
+`Direction` 의 지도 버튼은 `useMapNavigation` 으로 네이티브 앱(안드로이드 `intent://` · iOS 커스텀 스킴)을 열고,
+실패하면 웹 대체 주소로 넘어갑니다. **티맵만 웹 대체 주소가 없어** PC 브라우저에서는 열 수 있는 경로가 없습니다.
+
+이때 훅은 UI 를 그리지 않습니다 — 사실(`providerKey`·`label`·`reason`)만 `onNotice` 콜백으로 넘기고,
+`Direction` 이 기존 `MessageDialog` 의 **알림 모드**(`hideCancel: true`, 확인 버튼 하나)로 안내합니다.
+네이티브 `alert` 는 쓰지 않습니다 — 브라우저 크롬이라 청첩장 디자인과 이질적이고, 스크린샷·자동화에서는
+화면에 남지 않아 사용자가 아무 반응도 못 받은 것으로 읽힙니다.
+
+판정 앵커: `message-dialog` · `message-dialog-title` · `message-dialog-message` · `message-dialog-confirm` ·
+`message-dialog-cancel`(알림 모드에서는 DOM 에 없습니다).
+
 ## 데이터/환경변수
 
 - 청첩장 데이터는 Repository 팩토리(`getInvitationRepository`)를 통해 조회합니다. `VITE_DATA_SOURCE === 'supabase'`면 Supabase, 아니면 로컬 구현으로 분기합니다. 자세한 내용은 [`data-model.md`](./data-model.md), [`shared-ui.md`](./shared-ui.md) 참조.
 - 방명록은 `getGuestBookRepository`로 접근합니다.
 - 지도 섹션은 `VITE_NAVER_MAP_CLIENT_ID` 환경변수를 사용합니다.
 - 로컬 개발 시 `/api` 요청은 `apps/momozzang-invitation/vite.config.ts`에서 `http://localhost:8081`로 프록시됩니다.
+- 랜딩(`/`)의 `내 청첩장 수정하기` 앵커는 `VITE_EDIT_URL` 을 가리킵니다(어드민 앱의 `/edit` 주소). 값이 비어 있으면 앵커를 렌더하지 않고 안내 문구만 냅니다 — `VITE_APPLY_URL` 과 같은 규칙입니다.
+- 랜딩의 **상태 확인** 입력에 청첩장 주소(슬러그)를 넣고 제출하면 `/<슬러그>` 로 이동합니다. 앞뒤 공백은 제거하며, 값이 공백뿐이면 이동하지 않고 `청첩장 주소를 입력해 주세요.` 를 `role="alert"` 로 알립니다.
 
 ## 관련 명령
 

@@ -35,6 +35,13 @@
   min-width: 0;
 }
 
+/* T11: 툴바가 접히면(Panel.module.css) 입력칸이 한 행을 독점한다. 파일 끝은 T1 이 점유했다 — 계약 §5.3. */
+@media (max-width: 768px) {
+  .slugInput {
+    flex: 1 1 100%;
+  }
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -73,4 +80,22 @@
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── T1: 상단바 + 딥링크 확인 표시 ─────────────────────────────────────────
+   기존 규칙 사이에 끼워넣지 않고 파일 끝에 새 블록으로 붙인다. */
+.container > nav {
+  margin-bottom: 24px;
+}
+
+.loaded {
+  margin: 0;
+  font-size: var(--font-size-13);
+  line-height: var(--line-height-13);
+  color: var(--color-neutral-700);
+}
+
+.loadedSlug {
+  font-family: var(--font-PyeongChang);
+  color: var(--color-neutral-500);
 }

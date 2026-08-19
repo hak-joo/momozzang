@@ -12,23 +12,38 @@
 
 라우터 정의는 `src/App.tsx`에 있습니다.
 
-| 라우트 | 컴포넌트 | 접근 조건 |
-|--------|----------|-----------|
-| `/` | `<Navigate to="/admin" replace />` | 공개(리다이렉트만) |
-| `/login` | `LoginPage` (`src/pages/LoginPage/LoginPage.tsx`) | 공개 |
-| `/admin` | `ApprovalsPage` (`src/pages/ApprovalsPage/ApprovalsPage.tsx`) | `RequireAdmin` (관리자 로그인) |
-| `/admin/edit` | `AdminPage` (`src/pages/AdminPage.tsx`) | `RequireAdmin` (관리자 로그인) |
-| `/apply` | `ApplyPage` (`src/pages/ApplyPage/ApplyPage.tsx`) | 공개 |
-| `/edit` | `EditPage` (`src/pages/EditPage/EditPage.tsx`) | 공개 라우트 + 슬러그+비밀번호 게이트 |
+| 라우트 | 컴포넌트 | 접근 조건 | 화면 이동 |
+|--------|----------|-----------|-----------|
+| `/` | `<Navigate to="/admin" replace />` | 공개(리다이렉트만) | — |
+| `/login` | `LoginPage` (`src/pages/LoginPage/LoginPage.tsx`) | 공개 | — |
+| `/admin` | `ApprovalsPage` (`src/pages/ApprovalsPage/ApprovalsPage.tsx`) | `RequireAdmin` (관리자 로그인) | 공통 상단바(`data-testid="admin-topbar"`)로 `/admin/edit` 과 상호 이동합니다. 목록의 각 행에는 그 슬러그를 실은 `편집` 딥링크가 있습니다 |
+| `/admin/edit` | `AdminPage` (`src/pages/AdminPage.tsx`) | `RequireAdmin` (관리자 로그인) | 공통 상단바(`data-testid="admin-topbar"`)로 `/admin` 과 상호 이동합니다. `?slug=` 쿼리를 마운트 시 슬러그 입력·조회의 **초기값으로 수용**하며, 쿼리가 없으면 종전 기본값(`demo-captain-luna`)입니다 |
+| `/apply` | `ApplyPage` (`src/pages/ApplyPage/ApplyPage.tsx`) | 공개 | — |
+| `/edit` | `EditPage` (`src/pages/EditPage/EditPage.tsx`) | 공개 라우트 + 슬러그+비밀번호 게이트 | — |
 
 `/admin` 은 신청 목록·승인/반려 화면(`ApprovalsPage`)이고, 슬러그를 불러와 이미지·갤러리를 고치는
 관리자 편집 화면은 `/admin/edit`(`AdminPage`)로 옮겨졌습니다.
 
+두 보호 화면은 `AdminTopBar`(`src/widgets/AdminTopBar/AdminTopBar.tsx`)를 공유합니다. 상단바는
+`신청 관리` / `청첩장 편집` 링크(현재 화면에 `aria-current="page"`), 로그인한 관리자 이메일,
+`로그아웃` 버튼을 갖습니다. 상단바는 라우터의 공통 레이아웃이 아니라 **각 보호 페이지의 최상단**에서
+렌더합니다 — `RequireAdmin` 바깥으로 올리면 세션 판정 전에 마운트되어 가드 불변식이 깨집니다.
+
 ## 신청자 수정 흐름 (`/edit`)
 
-1. **게이트** — 신청할 때 정한 주소(슬러그)와 편집 비밀번호를 입력해 `getInvitationForEdit(slug, editPassword)` 로 잠금을 해제합니다. 슬러그 미존재·비밀번호 불일치·해시 없는 레거시 행 세 경우 모두 `슬러그 또는 비밀번호가 올바르지 않습니다.` 한 문장으로 끝나 존재 여부가 새지 않고, 잠금 전에는 편집 폼을 마운트조차 하지 않습니다.
+1. **게이트** — 신청할 때 정한 주소(슬러그)와 편집 비밀번호를 입력해 `getInvitationForEdit(slug, editPassword)` 로 잠금을 해제합니다. 슬러그 미존재·비밀번호 불일치·해시 없는 레거시 행 세 경우 모두 `슬러그 또는 비밀번호가 올바르지 않습니다.` 한 문장으로 끝나 존재 여부가 새지 않고, 잠금 전에는 편집 폼을 마운트조차 하지 않습니다. 게이트 폼은 다음 넷을 함께 제공합니다 — ① 편집 비밀번호 **표시/숨김 토글**(`data-testid="edit-password-toggle"`, `aria-pressed` 로 상태 노출, 접근 이름은 두 상태 모두 `편집 비밀번호 표시 전환`), ② 슬러그 입력의 **실시간 문자셋 피드백**(`/apply` 와 같은 `getSlugError` 를 재사용하고 `aria-invalid` 를 갱신, 앵커 `data-testid="edit-slug-error"`), ③ 실패 시 **회복 안내**(`data-testid="edit-gate-recovery"`) — 자격증명 오류 문구와는 **별개 요소**이며 슬러그 존재 여부와 무관하게 항상 같은 문장입니다, ④ **새로고침 고지**(`data-testid="edit-gate-refresh-note"`) — 새로고침하면 게이트로 되돌아가는 것은 의도된 설계이고 그 사실을 진입 직후부터 알립니다. 두 입력과 제출 버튼은 하나의 `fieldset` 에 묶여 제출 중 함께 잠기므로 Enter 연타로도 조회가 한 번만 나갑니다. 편집 비밀번호 입력은 **비제어 입력**입니다 — 제어 입력으로 두면 React 가 값을 DOM `value` 속성에 반영해 평문이 직렬화된 마크업에 남습니다.
 2. **폼 재사용** — 잠금이 풀리면 `/apply` 와 같은 `useApplyForm`·`ApplyForm`·`ImageStep`·`Stepper`·`PhonePreview` 를 그대로 쓰고, 불러온 청첩장으로 폼 전체를 교체합니다. 저장에 반영되지 않는 `신청 정보`(신청자 연락처·편집 비밀번호) 섹션은 이 화면에서 렌더하지 않습니다.
 3. **저장** — 게이트에서 받은 비밀번호를 함께 실어 `updateInvitationWithPassword(slug, editPassword, data)` 로만 저장합니다(무인증 `updateInvitation` 을 쓰지 않습니다). 저장 대상 행은 게이트로 연 슬러그로 고정되며, 공개 상태(`status`)·신청 메타는 그대로 보존됩니다. 데이터 접점은 `src/features/apply/useEditGate.ts` 하나입니다.
+
+<!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. -->
+## 신청 접수 완료 (`/apply` 3단계)
+
+저장이 성공하면 `PublishStep` 이 저장 섹션을 감추고 접수 완료 카드(`publish-complete`)를 보여줍니다.
+
+- **주소 복사** — 확정된 슬러그를 클립보드에 넣습니다(`navigator.clipboard.writeText`). 성공/실패 모두 토스트로 알리며, 실패하면 `주소를 길게 눌러 직접 복사해 주세요.` 를 띄웁니다(아무 반응 없는 버튼을 남기지 않습니다).
+- **공개 주소** — `VITE_INVITATION_BASE_URL` 이 있으면 `<베이스>/<슬러그>`, 비어 있으면 `/<슬러그>` 를 보여주고 같은 값을 복사합니다. 값이 없을 때 가짜 도메인을 지어내지 않습니다.
+- **내용 수정하러 가기** — `/edit?slug=<슬러그>` 로 이동합니다. `EditPage` 가 이 쿼리를 받아 게이트의 주소 입력칸을 한 번만 채우므로, 신청자는 편집 비밀번호만 입력하면 됩니다.
+- **편집 비밀번호 경고** — 비밀번호는 재발급되지 않으므로 보관을 안내합니다. **비밀번호 값 자체는 이 카드 DOM 어디에도 넣지 않습니다.**
 
 ## 관리자 편집 흐름 (`/admin/edit`)
 
@@ -42,7 +57,7 @@ flowchart LR
     M --> SB[(Supabase momozzang 테이블)]
 ```
 
-1. **슬러그 입력 → Load** — 입력 필드 기본값은 `demo-captain-luna`. `Load` 버튼(또는 Enter)으로 `slug` 상태를 확정하면 `useInvitationQuery(slug)`가 청첩장 데이터를 조회합니다. 조회 성공 시 로컬 편집 상태(`invitation`)에 반영하고, 실패 시 에러 메시지를 표시합니다.
+1. **슬러그 입력 → Load** — 입력 필드 기본값은 `demo-captain-luna`. `Load` 버튼(또는 Enter)으로 `slug` 상태를 확정하면 `useInvitationQuery(slug)`가 청첩장 데이터를 조회합니다. 조회 성공 시 로컬 편집 상태(`invitation`)에 반영하고, 실패 시 에러 메시지를 표시합니다. <!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. --> `768px` 이하에서는 청첩장 주소 툴바가 여러 행으로 접히고 입력칸이 한 행을 통째로 씁니다(`Panel.module.css` 의 `.toolbar { flex-wrap: wrap }` + `AdminPage.module.css` 의 `.slugInput { flex: 1 1 100% }`). 좁은 폭에서 주소가 앞 몇 글자만 보이던 문제를 막습니다.
 2. **편집** — 메인 이미지, 공유 썸네일(카카오), 신랑/신부 이미지, 그리고 갤러리 앨범을 수정합니다. 모든 편집은 로컬 상태에만 반영되고, 저장 전까지 서버에 반영되지 않습니다.
 3. **저장(Save Changes)** — `useInvitationMutation`으로 `updateInvitation(slug, data)`를 호출해 `momozzang` 테이블의 해당 행 `data` 컬럼을 갱신합니다. 성공/실패 시 `alert`로 결과를 알립니다.
 
@@ -52,11 +67,40 @@ flowchart LR
 - `useInvitationMutation.ts` — 청첩장 저장(react-query mutation).
 - `useImageUploadMutation.ts` — 이미지 업로드(아래 참조).
 
+## `/edit` 좁은 폭 레이아웃과 저장 카드
+
+> 이 절의 **위치**는 서술 순서가 아니라 **독립성**으로 정해졌다. 같은 문서를 여러 태스크가 만지므로
+> 각 태스크의 삽입 지점을 6줄 이상 떼어 놓는다(`.harness/runs/ux-diff-picks/APPLY.md` §2.2).
+
+- **탭 토글(`768px` 이하)** — `/apply` 와 **같은 폭 분기·같은 구조(`role="tablist"` + `aria-selected`)·같은 라벨**
+  (`입력 폼` / `미리보기`)로 한 번에 한 pane 만 보입니다. 미리보기를 폼 위에 쌓으면 390px 에서 입력 폼이
+  첫 화면 밖(문서 기준 수천 px 아래)으로 밀려 아예 보이지 않습니다. 데스크톱 2열은 그대로입니다.
+- **스텝 전환 스크롤** — 스텝을 바꾸면 폼 pane 상단으로 스크롤이 돌아옵니다. 스텝 버튼은 화면 위쪽인데
+  내용은 아래에서 통째로 갈리므로, 되돌리지 않으면 새 스텝의 중간부터 보입니다.
+- **저장 카드** — 스텝 ③의 저장 카드는 자체 표면을 그리지 않고 어드민 표면 SSOT 인 `Panel` 을 씁니다
+  (`/admin`·`/login` 과 같은 면). `.saveStep`/`.saveTitle` CSS 는 삭제했습니다.
+- 판정 앵커: `edit-mobile-tabs` · `edit-mobile-tab-form` · `edit-mobile-tab-preview` · `edit-form-pane` ·
+  `edit-preview-pane` · `edit-save-step`.
+
 ## 이미지 업로드 / 리사이즈
 
 - 업로드 전, 클라이언트에서 `canvas`로 이미지를 리사이즈합니다. 최대 크기는 **1920 x 1080**, 가로/세로 비율을 유지하며 긴 변 기준으로 축소하고 품질 `0.8`의 blob으로 인코딩합니다(`AdminPage`의 `handleImageResize`, 갤러리도 동일 로직).
 - 리사이즈된 파일을 Supabase Storage `wedding-images` 버킷에 업로드한 뒤 public URL을 사용합니다(`src/features/invitation/api/useImageUploadMutation.ts`).
 - 단일 이미지 필드: 메인 이미지(`customization.mainImageUrl`), 공유 썸네일(`invitationInfo.shareImageUrl`), 신랑/신부 이미지(`aboutUs.groomImageUrl` / `aboutUs.brideImageUrl`).
+
+<!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. -->
+## 승인 콘솔 좁은 폭 카드 레이아웃 (/admin)
+
+- `768px` 이하에서 승인 목록 표가 **행 단위 카드**로 접힙니다. `thead` 를 숨기고 각 행을 카드 표면
+  (테두리 + 라운드 + 여백)으로, 각 셀을 블록으로 바꿉니다. 그래서 **가로 스크롤이 발생하지 않고**
+  `처리` 버튼이 스크롤 없이 화면 안에 들어옵니다.
+- 항목 이름은 마크업이 아니라 `ApprovalsPage.module.css` 의 `::before` 로 그립니다
+  (`슬러그` · `연락처` · `상태` · `신청일` · `신랑·신부` · `예식일` · `처리`).
+  펼침 미리보기 행과 `내용 보기` 셀에는 라벨을 붙이지 않습니다.
+- 선택자는 컬럼 개수에 흔들리지 않도록 앞·뒤·구조 기준으로 씁니다. 상태 셀은 `[data-badge]` 를 가진
+  유일한 셀이고 신청일은 그 다음 셀입니다.
+- `769px` 이상에서는 기존 표 레이아웃이 그대로입니다(`white-space: nowrap` 포함).
+
 
 ## 갤러리 드래그 정렬
 
@@ -66,6 +110,26 @@ flowchart LR
 - `PointerSensor`(8px 이동 후 드래그 시작) + `KeyboardSensor`로 마우스/키보드 정렬을 지원하고, `DragOverlay`로 드래그 중 미리보기를 보여줍니다.
 - 사진은 최대 **20장**까지 업로드 가능하며, 초과 시 경고를 표시합니다. 개별 사진 삭제(`confirm` 확인 후 배열에서 제거)도 지원합니다.
 - 항목 컴포넌트는 `src/widgets/GalleryManager/SortableImage.tsx`입니다.
+
+## 승인 콘솔 (`/admin`)
+
+> 이 절의 **위치**는 서술 순서가 아니라 **독립성**으로 정해졌다. 같은 문서를 여러 태스크가 만지므로
+> 각 태스크의 삽입 지점을 6줄 이상 떼어 놓는다(`.harness/runs/ux-diff-picks/APPLY.md` §2.1).
+
+`ApprovalsPage`(`src/pages/ApprovalsPage/ApprovalsPage.tsx`)가 신청 목록과 승인/반려를 담당합니다.
+
+- **확인 대화** — `승인`/`반려`는 되돌리기 어려운 공개 상태 변경이라 `useAdminConfirm`(`src/shared/ui/ConfirmDialog`)
+  의 확인 대화를 먼저 띄웁니다. `승인`은 그 청첩장이 **공개**되어 주소를 아는 누구나 볼 수 있게 된다는 사실을,
+  `반려`는 공개되지 않고 하객에게 안내 화면만 보인다는 사실을 설명에 적습니다. 반려 대화의 확인 버튼은
+  `destructive` 표기입니다. **취소하면 요청을 만들지 않습니다**(`mutate` 를 호출하지 않습니다).
+  `Esc`·오버레이 클릭은 취소와 같습니다.
+- **결과 피드백** — 성공/실패를 **토스트**(`useAdminToast`, `src/shared/ui/Toast`)로 알립니다. `승인 대기` 필터에서
+  승인하면 그 행이 목록에서 사라지므로 토스트 문구에 슬러그를 넣어 무엇이 처리됐는지 잃지 않게 합니다.
+- **행 인라인 오류** — 실패는 토스트만으로 끝내지 않습니다. 그 행의 `처리` 셀에 `role="alert"` 인
+  `처리하지 못했습니다. 잠시 후 다시 시도해 주세요.` 를 남겨, 토스트가 사라진 뒤에도 어느 행이 실패했는지 보입니다.
+  이때 행의 상태는 바뀌지 않습니다.
+- 판정 앵커: `approvals-approve` · `approvals-reject` · `approvals-row-error` ·
+  `admin-confirm-dialog` / `-title` / `-description` / `-accept` / `-cancel`.
 
 ## 데이터/환경변수
 
@@ -79,3 +143,21 @@ pnpm dev:admin                          # dev 서버 (port 3002)
 pnpm build:admin                        # 빌드
 pnpm --filter momozzang-admin lint      # lint
 ```
+
+## 승인 콘솔 — 신청 내용 미리보기 (`/admin`)
+
+승인 목록의 `내용` 컬럼(`내용 보기` 토글)으로 그 행을 **펼친 행**에서만 신청 내용을 확인합니다.
+
+- **조회 시점** — 펼친 순간에만 `getInvitationRecord(slug)` 를 부릅니다
+  (`src/features/invitation/api/useInvitationRecordQuery.ts`). 목록 진입 시 N건 일괄 조회는 코드 경로 자체가
+  없습니다 — 훅의 `enabled` 에 기본값이 없고 `expandedSlug === slug` 일 때만 켜집니다. Repository 인터페이스는
+  바꾸지 않았습니다.
+- **카드가 담는 것** — 초대장 제목 · 신랑·신부 · 예식 일시 · 예식장명/주소 · 사진 수 · 대표 이미지 썸네일.
+  예식 일시는 `toLocaleString` 없이 저장된 필드로 조립해 로케일·타임존에 흔들리지 않습니다.
+- **조회 중·실패** — `내용을 불러오는 중입니다.` / `내용을 불러오지 못했습니다.`(`role="alert"`) + `다시 시도`.
+  실패해도 **목록 자체는 정상**입니다(목록은 `listInvitations`, 미리보기는 `getInvitationRecord` 로 경로가 다릅니다).
+- **표 컬럼** — 목록 조회가 돌려주는 `InvitationSummary` 는 본문(`data`)을 담지 않아
+  **신랑·신부**·**예식일** 을 모든 행에 항상 그릴 수 없습니다. 그 컬럼은 요약 타입을 넓히는 별도 작업(T12)에서
+  되살립니다. 이 절의 미리보기는 어드민 앱 안에서만 끝납니다(`packages/ui/` 무변경).
+- 판정 앵커: `approvals-preview-toggle` · `-row` · `-card` · `-title` · `-couple` · `-datetime` · `-hall` ·
+  `-photos` · `-thumb` · `-loading` · `-error` · `-retry`.
