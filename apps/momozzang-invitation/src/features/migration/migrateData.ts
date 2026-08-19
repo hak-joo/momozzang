@@ -16,7 +16,7 @@
  * (이 스크립트는 1회성 마이그레이션 전용이며, 어드민/Worker 런타임 번들과 무관하다.)
  *
  * 사용한 .env 키 (값은 .env 에만):
- *   - VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY : Supabase 접속(읽기+INSERT)
+ *   - VITE_SUPABASE_URL / SUPABASE_SECRET_KEY : Supabase 접속(읽기+INSERT)
  *   - CLOUDEFLARE_ACCESS_KEY_ID                  : R2 S3 Access Key ID (* 기존 .env 의 오타 철자 그대로 사용)
  *   - CLOUDEFLARE_SECRET_ACCESS_KEY              : R2 S3 Secret Access Key
  *   - CLOUDEFLARE_S3_CLIENT                      : R2 S3 호환 endpoint URL (예: https://<account>.r2.cloudflarestorage.com)
@@ -115,6 +115,28 @@ function requireEnv(name: string): string {
     throw new Error(`환경변수 누락: ${name} (루트 .env 에 설정 필요 — 값은 .env 에만)`);
   }
   return v;
+}
+
+/**
+ * Supabase 권한 키를 읽는다. **`VITE_` 이름을 쓰지 않는다.**
+ *
+ * 이 스크립트는 RLS 를 우회해야 하는 서버 작업(전체 row 읽기, INSERT)이라 권한 키가 필요하다.
+ * 그런데 예전에는 그 키를 `VITE_SUPABASE_ANON_KEY` 에 담아 브라우저용 키와 **한 변수로 공유**했다.
+ * `VITE_` 접두사 변수는 빌드 시 클라이언트 번들에 인라인되므로, 그 순간 권한 키가 배포본에 실려
+ * 누구나 꺼낼 수 있게 된다(실제로 그렇게 노출된 적이 있다). 이름을 분리하는 것이 그 재발을 막는다.
+ */
+function requireSecretKey(): string {
+  const secret = process.env.SUPABASE_SECRET_KEY;
+  if (secret) {
+    return secret;
+  }
+
+  throw new Error(
+    '환경변수 누락: SUPABASE_SECRET_KEY\n' +
+      '  이 스크립트는 RLS 를 우회하는 권한 키가 필요합니다.\n' +
+      '  Supabase 대시보드의 secret 키(sb_secret_...)를 루트 .env 에 SUPABASE_SECRET_KEY 로 넣으세요.\n' +
+      '  VITE_SUPABASE_ANON_KEY 에는 절대 넣지 마세요 — 클라이언트 번들에 그대로 실립니다.',
+  );
 }
 
 interface MigrationTask {
@@ -242,8 +264,8 @@ async function main() {
 
   // ── Supabase 클라이언트 (스크립트 전용 — 어드민/뷰어 런타임과 무관) ──
   const supabaseUrl = requireEnv('VITE_SUPABASE_URL');
-  const supabaseAnonKey = requireEnv('VITE_SUPABASE_ANON_KEY');
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const supabaseSecretKey = requireSecretKey();
+  const supabase = createClient(supabaseUrl, supabaseSecretKey);
 
   // ── source row 로드 ──
   const { data: sourceRow, error: srcErr } = await supabase

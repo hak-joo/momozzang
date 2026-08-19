@@ -64,7 +64,8 @@ flowchart TD
 | 키 | 용도 |
 |----|------|
 | `VITE_DATA_SOURCE` | Repository 구현체 분기 (`local` \| `supabase`) |
-| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Supabase 접속 정보 |
+| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Supabase 접속 정보. 키는 **공개 키만** (publishable 또는 legacy anon) |
+| `SUPABASE_SECRET_KEY` | 마이그레이션 스크립트 전용 서버 키. `VITE_` 를 붙이지 않는다 |
 | `VITE_NAVER_MAP_CLIENT_ID` | 네이버 지도 |
 | `VITE_IMAGE_BASE_URL` | 업로드 이미지 **객체 키**를 최종 URL로 조립할 때 쓰는 베이스. 현재 값 형식은 `{VITE_SUPABASE_URL}/storage/v1/object/public/wedding-images`. R2 등 스토리지/도메인 이전 시 이 값만 교체하면 DB 마이그레이션 없이 전환됩니다. |
 | `VITE_KAKAO_APP_KEY` / `VITE_KAKAO_TEMPLATE_ID` | (어드민) 카카오 공유 |

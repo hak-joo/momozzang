@@ -97,7 +97,8 @@ momozzang/
 |----|--------|------|
 | `VITE_DATA_SOURCE` | 공통 | `'supabase'`면 Supabase, 아니면 로컬/API 구현으로 분기 |
 | `VITE_SUPABASE_URL` | 공통 | Supabase 프로젝트 URL |
-| `VITE_SUPABASE_ANON_KEY` | 공통 | Supabase anon 키 |
+| `VITE_SUPABASE_ANON_KEY` | 공통 | Supabase **공개** 키 — publishable(`sb_publishable_…`) 또는 legacy anon. secret/service_role 키를 넣으면 빌드가 중단된다(`scripts/check-public-env.mjs`) |
+| `SUPABASE_SECRET_KEY` | 마이그레이션 스크립트 | RLS 를 우회하는 서버 전용 키. **`VITE_` 를 붙이지 않는다** — 붙이면 클라이언트 번들에 인라인되어 공개된다 |
 | `VITE_NAVER_MAP_CLIENT_ID` | 공통 | 네이버 지도 클라이언트 ID (Direction/지도 위젯) |
 | `VITE_KAKAO_APP_KEY` | admin | 카카오 앱 키 |
 | `VITE_KAKAO_TEMPLATE_ID` | admin | 카카오 공유 템플릿 ID |
