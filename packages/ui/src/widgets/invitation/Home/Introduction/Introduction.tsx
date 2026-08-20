@@ -3,7 +3,7 @@ import styles from './Introduction.module.css';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import { ContactInfo } from '../ContactInfo';
 import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
-import pixelWeddingImg from '@shared/assets/images/pixel-wedding.png';
+import pixelWeddingImg from '@shared/assets/images/groom-bride.png';
 
 export function Introduction() {
   const metadata = useInvitation();
