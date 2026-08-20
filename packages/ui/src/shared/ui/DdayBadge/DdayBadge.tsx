@@ -12,7 +12,6 @@ function capitalize(value: string) {
 export function DdayBadge() {
   const { weddingHallInfo } = useInvitation();
   const remainingDays = dayjs(weddingHallInfo.date).diff(dayjs().format('YYYY-MM-DD'), 'day');
-  weddingHallInfo.date;
 
   const verticalPositions = ['top', 'bottom'] as const;
   const horizontalPositions = ['left', 'right'] as const;
