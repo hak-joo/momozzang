@@ -79,9 +79,9 @@ export function MiniMeSelectionStep() {
         </div>
 
         <div className={styles.pageDots}>
-          {miniMePages.map((_, index) => (
+          {miniMePages.map((page, index) => (
             <button
-              key={index}
+              key={page[0]}
               type="button"
               className={styles.dotButton}
               data-active={index === currentPage ? 'true' : undefined}
