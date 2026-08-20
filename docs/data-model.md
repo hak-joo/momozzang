@@ -131,11 +131,22 @@ Supabase 경로에서는 이 테이블이 관리자 판정의 정본이고, 로�
 | `wedding_invitation_id` | `weddingInvitationId` / `invitationId` | 조회 필터 키, `created_at desc` 정렬 |
 | `writer` | `writer` / `nickname` | |
 | `contents` | `contents` / `message` | |
-| `password` | `password` | 삭제 시 비밀번호 검증에 사용 |
+| `password` | `password` | 삭제 비밀번호의 **bcrypt 해시**. **클라이언트로 절대 내려보내지 않습니다** — anon/authenticated 에 select 권한이 없고, 대조는 서버(RPC) 안에서만 합니다. |
 | `mini_me_id` | `miniMeId` | |
 | `created_at` | `date` | |
 
-조회는 `wedding_invitation_id`로 필터하고 `created_at` 내림차순 정렬(옵션 `limit`)합니다. 삭제는 비밀번호 일치 검증 후 행을 제거합니다.
+조회는 `wedding_invitation_id`로 필터하고 `created_at` 내림차순 정렬(옵션 `limit`)합니다. `password` 에 select 권한이 없으므로 **`select('*')` 는 권한 오류가 납니다** — 필요한 컬럼을 명시해야 합니다.
+
+### 방명록 권한 모델
+
+권한·RLS·해시 DDL 은 `apps/momozzang-invitation/supabase/guestbook_hardening.sql` 한 파일에 있습니다(재실행 안전).
+
+| 동작 | 경로 | 규칙 |
+|------|------|------|
+| 조회 | `select` + RLS | 공개(`status='approved'`)된 청첩장의 방명록만. `password` 제외 컬럼만 grant |
+| 작성 | `insert` + RLS | 공개된 청첩장에만. `writer` 20자·`contents` 500자 상한, 청첩장당 1000건 상한 |
+| 저장 | `guestbooks_hash_password` 트리거 | 클라이언트는 평문을 보내지만 서버에서 bcrypt 해시로 바꿔 저장 |
+| 삭제 | `public.delete_guestbook(id, password)` RPC | 테이블 delete 권한은 회수. 서버에서 대조 후 삭제하고 성공 여부만 boolean 으로 반환(없는 id 와 비밀번호 불일치를 구분해 알려주지 않음) |
 
 ## 관련 문서
 

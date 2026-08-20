@@ -1,0 +1,18 @@
+{
+  "name": "momozzang-cron-worker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cloudflare Worker — Supabase keep-alive 와 DB 백업 스케줄 작업",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "dry-run": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "typescript": "^5.8.0",
+    "wrangler": "^3.86.0"
+  }
+}

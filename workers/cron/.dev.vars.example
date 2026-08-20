@@ -1,0 +1,14 @@
+# wrangler dev 로컬 값 예시. 실제 값은 .dev.vars 에 넣고 커밋하지 않는다.
+# 배포 환경에서는 전부 `wrangler secret put <이름>` 으로 주입한다.
+
+# Supabase 프로젝트 URL (예: https://xxxx.supabase.co)
+SUPABASE_URL=
+
+# keep-alive 용 공개 키(publishable 또는 legacy anon). RLS 가 걸린 select 1건만 수행한다.
+SUPABASE_ANON_KEY=
+
+# 백업 용 service_role 키. RLS 를 우회하므로 절대 클라이언트/저장소에 남기지 않는다.
+SUPABASE_SECRET_KEY=
+
+# (선택) 백업 실패 시 알림을 받을 Slack/Discord webhook URL.
+# ALERT_WEBHOOK_URL=
