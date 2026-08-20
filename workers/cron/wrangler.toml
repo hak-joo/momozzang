@@ -1,0 +1,25 @@
+# Cloudflare Worker — Supabase keep-alive + DB 백업 (스케줄 전용)
+#
+# ⚠️ 이 파일에는 URL·키 값을 **평문으로 적지 않는다**(저장소 규칙: 비밀값 금지).
+#    SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SECRET_KEY 는 모두
+#    `wrangler secret put <이름>` 으로 주입한다. 로컬은 .dev.vars (git 제외).
+# ⚠️ BACKUP 버킷에는 **커스텀 도메인을 붙이지 않는다.** 백업 JSON 에는 비밀번호 해시와
+#    방명록 비밀번호가 들어 있어, 공개 도메인에 노출되면 키만 알면 내려받을 수 있다.
+
+name = "momozzang-cron"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# 6시간마다 실행. 매 tick 에서 keep-alive 를 하고, 그날 백업이 없으면 백업까지 한다.
+# (하루 1회 제한은 cron 이 아니라 "오늘자 객체 존재 여부"로 건다 — src/index.ts 참고)
+[triggers]
+crons = ["0 */6 * * *"]
+
+# 백업 전용 비공개 버킷. momozzang-images(=img.momozzang.com) 와 반드시 분리한다.
+[[r2_buckets]]
+binding = "BACKUP_BUCKET"
+bucket_name = "momozzang-backups"
+
+# (선택) 백업 보관 일수. 미설정 시 30일.
+# [vars]
+# BACKUP_RETENTION_DAYS = "30"

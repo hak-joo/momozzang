@@ -69,6 +69,9 @@ momozzang/
 │           ├── features/       # 도메인 훅 (useCurrentMenuByScroll 등)
 │           ├── widgets/        # invitation 위젯 (Home, Gallery, MiniRoom, Direction, Account, Music 등)
 │           └── pages/          # WeddingInvitation (본문 페이지 조립)
+├── workers/                    # Cloudflare Workers (pnpm 워크스페이스 밖, 각자 npm + wrangler)
+│   ├── upload/                 # 어드민 이미지 업로드 중개 → R2 (공개 POST 엔드포인트)
+│   └── cron/                   # Supabase keep-alive + DB 백업 (스케줄 전용, 공개 API 없음)
 ├── docs/                       # 상세 스펙 문서 (이 문서가 진입점)
 ├── .claude/                    # Claude Code 에이전트/커맨드
 ├── package.json                # 루트 워크스페이스 + 스크립트
