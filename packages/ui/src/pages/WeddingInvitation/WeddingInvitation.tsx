@@ -1,4 +1,4 @@
-import { useRef, useEffect, type RefObject } from 'react';
+import { useRef, useEffect, useMemo, type RefObject } from 'react';
 import { clsx } from 'clsx';
 import { Header } from '@widgets/invitation/Header';
 import { Gallery } from '@widgets/invitation/Gallery';
@@ -35,13 +35,20 @@ export function WeddingInvitation({ metadata, themeScopeRef }: Props) {
   const infoRef = useRef<HTMLDivElement>(null);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
 
-  const sectionRefs = {
-    home: homeRef,
-    gallery: galleryRef,
-    miniRoom: miniRoomRef,
-    directions: directionsRef,
-    info: infoRef,
-  } satisfies Record<Menu, RefObject<HTMLDivElement | null>>;
+  // `useCurrentMenuByScroll` 의 effect 의존 배열이 이 객체다. 매 렌더 새 객체를 만들면
+  // 스크롤 구독이 렌더마다 해제·재등록된다(B6). `useRef` 결과는 렌더 간 동일 객체이므로
+  // 의존 목록은 비어 있는 것이 정확하다.
+  const sectionRefs = useMemo(
+    () =>
+      ({
+        home: homeRef,
+        gallery: galleryRef,
+        miniRoom: miniRoomRef,
+        directions: directionsRef,
+        info: infoRef,
+      }) satisfies Record<Menu, RefObject<HTMLDivElement | null>>,
+    [],
+  );
 
   const { currentMenu, isAtTop } = useCurrentMenuByScroll(sectionRefs, mainWrapperRef);
 
@@ -56,8 +63,13 @@ export function WeddingInvitation({ metadata, themeScopeRef }: Props) {
     });
   };
 
-  const themeVars = getThemeVariables(metadata.customization?.themeColor);
-  const themeHue = getThemeHue(metadata.customization?.themeColor);
+  // 의존 배열에 복합 표현식을 넣지 않기 위해 지역 변수로 추출한다.
+  const themeColor = metadata.customization?.themeColor;
+  // 테마 CSS 변수 주입 effect 의 의존 배열이 이 객체다. 매 렌더 새 객체면 같은 테마인데도
+  // 변수 20개를 매 렌더 지웠다 다시 넣는다(B6). `getThemeVariables` 는 순수하므로
+  // 같은 `themeColor` 에 같은 결과다 — 함수 자체는 동결이고 호출부만 안정화한다.
+  const themeVars = useMemo(() => getThemeVariables(themeColor), [themeColor]);
+  const themeHue = getThemeHue(themeColor);
   const bgImage = useImageHueShift(bgBlue, themeHue);
 
   useEffect(() => {
