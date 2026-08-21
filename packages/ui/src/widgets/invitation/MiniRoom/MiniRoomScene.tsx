@@ -31,7 +31,18 @@ interface MiniRoomSceneProps {
   restrictedZones?: RestrictedZone[];
 }
 
-export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: MiniRoomSceneProps) {
+/**
+ * `restrictedZones` 기본값을 모듈 상수로 올린다. 인라인 `= []` 은 prop 이 생략될 때마다
+ * **새 배열**이 되어 `positions` 의 `useMemo` 를 매 렌더 무효화하고, 그 결과 아래
+ * `entriesWithPosition` 과 말풍선 타이머 effect 까지 연쇄로 재실행시킨다.
+ */
+const EMPTY_RESTRICTED_ZONES: RestrictedZone[] = [];
+
+export function MiniRoomScene({
+  entries,
+  restrictedZones = EMPTY_RESTRICTED_ZONES,
+  mainMiniMe,
+}: MiniRoomSceneProps) {
   const { customization } = useInvitation();
   const themeHue = getThemeHue(customization?.themeColor);
 
@@ -56,10 +67,17 @@ export function MiniRoomScene({ entries, restrictedZones = [], mainMiniMe }: Min
     [entries.length, seed, restrictedZones],
   );
 
-  const entriesWithPosition = entries.map((entry, index) => ({
-    ...entry,
-    position: positions[index],
-  }));
+  // 말풍선 타이머 effect 의 의존 배열이 이 배열이다(아래 `[entriesWithPosition, activeMiniId]`).
+  // 매 렌더 새 배열이면 `setPreviewBubble` 이 유발한 렌더가 곧바로 effect 를 재실행시켜
+  // 방금 건 3초 숨김 타이머를 cleanup 이 지운다 — 말풍선이 사라지지 않는 원인이다(B7).
+  const entriesWithPosition = useMemo(
+    () =>
+      entries.map((entry, index) => ({
+        ...entry,
+        position: positions[index],
+      })),
+    [entries, positions],
+  );
 
   const [activeMiniId, setActiveMiniId] = useState<number | null>(null);
   const [previewBubble, setPreviewBubble] = useState<{ miniId: number; message: string } | null>(
