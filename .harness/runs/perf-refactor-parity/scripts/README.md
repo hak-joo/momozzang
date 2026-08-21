@@ -174,3 +174,122 @@ curl -s "http://localhost:3095/@fs$P" | grep -o memo_cache_sentinel | grep -c . 
 
 `grep -c .` 는 매치 0건일 때 **exit 1** 이다(계약 `C-13`). 판정 명령을 `set -e` 셸에서 돌리면
 *정상 통과(0건)* 가 실패로 보인다. 이 디렉토리의 예시 명령은 `set -e` 없이 실행한다.
+
+---
+
+# 스프린트 3 (묶음 3) 추가 2종 + 확장 1종
+
+`SPRINT_CONTRACT_3.md` §1.2 5·6·7·8 행의 산출물이다. 묶음 3 은 **색조 훅 자체**를 고치므로
+"시각에 영향을 주는 파일의 diff 가 0" 이라는 스프린트 1·2 의 시각 판정 근거가 구조적으로
+사라진다. 그래서 HC-2(색상 무변화)를 **3중 방어선**으로 판정하며, 이 디렉토리는 그중
+**정적**·**Node** 축을 담당한다(브라우저 축은 Playwright + `probe-init.mjs` 가 담당).
+
+| 스크립트 | 무엇을 판정하는가 | 계약 3 기준 |
+|---|---|---|
+| `hue-pixels-parity.mjs` | 픽셀 루프 추출의 **바이트 동등성**(경계 전수 입력)과 **문자 동일성** | **N1(G-a)** · **S2** |
+| `hue-cache-parity.mjs` | 캐시 키 순수성 · `Direction` 4호출→3키 · LRU 상한 축출 · single-flight · 실패 미캐시 | **N2·N3·N4·N5·N6(G-e)** |
+| `probe-init.mjs` (확장) | 캔버스 카운터 2종 + 형상 다중집합 + 뷰어 `main` 인라인 `style` 관측기 | **M1·M2·M3** · **V4** |
+
+## `hue-pixels-parity.mjs`
+
+```bash
+S=.harness/runs/perf-refactor-parity/scripts/hue-pixels-parity.mjs
+
+# N1 (게이트 G-a) — 경계 전수 입력에서 구/신 구현의 출력 버퍼가 바이트 동일한가
+node $S                 # 마지막 줄: ALL BYTE-IDENTICAL: yes
+node $S --quiet         # 케이스별 SHA 행 생략
+
+# S2 (P2′-1) — 이동 구간이 <BASE> 43~78 과 문자 동일한가
+node $S --diff-only     # 마지막 줄: REGION DIFF LINES: 0
+```
+
+**모듈 로딩** (계약 §1.2 (†)). `hueShiftPixels.ts` 를 그냥 `import()` 하면 실패한다 — TS 파일이고
+`'./colorUtils'` 가 확장자 없는 상대 경로라 Node ESM 이 해석하지 못한다(Vite 만 해석한다).
+이 스크립트는 자기 재기동 없이 처리한다.
+
+1. `colorUtils.ts`(런타임 import 0건)를 `module.stripTypeScriptTypes` 로 지우고 `data:` 모듈로 평가.
+2. `hueShiftPixels.ts` **전문**의 타입을 지우고 `'./colorUtils'` 지정자만 1번의 `data:` URL 로 바꿔 평가.
+   → 구간 발췌가 아니라 **실제 모듈**을 판정한다.
+3. `oldLoop` 은 `<BASE>` blob 의 `43~78` 을 같은 `colorUtils` 인스턴스를 받는 팩토리로 감싸 평가.
+   그 구간에 **타입 표기가 0건**이라 변환 없이 그대로 평가된다 — 이것이 발췌 가능성의 핵심이다.
+
+즉 **두 구현이 같은 `rgbToHsl`/`hslToRgb` 인스턴스**를 쓴다. `<BASE>` blob 은
+`git cat-file blob` 으로 직접 받고 **bytes=2674 / md5=6b2f62c99667b35ce01472b8bc861af2 를
+assert** 한 뒤 진행한다(`C-9` · 규약 라). 합성한 `oldLoop` 소스를 stdout 에 **그대로 출력**하므로
+평가자가 합성 방식을 눈으로 검증할 수 있다.
+
+**이동 구간의 기계적 식별 규칙**(계약 S2): `export function hueShiftPixels(` 의 **여는 `{` 다음
+줄**부터 **파일 마지막 `}` 앞 줄**까지. 주석 마커는 쓰지 않는다 — 마커 자체가 P2′-1 비교 대상
+밖 문자가 되어 혼동을 만든다.
+
+**경계 전수 입력**: 픽셀 120개 = `a{0,9,10,11,255}`(투명 스킵 경계 `a < 10`) ×
+`h{9,10,50,51}`(피부색 경계 `h >= 10 && h <= 50`) × `s{0,100}` × `l{0,50,100}`.
+케이스 63 = `(targetHue, originalHue)` 7쌍(`hueDiff` = −60/+60/−340/+340/−270/+360/0) ×
+`strategy` 3값 × `preserveSkinTones` 3값.
+
+## `hue-cache-parity.mjs`
+
+```bash
+node .harness/runs/perf-refactor-parity/scripts/hue-cache-parity.mjs
+# 마지막 줄: ALL CACHE CHECKS: yes
+```
+
+`hueShiftCache.ts` 는 **런타임 import 0건**이므로 타입만 지우면 `data:` 모듈로 그대로 평가된다.
+스크립트가 그 조건을 먼저 확인하고, 깨져 있으면 exit 3 으로 중단한다(전제가 무너진 것을 `OK`
+로 덮지 않는다).
+
+**판정 순서에 의미가 있다.** 모듈 상태(맵)는 프로세스 전체에서 공유되므로 **N4(축출)를 캐시
+최초 사용으로 돌린다** — 맵이 빈 상태에서 `LIMIT + 1` 개를 넣어야 "가장 오래된 항목 1개만
+사라진다" 를 문면대로 판정할 수 있다. N2·N3 은 키 함수만 부르므로 맵을 건드리지 않는다.
+
+## `probe-init.mjs` 스프린트 3 확장
+
+기존 카운터 4종의 이름·의미와 `read()`/`short()`/`reset()`/`uninstall()` 의 **외부 계약은
+불변**이다(계약 3 기준 O3). `short()` 는 여전히 `{set, rm}` 만 반환한다. `read()` 에는 새 카운터
+2종이 더해진다.
+
+```bash
+node .harness/runs/perf-refactor-parity/scripts/probe-init.mjs --oneline
+```
+
+| 추가 항목 | 뜻 | 기준 |
+|---|---|---|
+| `hueCanvasEncodes` | `HTMLCanvasElement.prototype.toDataURL` 호출 수 | M1·M3 |
+| `hueCanvasDecodes` | `CanvasRenderingContext2D.prototype.getImageData` 호출 수 | M1·M3 |
+| `hueCanvasShapes()` / `hueCanvasShapeCounts()` | 호출별 `${w}x${h}:${dataUrlLen}` 배열 / 다중집합 | M2 |
+| `watchStyle()` / `readStyle()` | 뷰어 `main` 의 인라인 `style` 변화 관측기 | V4 |
+
+**귀속이 깨끗하다** — `packages/ui`·두 앱 전체에서 이 두 캔버스 API 를 쓰는 곳은
+`useImageHueShift.ts` 한 곳뿐이다(어드민 `resizeImage.ts` 는 `toBlob` 을 쓴다 → 계수 대상 아님).
+
+**주입 시점이 판정을 갈른다.** 색조 변환은 **마운트 시 1회**뿐이므로 로드 후 주입하면 캔버스
+카운터가 전부 0 이 된다. M1~M3·V4 는 `page.addInitScript()` 로 **앱 번들 평가 전에** 주입한다
+(계약 3 §0.2 D-e).
+
+확장 시 밟은 함정 2건을 그대로 적어 둔다.
+
+1. **`reset()` 이 배열을 `0` 으로 만든다.** 현행 `reset()` 은 `Object.keys(c).forEach(k => c[k] = 0)`
+   이므로 `shapes` 배열을 카운터 객체 `c` 안에 두면 reset 후 다음 `push` 가 터진다.
+   **배열은 `c` 밖에 둔다.**
+2. **`watchStyle` 은 DOM 이전에 평가된다.** `addInitScript` 는 앱 번들보다 먼저 돌므로
+   `#main-wrapper` 가 아직 없다. 설치 시 부착을 시도하고 실패하면 `DOMContentLoaded` 에서 다시
+   시도한다. 부착 성공 시 `childList` 관측으로 **대상이 나타나는 순간의 초기값도 표본에
+   담는다** — `MutationObserver` 는 부착 이후 변화만 보므로 그렇게 하지 않으면 첫 값(원본 경로)을
+   놓친다.
+
+**지문 수집과 섞지 말 것.** 계약 §4.0(다) 의 지문 수집 스니펫도 `getImageData` 를 호출한다.
+지문 수집은 `uninstall()` 이후에, 또는 별도 세션에서 한다.
+
+## Playwright 조달 (브라우저 축)
+
+이 저장소는 `playwright` 를 의존성으로 갖지 않는다(`package.json` 무변경 = 기준 X3·DoD 23).
+측정에는 **npx 캐시**를 쓴다.
+
+```bash
+/bin/ls -d ~/.npm/_npx/*/node_modules/playwright     # 실측 4벌 (1.61.0 / 1.62.0 / 1.63.0-alpha / 1.60.0-alpha)
+# 그중 하나로 chromium.launch() → chromium 149.0.7827.55 기동 성공 (네트워크 불필요)
+```
+
+같은 저장소의 기성 헬퍼 `.harness/runs/apply-admin-ux-polish/scripts/lib/pw.mjs` 도
+`PLAYWRIGHT_DIR` 환경변수로 외부 playwright 를 로드한다. 브라우저 판정 드라이버 자체는
+**저장소 밖**(`/tmp`)에 둔다 — 이 디렉토리에 `.mjs` 를 더하면 기준 X2 의 허용 목록(8건)을 넘긴다.
