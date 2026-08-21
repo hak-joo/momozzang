@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { hueShiftPixels } from '../lib/hueShiftPixels';
+import { getOrCreateHueShift, hueShiftKey, peekHueShift } from '../lib/hueShiftCache';
 
 /**
  * 이미지의 색조(Hue)를 목표 Hue로 변경하는 훅
@@ -14,7 +15,20 @@ export function useImageHueShift(
   originalHue: number = 270,
   options?: { strategy?: 'absolute' | 'relative'; preserveSkinTones?: boolean },
 ) {
-  const [displaySrc, setDisplaySrc] = useState<string>(src);
+  // 캐시 적중이면 첫 렌더부터 변환본으로 시작한다(SPEC P7 이 명시적으로 허용하는 형태).
+  // 조기 반환 대상(targetHue 없음 / originalHue 와 동일)은 단락 평가로 키 계산조차 건너뛴다 —
+  // 즉 PURPLE 경로는 캐시를 한 번도 만지지 않는다.
+  const [displaySrc, setDisplaySrc] = useState<string>(() => {
+    if (targetHue === undefined || targetHue === originalHue) return src;
+    const cachedKey = hueShiftKey(
+      src,
+      targetHue,
+      originalHue,
+      options?.strategy,
+      options?.preserveSkinTones,
+    );
+    return peekHueShift(cachedKey) ?? src;
+  });
 
   useEffect(() => {
     // targetHue가 없거나 original과 같으면 원본 사용
@@ -23,31 +37,46 @@ export function useImageHueShift(
       return;
     }
 
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = src;
+    const key = hueShiftKey(
+      src,
+      targetHue,
+      originalHue,
+      options?.strategy,
+      options?.preserveSkinTones,
+    );
 
-    img.onload = () => {
-      // 캔버스 생성 (메모리 상)
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+    const compute = () =>
+      new Promise<string>((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = src;
 
-      canvas.width = img.width;
-      canvas.height = img.height;
+        img.onload = () => {
+          // 캔버스 생성 (메모리 상)
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
 
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
+          canvas.width = img.width;
+          canvas.height = img.height;
 
-      hueShiftPixels(data, targetHue, originalHue, {
-        strategy: options?.strategy,
-        preserveSkinTones: options?.preserveSkinTones,
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+
+          hueShiftPixels(data, targetHue, originalHue, {
+            strategy: options?.strategy,
+            preserveSkinTones: options?.preserveSkinTones,
+          });
+
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas.toDataURL());
+        };
       });
 
-      ctx.putImageData(imageData, 0, 0);
-      setDisplaySrc(canvas.toDataURL());
-    };
+    getOrCreateHueShift(key, compute).then((result) => {
+      setDisplaySrc(result);
+    });
   }, [src, targetHue, originalHue, options?.strategy, options?.preserveSkinTones]);
 
   return displaySrc;
