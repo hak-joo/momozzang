@@ -37,6 +37,9 @@ export function useImageHueShift(
       return;
     }
 
+    // 언마운트되거나 의존값이 바뀌면 이 실행의 결과를 버린다(계산 자체는 취소하지 않는다).
+    let cancelled = false;
+
     const key = hueShiftKey(
       src,
       targetHue,
@@ -46,16 +49,23 @@ export function useImageHueShift(
     );
 
     const compute = () =>
-      new Promise<string>((resolve) => {
+      new Promise<string>((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.src = src;
+
+        img.onerror = () => {
+          reject(new Error('useImageHueShift: 이미지 로드 실패'));
+        };
 
         img.onload = () => {
           // 캔버스 생성 (메모리 상)
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          if (!ctx) return;
+          if (!ctx) {
+            reject(new Error('useImageHueShift: 2d 컨텍스트 획득 실패'));
+            return;
+          }
 
           canvas.width = img.width;
           canvas.height = img.height;
@@ -74,9 +84,23 @@ export function useImageHueShift(
         };
       });
 
-    getOrCreateHueShift(key, compute).then((result) => {
-      setDisplaySrc(result);
-    });
+    getOrCreateHueShift(key, compute)
+      .then((result) => {
+        // 늦게 도착한 결과가 최신 선택을 덮어쓰지 않게 한다. 버려질 뿐 변형되지 않으므로
+        // 같은 키를 기다리는 다른 소비자와 캐시는 이 결과를 그대로 쓴다.
+        if (cancelled) return;
+        setDisplaySrc(result);
+      })
+      .catch(() => {
+        // 변환 실패(이미지 로드 실패 / 2d 컨텍스트 실패)는 **원본 src** 로 남는다.
+        // 다른 색으로 대체하지 않는다. 실패한 키는 캐시에 남지 않아 다음 요청이 재계산한다.
+        if (cancelled) return;
+        setDisplaySrc(src);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [src, targetHue, originalHue, options?.strategy, options?.preserveSkinTones]);
 
   return displaySrc;
