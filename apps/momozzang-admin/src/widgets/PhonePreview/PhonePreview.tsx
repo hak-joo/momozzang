@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import { WeddingInvitation as WeddingInvitationPage } from '@momozzang/ui/src/pages/WeddingInvitation/WeddingInvitation';
 import { InvitationProvider } from '@momozzang/ui/src/entities/WeddingInvitation/Context';
 import { ToastProvider } from '@momozzang/ui/src/shared/ui/Toast';
@@ -22,8 +22,12 @@ interface Props {
  *   지키는 불변식이다(계약 기준 31 이 자동 판정한다).
  * - 모달/바텀시트의 Radix 포털도 `.screen` 으로 돌린다(F3-b). 그래야 미리보기 안에서 연 시트가
  *   `document.body` 로 새어 나가 어드민 화면 전체를 덮지 않고 실기기처럼 프레임 안에 나타난다.
+ * - **`memo` 경계**(F9): 어드민 페이지의 로컬 상태 변경(탭 토글·토스트·확인 다이얼로그 등)이
+ *   뷰어 트리 전체를 재렌더시키지 않게 끊는다. prop 은 `invitation` 하나뿐이고 그 값은
+ *   `useApplyForm` 이 `useMemo` 로 안정화하므로 얕은 비교가 성립한다. 경계 안쪽은 React
+ *   Compiler 가 메모화한다(`vite.config.ts` 의 `shouldUseCompiler`).
  */
-export function PhonePreview({ invitation }: Props) {
+export const PhonePreview = memo(function PhonePreview({ invitation }: Props) {
   const screenRef = useRef<HTMLDivElement>(null);
   // 포털 `container` 는 **DOM 노드**를 요구한다. `useRef` 만 쓰면 첫 렌더에 `null` 이고
   // `ref.current` 변경은 리렌더를 유발하지 않아 포털이 영원히 `body` 로 간다(계약 3 §6 R1).
@@ -50,4 +54,4 @@ export function PhonePreview({ invitation }: Props) {
       </div>
     </div>
   );
-}
+});

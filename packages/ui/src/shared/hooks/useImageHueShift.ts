@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import { rgbToHsl, hslToRgb } from '../lib/colorUtils';
+import { hueShiftPixels } from '../lib/hueShiftPixels';
+import { getOrCreateHueShift, hueShiftKey, peekHueShift } from '../lib/hueShiftCache';
 
 /**
  * 이미지의 색조(Hue)를 목표 Hue로 변경하는 훅
@@ -14,7 +15,20 @@ export function useImageHueShift(
   originalHue: number = 270,
   options?: { strategy?: 'absolute' | 'relative'; preserveSkinTones?: boolean },
 ) {
-  const [displaySrc, setDisplaySrc] = useState<string>(src);
+  // 캐시 적중이면 첫 렌더부터 변환본으로 시작한다(SPEC P7 이 명시적으로 허용하는 형태).
+  // 조기 반환 대상(targetHue 없음 / originalHue 와 동일)은 단락 평가로 키 계산조차 건너뛴다 —
+  // 즉 PURPLE 경로는 캐시를 한 번도 만지지 않는다.
+  const [displaySrc, setDisplaySrc] = useState<string>(() => {
+    if (targetHue === undefined || targetHue === originalHue) return src;
+    const cachedKey = hueShiftKey(
+      src,
+      targetHue,
+      originalHue,
+      options?.strategy,
+      options?.preserveSkinTones,
+    );
+    return peekHueShift(cachedKey) ?? src;
+  });
 
   useEffect(() => {
     // targetHue가 없거나 original과 같으면 원본 사용
@@ -23,62 +37,69 @@ export function useImageHueShift(
       return;
     }
 
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = src;
+    // 언마운트되거나 의존값이 바뀌면 이 실행의 결과를 버린다(계산 자체는 취소하지 않는다).
+    let cancelled = false;
 
-    img.onload = () => {
-      // 캔버스 생성 (메모리 상)
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+    const key = hueShiftKey(
+      src,
+      targetHue,
+      originalHue,
+      options?.strategy,
+      options?.preserveSkinTones,
+    );
 
-      canvas.width = img.width;
-      canvas.height = img.height;
+    const compute = () =>
+      new Promise<string>((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = src;
 
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
+        img.onerror = () => {
+          reject(new Error('useImageHueShift: 이미지 로드 실패'));
+        };
 
-      const hueDiff = targetHue - originalHue;
+        img.onload = () => {
+          // 캔버스 생성 (메모리 상)
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('useImageHueShift: 2d 컨텍스트 획득 실패'));
+            return;
+          }
 
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
+          canvas.width = img.width;
+          canvas.height = img.height;
 
-        // 투명 픽셀 스킵
-        if (a < 10) continue;
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
 
-        const [h, s, l] = rgbToHsl(r, g, b);
+          hueShiftPixels(data, targetHue, originalHue, {
+            strategy: options?.strategy,
+            preserveSkinTones: options?.preserveSkinTones,
+          });
 
-        let newR, newG, newB;
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas.toDataURL());
+        };
+      });
 
-        // 피부색 보호 로직 (대략 Hue 10~50 사이는 오렌지/살구색 계열)
-        const isSkinTone = options?.preserveSkinTones && h >= 10 && h <= 50;
+    getOrCreateHueShift(key, compute)
+      .then((result) => {
+        // 늦게 도착한 결과가 최신 선택을 덮어쓰지 않게 한다. 버려질 뿐 변형되지 않으므로
+        // 같은 키를 기다리는 다른 소비자와 캐시는 이 결과를 그대로 쓴다.
+        if (cancelled) return;
+        setDisplaySrc(result);
+      })
+      .catch(() => {
+        // 변환 실패(이미지 로드 실패 / 2d 컨텍스트 실패)는 **원본 src** 로 남는다.
+        // 다른 색으로 대체하지 않는다. 실패한 키는 캐시에 남지 않아 다음 요청이 재계산한다.
+        if (cancelled) return;
+        setDisplaySrc(src);
+      });
 
-        if (isSkinTone) {
-          // 피부색이면 변경하지 않음
-          newR = r;
-          newG = g;
-          newB = b;
-        } else if (options?.strategy === 'relative') {
-          // 상대적 회전: 원본 픽셀의 Hue에 차이값을 더함
-          const newH = (h + hueDiff + 360) % 360;
-          [newR, newG, newB] = hslToRgb(newH, s, l);
-        } else {
-          // 절대적 변경 (기존 로직): 모든 픽셀을 targetHue로 고정
-          [newR, newG, newB] = hslToRgb(targetHue, s, l);
-        }
-
-        data[i] = newR;
-        data[i + 1] = newG;
-        data[i + 2] = newB;
-      }
-
-      ctx.putImageData(imageData, 0, 0);
-      setDisplaySrc(canvas.toDataURL());
+    return () => {
+      cancelled = true;
     };
   }, [src, targetHue, originalHue, options?.strategy, options?.preserveSkinTones]);
 

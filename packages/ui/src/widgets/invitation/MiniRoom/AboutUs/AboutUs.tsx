@@ -1,4 +1,5 @@
 import { useInvitation, useIsPreviewMode } from '@entities/WeddingInvitation/Context';
+import type { AboutUs as AboutUsModel } from '@entities/WeddingInvitation/model';
 import styles from './AboutUs.module.css';
 import clsx from 'clsx';
 import * as BottomSheet from '@shared/ui/BottomSheet';
@@ -13,13 +14,29 @@ import { SafeImage } from '@shared/ui/SafeImage';
 interface Props {
   className?: string;
 }
+
+/**
+ * 외곽 가드. `aboutUs` 가 없으면 여기서 끝나므로 색조 변환이 시작되지 않는다.
+ * 훅 호출 순서는 조건부가 되지 않는다 — 이 함수는 `useInvitation()` 만 무조건 호출한다.
+ */
 export function AboutUs({ className }: Props) {
-  const { aboutUs, couple, customization } = useInvitation();
+  const { aboutUs } = useInvitation();
+  if (!aboutUs) return null;
+
+  return <AboutUsContent className={className} aboutUs={aboutUs} />;
+}
+
+/**
+ * 마운트되면 자기 훅 전부를 무조건 호출한다. 가드를 다시 쓰지 않기 위해 좁혀진 `aboutUs` 를
+ * prop 으로 받는다 — 여기서 `useInvitation()` 으로 재조회하면 타입 내로잉을 위해 가드를
+ * 한 번 더 쓰게 되고, 그 함수가 가드와 색조 훅 호출을 동시에 담게 된다.
+ */
+function AboutUsContent({ className, aboutUs }: Props & { aboutUs: AboutUsModel }) {
+  const { couple, customization } = useInvitation();
   const isPreview = useIsPreviewMode();
 
   const themeHue = getThemeHue(customization?.themeColor);
   const themedPhotoBookCover = useImageHueShift(photoBookCover, themeHue);
-  if (!aboutUs) return null;
 
   return (
     <BottomSheet.Root>

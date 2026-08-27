@@ -46,12 +46,12 @@ export async function fetchGuestBookList({
   const repo = getGuestBookRepository();
   const limit = isTop ? TOP_LIMIT : undefined;
   
-  // Convert Entity Model to Widget Model if needed (currently they match closely but to be safe)
+  // 엔티티 GuestBook 은 위젯 GuestBook 의 상위집합이므로(weddingInvitationId·date 초과)
+  // 구조적으로 대입 가능하다. 초과 프로퍼티 검사는 fresh 객체 리터럴에만 적용되므로
+  // 이중 단언 없이 그대로 반환한다.
   const data = await repo.getGuestBooks({ invitationId, limit });
   
-  // Map Entity GuestBook to Widget GuestBook type (if different)
-  // Currently compatible.
-  return data as unknown as GuestBook[]; 
+  return data;
 }
 
 export async function fetchTopGuestBookList({
