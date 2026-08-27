@@ -293,3 +293,62 @@ node .harness/runs/perf-refactor-parity/scripts/probe-init.mjs --oneline
 같은 저장소의 기성 헬퍼 `.harness/runs/apply-admin-ux-polish/scripts/lib/pw.mjs` 도
 `PLAYWRIGHT_DIR` 환경변수로 외부 playwright 를 로드한다. 브라우저 판정 드라이버 자체는
 **저장소 밖**(`/tmp`)에 둔다 — 이 디렉토리에 `.mjs` 를 더하면 기준 X2 의 허용 목록(8건)을 넘긴다.
+
+## 후속 작업 (묶음 3 이후) — intro 애니메이션 WebP 전환 2종
+
+`intro.png` 는 **APNG**(51프레임·374×812·RGB8·무한반복, 2,803,670 B)였고 하객 `dist` 의 38%
+였다. 이를 **무손실 애니메이션 WebP**(358,514 B, **-87.2%**)로 교체했다. 픽셀은 한 비트도
+바뀌지 않는다.
+
+| 스크립트 | 무엇을 하는가 | 의존성 |
+|---|---|---|
+| `intro-webp-parity.mjs` | 변경 전 APNG(git blob) ↔ 변경 후 WebP 의 캔버스·타임라인·반복·무손실 4항목 판정 | **Node 내장만** |
+| `intro-webp-encode.mjs` | 자산 재생성(1회성). 왕복 디코딩으로 `maxdelta=0` 을 확인한 뒤에만 파일을 쓴다 | `sharp` (저장소 밖) |
+
+```bash
+# 파리티 판정 — 마지막 줄이 PARITY: yes 여야 한다
+node .harness/runs/perf-refactor-parity/scripts/intro-webp-parity.mjs
+
+# 자산 재생성 (sharp 는 저장소 devDependency 로 넣지 않는다 — 스크래치패드에 따로 설치)
+mkdir -p /tmp/introwebp && cd /tmp/introwebp \
+  && echo '{"name":"introwebp","private":true}' > package.json && pnpm add sharp@0.35.1
+cd <repo> && git cat-file blob 207e259:packages/ui/src/shared/assets/images/intro.png > /tmp/intro.png
+NODE_PATH=/tmp/introwebp/node_modules node \
+  .harness/runs/perf-refactor-parity/scripts/intro-webp-encode.mjs \
+  /tmp/intro.png packages/ui/src/shared/assets/images/intro.webp
+```
+
+**재생성은 결정적이다** — 같은 입력으로 두 번 구우면 커밋된 자산과 바이트가 같다(실측 확인).
+
+### 판정에 쓴 사실
+
+- APNG 51프레임 중 **19프레임이 1×1 무변화 프레임**이었다. 연속 동일 합성 프레임을 병합해
+  **51 → 32프레임**으로 줄이고 지속시간을 앞 프레임에 더했다. 총 재생시간 **5100ms 불변**,
+  프레임별 지속시간 배열도 병합 기준으로 동일하다.
+- `dispose_op=2`(RESTORE_PREVIOUS) 프레임이 **1개** 있다. 합성기가 이를 무시하면 그 이후
+  모든 프레임이 어긋난다 — 두 스크립트 모두 dispose 0/1/2 를 구현한다.
+- WebP 프레임 32개가 **전부 VP8L**(무손실)임을 RIFF 컨테이너에서 확인한다. 하나라도 `VP8 `
+  (손실)이면 `lossless` 항목이 FAIL 이다.
+- **픽셀 동일성은 파리티 스크립트가 판정하지 않는다** — Node 내장에 VP8L 디코더가 없다.
+  대신 생성 시점에 `intro-webp-encode.mjs` 가 sharp 로 왕복 디코딩해 **maxdelta=0** 을 확인하고,
+  실패하면 파일 자체를 쓰지 않는다.
+
+### 브라우저 축 (저장소 밖 드라이버)
+
+npx 캐시의 playwright 로 Chromium 을 띄워 data URL 로 실제 디코딩·재생을 확인했다.
+`naturalSize=374×812`, 0.7초 간격 6표본 중 **서로 다른 렌더 5종** → 재생됨.
+**지원 하한은 iOS 16 / Safari 16(2022)** 이다. Safari 는 14 부터 WebP 를 읽지만
+**손실 정지 이미지만** 제대로 읽고, **무손실·애니메이션은 16 부터**다(14~15.6 은 프레임을
+떨어뜨리거나 첫 프레임 정지로 렌더한다). 이 자산은 무손실 + 애니메이션 둘 다이므로
+iOS 15 이하에서는 정지 이미지로 보일 수 있다. 2026년 한국 모바일 하객·카카오톡 웹뷰
+(안드로이드는 Chromium)를 대상으로 보면 무시 가능한 비율로 판단해 **폴백 없이 교체**한다.
+`<picture>` 폴백을 붙이면 PNG 도 함께 배포되어 `dist` 가 오히려 커지므로 이 항목의 목적과
+어긋난다.
+
+### 계측
+
+| | 변경 전 | 변경 후 |
+|---|---|---|
+| `intro` 자산 | 2,803,670 B (png) | 358,514 B (webp) |
+| 하객 `dist` 총합 | 7,388,168 B | 4,943,013 B (**-33.1%**) |
+| `dist` 파일 수 | 17 | 17 |
