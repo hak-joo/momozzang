@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import styles from './Intro.module.css';
-import introPng from '@shared/assets/images/intro.png';
+import introAnimation from '@shared/assets/images/intro.webp';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
 import dayjs from 'dayjs';
@@ -55,7 +55,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
 
   return (
     <div className={styles.intro}>
-      <img src={introPng} alt={label} className={styles.video} />
+      <img src={introAnimation} alt={label} className={styles.video} />
 
       {bride && groom && (
         <div className={styles.contents}>
