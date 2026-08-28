@@ -1,6 +1,6 @@
 # 프론트엔드 개발 컨벤션
 
-새 UI를 작성·수정할 때 그대로 따를 규칙입니다. 이 문서는 루트 [`CLAUDE.md`](../CLAUDE.md)의 "코딩 컨벤션"을 **대체가 아니라 보완**합니다 — CLAUDE.md가 얕게 다루는 디자인 시스템/스타일링/패턴 영역을 깊게 채우며, 중복 항목은 CLAUDE.md와 동일하게 진술합니다(상충 규칙을 새로 만들지 않습니다).
+새 UI를 작성·수정할 때 그대로 따를 규칙입니다. 이 문서는 루트 [`AGENTS.md`](../AGENTS.md)의 "코딩 컨벤션"을 **대체가 아니라 보완**합니다 — AGENTS.md가 얕게 다루는 디자인 시스템/스타일링/패턴 영역을 깊게 채우며, 중복 항목은 AGENTS.md와 동일하게 진술합니다(상충 규칙을 새로 만들지 않습니다).
 
 > 관련 문서: [`overview.md`](./overview.md) · [`design-system.md`](./design-system.md) · [`ui-logic.md`](./ui-logic.md) · [`shared-ui.md`](./shared-ui.md)
 
@@ -36,7 +36,7 @@
 | `@entities/*` | `packages/ui/src/entities/*` | 공통 |
 | `@shared/*` | `packages/ui/src/shared/*` | 공통 |
 
-별칭 해석은 Vite `vite-tsconfig-paths` 플러그인이 담당합니다(CLAUDE.md 코딩 컨벤션과 동일).
+별칭 해석은 Vite `vite-tsconfig-paths` 플러그인이 담당합니다(AGENTS.md 코딩 컨벤션과 동일).
 
 ## 5. 컴포넌트 작성 규칙
 
@@ -61,7 +61,7 @@
 
 ## 8. 네이밍 / 포매팅 / 커밋
 
-- **Prettier**: `singleQuote: true`, `semi: true`, `trailingComma: 'all'`, `printWidth: 100` (CLAUDE.md 코딩 컨벤션과 동일).
+- **Prettier**: `singleQuote: true`, `semi: true`, `trailingComma: 'all'`, `printWidth: 100` (AGENTS.md 코딩 컨벤션과 동일).
 - **린트**: ESLint(`eslint:recommended` + React + TS). 앱별 실행: `pnpm --filter momozzang-invitation lint` / `pnpm --filter momozzang-admin lint`.
 - **커밋 메시지**: 한글 혼용 `feat:` / `fix:` 접두어. 예) `feat(admin): 갤러리 드래그 정렬 추가`, `fix: AboutUs 간격 수정`.
 - **비밀값 금지**: 토큰/URL/키 **값**을 코드·문서·커밋에 남기지 않습니다(환경변수는 키 이름만). 색상 HEX는 비밀이 아니므로 토큰 문서화에 사용 가능합니다.

@@ -75,7 +75,7 @@ flowchart TD
 
 ## 실행/빌드 명령
 
-루트에서 실행합니다. 전체 목록은 루트 [`CLAUDE.md`](../CLAUDE.md)를 참조하세요.
+루트에서 실행합니다. 전체 목록은 루트 [`AGENTS.md`](../AGENTS.md)를 참조하세요.
 
 ```bash
 pnpm install
