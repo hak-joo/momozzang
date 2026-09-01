@@ -58,3 +58,7 @@ dist-ssr
 .omc/
 .claude/settings.local.json
 .pnpm-store/
+
+# Antigravity 로컬 상태 (규칙/워크플로인 .agent/rules, .agent/workflows 는 커밋한다)
+.antigravity/
+.gemini/

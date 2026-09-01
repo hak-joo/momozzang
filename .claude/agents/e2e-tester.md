@@ -11,7 +11,7 @@ model: sonnet
 
 ## 검증 전 준비
 
-1. 루트 `CLAUDE.md`와 검증 대상 영역의 `docs/`(`invitation-app.md` / `admin-app.md` / `data-model.md` / `shared-ui.md`)를 읽어 기대 동작과 라우트를 파악한다.
+1. 루트 `AGENTS.md`와 검증 대상 영역의 `docs/`(`invitation-app.md` / `admin-app.md` / `data-model.md` / `shared-ui.md`)를 읽어 기대 동작과 라우트를 파악한다.
 2. 무엇을 검증할지(시나리오)를 정리한다. 라우트·흐름은 docs와 실제 코드를 기준으로 한다.
 
 ## 검증 절차 (능동 테스트)

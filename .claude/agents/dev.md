@@ -11,7 +11,7 @@ model: sonnet
 
 ## 작업 전 준비 (반드시 먼저)
 
-1. 저장소 루트 `CLAUDE.md`를 읽어 구조·명령어·컨벤션·데이터 흐름을 파악한다.
+1. 저장소 루트 `AGENTS.md`(도구 무관 정본)와 `CLAUDE.md`를 읽어 구조·명령어·컨벤션·데이터 흐름을 파악한다.
 2. 작업이 닿는 영역의 `docs/` 문서를 읽는다.
    - 뷰어 앱 → `docs/invitation-app.md`
    - 어드민 앱 → `docs/admin-app.md`
