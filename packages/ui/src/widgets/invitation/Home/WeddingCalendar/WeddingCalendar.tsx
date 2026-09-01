@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useInvitation } from '@entities/WeddingInvitation/Context';
 import { Box } from '@shared/ui/Box';
 import styles from './WeddingCalendar.module.css';
+import { toHour24 } from '@shared/util/date';
 import { dayNames } from './constants';
 import { WeddingCalendarSummary } from './Summary';
 
@@ -13,11 +14,68 @@ function chunk<T>(arr: T[], size: number): T[][] {
 }
 
 export function WeddingCalendar() {
+  const invitation = useInvitation();
   const {
-    weddingHallInfo: { date, ampm, hour, minute },
-  } = useInvitation();
+    couple,
+    invitationInfo,
+    weddingHallInfo: { date, ampm, hour, minute, hallName, address },
+  } = invitation;
 
-  const hour24 = ampm === 'AM' ? hour % 12 : (hour % 12) + 12;
+  const handleGoogleCalendar = () => {
+    const hour24 = toHour24(hour, ampm);
+    const start = dayjs(date).hour(hour24).minute(minute).second(0);
+    const end = start.add(2, 'hour');
+
+    const startUtc = start.toDate().toISOString().replace(/-|:|\.\d+/g, '');
+    const endUtc = end.toDate().toISOString().replace(/-|:|\.\d+/g, '');
+
+    const title = encodeURIComponent(`${couple.groom.name} ♥ ${couple.bride.name} 결혼식`);
+    const details = encodeURIComponent(`${invitationInfo.title}\n예식장: ${hallName}`);
+    const location = encodeURIComponent(`${hallName} (${address})`);
+
+    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startUtc}/${endUtc}&details=${details}&location=${location}`;
+    window.open(googleUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleIcsDownload = () => {
+    const hour24 = toHour24(hour, ampm);
+    const start = dayjs(date).hour(hour24).minute(minute).second(0);
+    const end = start.add(2, 'hour');
+
+    const startUtc = start.toDate().toISOString().replace(/-|:|\.\d+/g, '');
+    const endUtc = end.toDate().toISOString().replace(/-|:|\.\d+/g, '');
+    const title = `${couple.groom.name} ♥ ${couple.bride.name} 결혼식`;
+    const location = `${hallName} (${address})`;
+    const description = `${invitationInfo.title}`;
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//momozzang//Wedding Calendar//KO',
+      'BEGIN:VEVENT',
+      `UID:${Date.now()}@momozzang.com`,
+      `DTSTAMP:${startUtc}`,
+      `DTSTART:${startUtc}`,
+      `DTEND:${endUtc}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${location}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `wedding-${date}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const hour24 = toHour24(hour, ampm);
   const weddingDay = dayjs(date).hour(hour24).minute(minute).second(0).millisecond(0);
   const monthLabel = `${weddingDay.month() + 1}월`;
 
@@ -102,6 +160,23 @@ export function WeddingCalendar() {
       </Box>
 
       <WeddingCalendarSummary />
+
+      <div className={styles.calendarActions}>
+        <button
+          type="button"
+          className={styles.calendarButton}
+          onClick={handleGoogleCalendar}
+        >
+          Google 캘린더
+        </button>
+        <button
+          type="button"
+          className={styles.calendarButton}
+          onClick={handleIcsDownload}
+        >
+          .ics 파일 저장
+        </button>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import { ThemedImage } from '@shared/ui/ThemedImage/ThemedImage';
 import { getThemeHue } from '@shared/styles/utils';
 
+import { toHour24 } from '@shared/util/date';
+
 type IntroProps = {
   next: () => void;
   label?: string;
@@ -21,11 +23,6 @@ const dayMap: Record<string, string> = {
   목: 'THU',
   금: 'FRI',
   토: 'SAT',
-};
-
-const AMPMMap: Record<string, string> = {
-  오전: 'AM',
-  오후: 'PM',
 };
 
 export function Intro({ next, label = 'Wedding day' }: IntroProps) {
@@ -43,11 +40,13 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
 
   const weddingDate = useMemo(() => {
     if (!weddingHallInfo) return '';
-    const { date, hour, minute } = weddingHallInfo;
-    const formattedDate = dayjs(date).format('YYYY.MM.DD');
-    const formattedAMPM = AMPMMap[dayjs().hour(hour).minute(minute).format('A')];
-    const formattedTime = dayjs().hour(hour).minute(minute).format(`HH:mm`);
-    const formattedDay = dayMap[dayjs(date).format('dd')];
+    const { date, ampm, hour, minute } = weddingHallInfo;
+    const hour24 = toHour24(hour, ampm);
+    const weddingDay = dayjs(date).hour(hour24).minute(minute);
+    const formattedDate = weddingDay.format('YYYY.MM.DD');
+    const formattedAMPM = ampm;
+    const formattedTime = weddingDay.format('HH:mm');
+    const formattedDay = dayMap[weddingDay.format('dd')];
 
     const weddingDate = `${formattedDate} ${formattedDay} ${formattedTime} ${formattedAMPM}`;
     return weddingDate;
@@ -55,7 +54,7 @@ export function Intro({ next, label = 'Wedding day' }: IntroProps) {
 
   return (
     <div className={styles.intro}>
-      <img src={introAnimation} alt={label} className={styles.video} />
+      <img src={introAnimation} alt={label} className={styles.video} loading="eager" decoding="async" />
 
       {bride && groom && (
         <div className={styles.contents}>

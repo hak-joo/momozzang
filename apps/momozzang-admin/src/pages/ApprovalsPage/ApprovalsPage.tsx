@@ -284,7 +284,7 @@ export function ApprovalsPage() {
                   </tr>
                   {expandedSlug === row.slug ? (
                     <tr className={styles.previewRow} data-testid="approvals-preview-row">
-                      <td colSpan={6}>
+                      <td colSpan={8}>
                         {previewQuery.isPending ? (
                           <p
                             className={styles.previewNotice}

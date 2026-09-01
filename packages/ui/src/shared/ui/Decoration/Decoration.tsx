@@ -101,5 +101,5 @@ export function Decoration({
     );
   }
 
-  return <img aria-hidden="true" src={src} alt="" style={style} />;
+  return <img aria-hidden="true" src={src} alt="" style={style} loading="lazy" decoding="async" />;
 }

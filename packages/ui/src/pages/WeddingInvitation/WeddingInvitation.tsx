@@ -13,6 +13,7 @@ import styles from './WeddingInvitation.module.css';
 import springImage from '../../shared/assets/images/spring.png';
 import { Account } from '@widgets/invitation/Account';
 import { Blur } from '@shared/ui/Blur';
+import { ErrorBoundary } from '@shared/ui/ErrorBoundary';
 import MiniRoom from '@widgets/invitation/MiniRoom';
 import { MessageDialogProvider } from '@shared/ui/MessageDialog';
 import { getThemeVariables, getThemeHue } from '@shared/styles/utils';
@@ -94,8 +95,8 @@ export function WeddingInvitation({ metadata, themeScopeRef }: Props) {
         style={{ backgroundImage: `url(${bgImage})` }}
       >
         <div className={styles.decorator}></div>
-        <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" />
-        <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" />
+        <img src={springImage} alt="" className={styles.springTop} aria-hidden="true" loading="lazy" decoding="async" />
+        <img src={springImage} alt="" className={styles.springBottom} aria-hidden="true" loading="lazy" decoding="async" />
         <Header currentMenu={currentMenu} isAtTop={isAtTop} onMenuClick={scrollToMenu} />
         <div
           id="main-wrapper"
@@ -110,7 +111,9 @@ export function WeddingInvitation({ metadata, themeScopeRef }: Props) {
           </SectionContainer>
 
           <SectionContainer ref={miniRoomRef}>
-            <MiniRoom />
+            <ErrorBoundary label="방명록">
+              <MiniRoom />
+            </ErrorBoundary>
           </SectionContainer>
           <SectionContainer ref={galleryRef}>
             <Gallery />

@@ -122,3 +122,34 @@
 .cellSelected .day {
   color: var(--accent-ink, #fff);
 }
+
+.calendarActions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 8px;
+}
+
+.calendarButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  background: var(--color-basic-white);
+  color: var(--color-basic-black);
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.15s ease;
+}
+
+.calendarButton:hover {
+  opacity: 0.9;
+}

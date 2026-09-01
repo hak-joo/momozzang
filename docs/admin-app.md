@@ -59,13 +59,12 @@ flowchart LR
 
 1. **슬러그 입력 → Load** — 입력 필드 기본값은 `demo-captain-luna`. `Load` 버튼(또는 Enter)으로 `slug` 상태를 확정하면 `useInvitationQuery(slug)`가 청첩장 데이터를 조회합니다. 조회 성공 시 로컬 편집 상태(`invitation`)에 반영하고, 실패 시 에러 메시지를 표시합니다. <!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. --> `768px` 이하에서는 청첩장 주소 툴바가 여러 행으로 접히고 입력칸이 한 행을 통째로 씁니다(`Panel.module.css` 의 `.toolbar { flex-wrap: wrap }` + `AdminPage.module.css` 의 `.slugInput { flex: 1 1 100% }`). 좁은 폭에서 주소가 앞 몇 글자만 보이던 문제를 막습니다.
 2. **편집** — 메인 이미지, 공유 썸네일(카카오), 신랑/신부 이미지, 그리고 갤러리 앨범을 수정합니다. 모든 편집은 로컬 상태에만 반영되고, 저장 전까지 서버에 반영되지 않습니다.
-3. **저장(Save Changes)** — `useInvitationMutation`으로 `updateInvitation(slug, data)`를 호출해 `momozzang` 테이블의 해당 행 `data` 컬럼을 갱신합니다. 성공/실패 시 `alert`로 결과를 알립니다.
+3. **저장(Save Changes)** — `useInvitationMutation`으로 `updateInvitation(slug, data)`를 호출해 `momozzang` 테이블의 해당 행 `data` 컬럼을 갱신합니다. 성공/실패 시 `AdminToastProvider` 토스트로 결과를 알립니다.
 
-데이터 조회/저장/업로드 훅은 `src/features/invitation/api/`에 있습니다.
+데이터 조회/저장 훅은 `src/features/invitation/api/`에 있습니다.
 
 - `useInvitationQuery.ts` — 슬러그로 청첩장 조회(react-query).
 - `useInvitationMutation.ts` — 청첩장 저장(react-query mutation).
-- `useImageUploadMutation.ts` — 이미지 업로드(아래 참조).
 
 ## `/edit` 좁은 폭 레이아웃과 저장 카드
 
@@ -85,7 +84,7 @@ flowchart LR
 ## 이미지 업로드 / 리사이즈
 
 - 업로드 전, 클라이언트에서 `canvas`로 이미지를 리사이즈합니다. 최대 크기는 **1920 x 1080**, 가로/세로 비율을 유지하며 긴 변 기준으로 축소하고 품질 `0.8`의 blob으로 인코딩합니다(`AdminPage`의 `handleImageResize`, 갤러리도 동일 로직).
-- 리사이즈된 파일을 Supabase Storage `wedding-images` 버킷에 업로드한 뒤 public URL을 사용합니다(`src/features/invitation/api/useImageUploadMutation.ts`).
+- 리사이즈된 이미지 파일은 Cloudflare Worker(`workers/upload`)를 거쳐 R2 저장소에 업로드되며, `usePendingImages.ts`를 통한 지연 커밋(deferred upload) 방식으로 저장 시점에 최종 반영됩니다.
 - 단일 이미지 필드: 메인 이미지(`customization.mainImageUrl`), 공유 썸네일(`invitationInfo.shareImageUrl`), 신랑/신부 이미지(`aboutUs.groomImageUrl` / `aboutUs.brideImageUrl`).
 
 <!-- 배치 사유: 주제 순서가 아니라 병합 독립성(스프린트 3 계약 §5.5)으로 정한 위치다. -->
@@ -156,8 +155,6 @@ pnpm --filter momozzang-admin lint      # lint
   예식 일시는 `toLocaleString` 없이 저장된 필드로 조립해 로케일·타임존에 흔들리지 않습니다.
 - **조회 중·실패** — `내용을 불러오는 중입니다.` / `내용을 불러오지 못했습니다.`(`role="alert"`) + `다시 시도`.
   실패해도 **목록 자체는 정상**입니다(목록은 `listInvitations`, 미리보기는 `getInvitationRecord` 로 경로가 다릅니다).
-- **표 컬럼** — 목록 조회가 돌려주는 `InvitationSummary` 는 본문(`data`)을 담지 않아
-  **신랑·신부**·**예식일** 을 모든 행에 항상 그릴 수 없습니다. 그 컬럼은 요약 타입을 넓히는 별도 작업(T12)에서
-  되살립니다. 이 절의 미리보기는 어드민 앱 안에서만 끝납니다(`packages/ui/` 무변경).
+- **표 컬럼** — 목록 조회가 돌려주는 `InvitationSummary` 요약 데이터에 **신랑·신부**·**예식일** 컬럼이 포함되어 신청 요약 정보를 한눈에 확인할 수 있습니다. 이 절의 미리보기는 어드민 앱 안에서만 끝납니다(`packages/ui/` 무변경).
 - 판정 앵커: `approvals-preview-toggle` · `-row` · `-card` · `-title` · `-couple` · `-datetime` · `-hall` ·
   `-photos` · `-thumb` · `-loading` · `-error` · `-retry`.

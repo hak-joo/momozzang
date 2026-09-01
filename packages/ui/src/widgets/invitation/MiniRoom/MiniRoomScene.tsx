@@ -182,6 +182,8 @@ export function MiniRoomScene({
         alt="미니룸 배경"
         className={styles.stageImage}
         draggable={false}
+        loading="lazy"
+        decoding="async"
       />
 
       {activeEntry && activeEntry.position && (
@@ -296,6 +298,8 @@ export function MiniRoomScene({
             src={mainMiniMe.src}
             alt={mainMiniMe.alt ?? '신랑 신부'}
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
         </div>
       )}

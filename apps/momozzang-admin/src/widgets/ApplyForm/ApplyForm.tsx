@@ -98,6 +98,7 @@ interface Props {
   editPassword?: string;
   onApplicantContactChange?: (value: string) => void;
   onEditPasswordChange?: (value: string) => void;
+  readOnlyApplicantContact?: string;
 }
 
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -320,6 +321,7 @@ export function ApplyForm(props: Props) {
     editPassword,
     onApplicantContactChange,
     onEditPasswordChange,
+    readOnlyApplicantContact,
   } = props;
 
   // 주소 검색 + 지오코딩 상태
@@ -359,7 +361,7 @@ export function ApplyForm(props: Props) {
     aboutUs,
   } = invitation;
   const slugError = getSlugError(invitationInfo.url);
-  const themeColor: ThemeColorOptions = customization?.themeColor === 'PINK' ? 'PINK' : 'PURPLE';
+  const themeColor: ThemeColorOptions = customization?.themeColor ?? 'PURPLE';
   const order = invitationInfo.order;
 
   return (
@@ -418,6 +420,25 @@ export function ApplyForm(props: Props) {
           {slugError && <p className={styles.error}>{slugError}</p>}
         </div>
       </section>
+
+      {/* 신청 정보 (관리자 읽기 전용) */}
+      {readOnlyApplicantContact !== undefined && (
+        <section className={styles.section}>
+          <h3 className={styles.sectionTitle}>신청 정보 (관리자 읽기 전용)</h3>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="apply-applicant-contact-readonly">
+              신청자 연락처
+            </label>
+            <Input
+              id="apply-applicant-contact-readonly"
+              value={readOnlyApplicantContact || '-'}
+              readOnly
+              disabled
+            />
+            <p className={styles.hint}>관리자용 안내: 신청자 연락처입니다. (편집 비밀번호는 노출되지 않습니다)</p>
+          </div>
+        </section>
+      )}
 
       {/* 신청 정보 (F3) — 청첩장 본문이 아니라 신청 메타데이터.
           신청 메타 props 넷이 모두 주어진 화면(`/apply`)에서만 렌더한다. */}
@@ -922,7 +943,7 @@ export function ApplyForm(props: Props) {
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>소개 (About Us)</h3>
         <p className={styles.hint}>
-          미니룸의 &lsquo;About Us!&rsquo; 시트에 즉시 반영됩니다. (이미지는 다음 스프린트)
+          미니룸의 &lsquo;About Us!&rsquo; 시트에 즉시 반영됩니다.
         </p>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-about-title">
@@ -992,6 +1013,8 @@ export function ApplyForm(props: Props) {
             >
               <option value="PURPLE">PURPLE</option>
               <option value="PINK">PINK</option>
+              <option value="GREEN">GREEN</option>
+              <option value="BLUE">BLUE</option>
             </Select>
           </div>
         </div>

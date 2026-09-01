@@ -70,7 +70,99 @@ export function validateInvitationBody(data: WeddingInvitation): ValidationIssue
     issues.push({ field: 'minute', label: '예식 시각(분)', message: '분은 0~59 범위여야 합니다.' });
   }
 
+  // 형식 검증 (전화번호, 이메일, 계좌번호, 좌표)
+  checkPhone(invitationInfo.order.phone, 'orderPhone', '주문자 전화번호', issues);
+  checkEmail(invitationInfo.order.email, 'orderEmail', '주문자 이메일', issues);
+
+  checkPhone(couple.groom.phone, 'groomPhone', '신랑 전화번호', issues);
+  checkEmail(couple.groom.email, 'groomEmail', '신랑 이메일', issues);
+  checkAccounts(couple.groom.accounts, 'groom', '신랑', issues);
+
+  checkPhone(couple.bride.phone, 'bridePhone', '신부 전화번호', issues);
+  checkEmail(couple.bride.email, 'brideEmail', '신부 이메일', issues);
+  checkAccounts(couple.bride.accounts, 'bride', '신부', issues);
+
+  if (data.parents) {
+    const { groomFather, groomMother, brideFather, brideMother } = data.parents;
+    if (groomFather) {
+      checkPhone(groomFather.phone, 'groomFatherPhone', '신랑 아버님 전화번호', issues);
+      checkEmail(groomFather.email, 'groomFatherEmail', '신랑 아버님 이메일', issues);
+      checkAccounts(groomFather.accounts, 'groomFather', '신랑 아버님', issues);
+    }
+    if (groomMother) {
+      checkPhone(groomMother.phone, 'groomMotherPhone', '신랑 어머님 전화번호', issues);
+      checkEmail(groomMother.email, 'groomMotherEmail', '신랑 어머님 이메일', issues);
+      checkAccounts(groomMother.accounts, 'groomMother', '신랑 어머님', issues);
+    }
+    if (brideFather) {
+      checkPhone(brideFather.phone, 'brideFatherPhone', '신부 아버님 전화번호', issues);
+      checkEmail(brideFather.email, 'brideFatherEmail', '신부 아버님 이메일', issues);
+      checkAccounts(brideFather.accounts, 'brideFather', '신부 아버님', issues);
+    }
+    if (brideMother) {
+      checkPhone(brideMother.phone, 'brideMotherPhone', '신부 어머님 전화번호', issues);
+      checkEmail(brideMother.email, 'brideMotherEmail', '신부 어머님 이메일', issues);
+      checkAccounts(brideMother.accounts, 'brideMother', '신부 어머님', issues);
+    }
+  }
+
+  if (weddingHallInfo.latitude !== undefined && weddingHallInfo.latitude !== null && String(weddingHallInfo.latitude).trim() !== '') {
+    const latNum = Number(weddingHallInfo.latitude);
+    if (!Number.isFinite(latNum) || latNum < -90 || latNum > 90) {
+      issues.push({ field: 'latitude', label: '위도', message: '위도는 -90~90 범위의 숫자여야 합니다.' });
+    }
+  }
+  if (weddingHallInfo.longitude !== undefined && weddingHallInfo.longitude !== null && String(weddingHallInfo.longitude).trim() !== '') {
+    const lngNum = Number(weddingHallInfo.longitude);
+    if (!Number.isFinite(lngNum) || lngNum < -180 || lngNum > 180) {
+      issues.push({ field: 'longitude', label: '경도', message: '경도는 -180~180 범위의 숫자여야 합니다.' });
+    }
+  }
+
   return issues;
+}
+
+function checkPhone(
+  phone: { number?: string } | undefined,
+  field: string,
+  label: string,
+  issues: ValidationIssue[],
+) {
+  const num = phone?.number?.trim();
+  if (num && !/^\d{9,11}$/.test(num)) {
+    issues.push({ field, label, message: '전화번호는 9~11자리 숫자만 입력해 주세요.' });
+  }
+}
+
+function checkEmail(
+  email: string | undefined,
+  field: string,
+  label: string,
+  issues: ValidationIssue[],
+) {
+  const mail = email?.trim();
+  if (mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
+    issues.push({ field, label, message: '올바른 이메일 형식이 아닙니다.' });
+  }
+}
+
+function checkAccounts(
+  accounts: Array<{ accountNumber?: string }> | undefined,
+  fieldPrefix: string,
+  labelPrefix: string,
+  issues: ValidationIssue[],
+) {
+  if (!accounts) return;
+  accounts.forEach((acct, index) => {
+    const num = acct.accountNumber?.trim();
+    if (num && !/^[0-9-]+$/.test(num)) {
+      issues.push({
+        field: `${fieldPrefix}-account-${index}`,
+        label: `${labelPrefix} 계좌번호`,
+        message: '계좌번호는 숫자와 하이픈(-)만 입력해 주세요.',
+      });
+    }
+  });
 }
 
 /**

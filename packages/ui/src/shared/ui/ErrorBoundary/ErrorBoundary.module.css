@@ -1,0 +1,36 @@
+.fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  gap: 12px;
+  text-align: center;
+  background-color: var(--color-surface, #ffffff);
+  border-radius: var(--radius-md, 12px);
+  margin: 16px 0;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.06));
+}
+
+.title {
+  color: var(--color-text-primary, #333333);
+  font-size: var(--font-size-base, 14px);
+  font-weight: 600;
+  margin: 0;
+}
+
+.retryButton {
+  padding: 8px 16px;
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 500;
+  color: var(--color-primary, #7c4dff);
+  background-color: transparent;
+  border: 1px solid var(--color-primary, #7c4dff);
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.retryButton:hover {
+  background-color: rgba(124, 77, 255, 0.08);
+}

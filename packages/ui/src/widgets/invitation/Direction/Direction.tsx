@@ -163,7 +163,7 @@ export function Direction() {
           return (
             <div className={styles.transportation} key={type}>
               <div className={styles.title}>
-                <img width={24} src={icon.src} alt={icon.label} />
+                <img width={24} height={24} src={icon.src} alt={icon.label} loading="lazy" decoding="async" />
                 <div>{icon.label}</div>
               </div>
               <div className={styles.description}>

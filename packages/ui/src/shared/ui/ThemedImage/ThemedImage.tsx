@@ -20,9 +20,21 @@ export function ThemedImage({
   className,
   style,
   alt,
+  loading = 'lazy',
+  decoding = 'async',
   ...props
 }: ThemedImageProps) {
   const displaySrc = useImageHueShift(src, targetHue, originalHue, { strategy, preserveSkinTones });
 
-  return <img src={displaySrc} alt={alt} className={className} style={style} {...props} />;
+  return (
+    <img
+      src={displaySrc}
+      alt={alt}
+      className={className}
+      style={style}
+      loading={loading}
+      decoding={decoding}
+      {...props}
+    />
+  );
 }

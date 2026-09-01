@@ -223,18 +223,22 @@ function withNormalizedDate(data: WeddingInvitation): WeddingInvitation {
  * 불변 업데이트로 동작한다 → `InvitationProvider`(useMemo([data]))가 재렌더되어 미리보기가 즉시 갱신된다.
  */
 export function useApplyForm() {
-  // 깊은 복사로 시드(공유 상수)를 직접 변형하지 않도록 한다.
   const [invitation, setInvitation] = useState<WeddingInvitation>(() =>
     withNormalizedDate(structuredClone(exampleWeddingInvitation)),
   );
 
-  // ── 신청 메타데이터(F3) — `invitation` 과 절대 섞지 않는다 ────────────────────
-  // editPassword/applicantContact 는 청첩장 본문(WeddingInvitation)이 아니라 신청 정보다.
-  // invitation state 에 섞으면 PhonePreview(뷰어 렌더)와 commitPendingUploads 의 데이터 경로에
-  // 평문 비밀번호가 흘러 들어가고, 저장 시 data JSON 에 그대로 박힌다.
-  // 별도 state 로 두는 것이 평문 미노출의 구조적 방어선이다.
   const [editPassword, setEditPassword] = useState('');
   const [applicantContact, setApplicantContact] = useState('');
+
+  const baselineRef = useRef<{
+    invitation: WeddingInvitation;
+    editPassword: string;
+    applicantContact: string;
+  }>({
+    invitation: withNormalizedDate(structuredClone(exampleWeddingInvitation)),
+    editPassword: '',
+    applicantContact: '',
+  });
 
   // ── 지연 업로드 pending 레이어(F1·F2·F5·F7·F8) ──────────────────────────────
   // 신청 폼 전체에서 단 1개의 인스턴스를 보유한다(F8). ImageStep(스텝②)·PublishStep(스텝③)이
@@ -595,12 +599,34 @@ export function useApplyForm() {
     });
   }, []);
 
+  const resetDirty = useCallback((data?: WeddingInvitation) => {
+    const nextInvitation = data ?? invitation;
+    baselineRef.current = {
+      invitation: structuredClone(nextInvitation),
+      editPassword,
+      applicantContact,
+    };
+  }, [invitation, editPassword, applicantContact]);
+
   // ── F14: 불러오기 — 폼 전체를 불러온 데이터로 교체 ──────────────────────────
   // 신청 메타데이터(editPassword·applicantContact)는 건드리지 않는다. 저장 성공 후 폼 동기화에도
   // 쓰이는 함수라, 여기서 비밀번호를 덮으면 화면 상태가 사용자가 입력한 값과 어긋난다.
   const loadInvitation = useCallback((data: WeddingInvitation) => {
-    setInvitation(withNormalizedDate(structuredClone(data)));
-  }, []);
+    const normalized = withNormalizedDate(structuredClone(data));
+    setInvitation(normalized);
+    baselineRef.current = {
+      invitation: structuredClone(normalized),
+      editPassword,
+      applicantContact,
+    };
+  }, [editPassword, applicantContact]);
+
+  const isDirty = useMemo(() => {
+    if (pendingCount > 0) return true;
+    if (editPassword !== baselineRef.current.editPassword) return true;
+    if (applicantContact !== baselineRef.current.applicantContact) return true;
+    return JSON.stringify(invitation) !== JSON.stringify(baselineRef.current.invitation);
+  }, [invitation, editPassword, applicantContact, pendingCount]);
 
   // ── 단일 5슬롯 지연 선택(F1·F2·F5) — 업로드 없이 pending 에 보관만 ─────────────
   // ImageStep 의 즉시 업로드(resizeAndUploadImage)를 대체한다. invitation state 는 건드리지 않는다
@@ -764,6 +790,9 @@ export function useApplyForm() {
     setMiniRoom,
     // 불러오기 (F14)
     loadInvitation,
+    // dirty 추적
+    isDirty,
+    resetDirty,
     // 신청 메타데이터 (F3) — invitation 본문과 분리된 값
     editPassword,
     applicantContact,

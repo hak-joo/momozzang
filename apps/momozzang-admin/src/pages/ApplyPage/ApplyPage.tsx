@@ -9,6 +9,7 @@ import { ImageStep } from '../../widgets/ImageStep/ImageStep';
 import { PublishStep } from '../../widgets/PublishStep/PublishStep';
 import { ErrorBoundary } from '../../widgets/ErrorBoundary/ErrorBoundary';
 import { useApplyForm } from '../../features/apply/useApplyForm';
+import { useUnsavedChangesBlocker } from '../../shared/hooks/useUnsavedChangesBlocker';
 import styles from './ApplyPage.module.css';
 import '@momozzang/ui/src/index.css';
 
@@ -26,6 +27,8 @@ export default function ApplyPage() {
   const {
     invitation,
     displayInvitation,
+    isDirty,
+    resetDirty,
     setInvitationInfo,
     setGroomName,
     setBrideName,
@@ -71,6 +74,8 @@ export default function ApplyPage() {
     setEditPassword,
     setApplicantContact,
   } = useApplyForm();
+
+  useUnsavedChangesBlocker(isDirty);
 
   // 어드민 크롬(스텝퍼/폼 패널)의 폼 컨트롤을 admin 시각 언어로 세운다.
   // 좌측 폰 미리보기 내부는 PhonePreview 가 다시 `invitation` 으로 되돌린다.

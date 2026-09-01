@@ -24,6 +24,7 @@ export function RingPhoto({ src, alt, maxWidth }: PhotoFrameProps) {
         alt=""
         aria-hidden="true"
         targetHue={themeHue}
+        loading="eager"
       />
       <svg
         viewBox="0 0 289 382"
@@ -212,6 +213,7 @@ export function RingPhoto({ src, alt, maxWidth }: PhotoFrameProps) {
         src={weddingDayImg}
         alt="웨딩데이"
         targetHue={themeHue}
+        loading="eager"
       />
     </div>
   );
