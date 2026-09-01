@@ -85,7 +85,7 @@ export function Account() {
       if (!navigator?.clipboard?.writeText) {
         throw new Error('Clipboard API not available');
       }
-      const cleanedAccountNumber = accountNumber.replace('-', '');
+      const cleanedAccountNumber = accountNumber.replaceAll('-', '');
       await navigator.clipboard.writeText(cleanedAccountNumber);
       info({
         title: '계좌번호가 복사되었습니다.',

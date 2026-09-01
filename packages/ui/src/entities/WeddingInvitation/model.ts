@@ -22,6 +22,19 @@ export interface Person {
   accounts?: Account[];
 }
 
+export function formatPersonName(person?: Person): string {
+  if (!person || !person.name) return '';
+  if (!person.isDeceased) return person.name;
+
+  if (person.deceasedType === 'hanja') {
+    return `故 ${person.name}`;
+  }
+  if (person.deceasedType === 'flower') {
+    return `✿ ${person.name}`;
+  }
+  return person.name;
+}
+
 export interface InvitationInfo {
   order: Person; // 주문자
   url: string; // 초대장 URL 또는 슬러그

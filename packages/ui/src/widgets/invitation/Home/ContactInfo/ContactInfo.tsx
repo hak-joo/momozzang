@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { PixelHeart } from '@shared/ui/Icon/PixelHeart';
 import clsx from 'clsx';
 import type { Person, Side } from '@entities/WeddingInvitation/model';
+import { formatPersonName } from '@entities/WeddingInvitation/model';
 import { Box } from '@shared/ui/Box';
 import { useContactInfoBySide } from '../../hooks/useContactInfoBySide';
 import { PixelChevronLeftIcon } from '@shared/ui/Icon/PixelChevron';
@@ -87,25 +88,27 @@ export function ContactInfo() {
               className={styles.contactCard}
             >
               <span className={styles.contactLabel}>{label}</span>
-              <strong className={styles.contactName}>{person.name}</strong>
-              <div className={styles.actionRow}>
-                <Button
-                  size="sm"
-                  variant="primary"
-                  className={styles.actionButton}
-                  onClick={handleContact(person.phone, 'sms')}
-                >
-                  문자 보내기
-                </Button>
-                <Button
-                  size="sm"
-                  variant="primary"
-                  className={styles.actionButton}
-                  onClick={handleContact(person.phone, 'tel')}
-                >
-                  전화 하기
-                </Button>
-              </div>
+              <strong className={styles.contactName}>{formatPersonName(person)}</strong>
+              {!person.isDeceased && (
+                <div className={styles.actionRow}>
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    className={styles.actionButton}
+                    onClick={handleContact(person.phone, 'sms')}
+                  >
+                    문자 보내기
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    className={styles.actionButton}
+                    onClick={handleContact(person.phone, 'tel')}
+                  >
+                    전화 하기
+                  </Button>
+                </div>
+              )}
             </Box>
           ))}
         </div>

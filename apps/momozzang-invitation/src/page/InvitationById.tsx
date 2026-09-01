@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { getInvitationRepository } from '@momozzang/ui/src/entities/WeddingInvitation/repositories/invitationRepositoryFactory';
 import { useQuery } from '@tanstack/react-query';
 import { Link, Navigate, useParams } from 'react-router-dom';
@@ -43,6 +44,44 @@ function InvitationByIdPage() {
     void recordQuery.refetch();
   };
 
+  const record = recordQuery.data;
+
+  useEffect(() => {
+    if (!record?.data) return;
+    const { invitationInfo, couple, customization } = record.data;
+    const groomName = couple?.groom?.name ?? '';
+    const brideName = couple?.bride?.name ?? '';
+    const defaultTitle =
+      groomName && brideName
+        ? `${groomName} ♥ ${brideName}의 결혼식에 초대합니다`
+        : '모모짱 청첩장';
+    const title = invitationInfo?.title?.trim() || defaultTitle;
+    const description =
+      invitationInfo?.message?.trim() ||
+      `${groomName} ♥ ${brideName}의 모시는 글을 확인해 보세요.`;
+    const shareImage = invitationInfo?.shareImageUrl || customization?.mainImageUrl || '';
+
+    document.title = title;
+
+    const setMeta = (attrName: 'property' | 'name', attrVal: string, content: string) => {
+      if (!content) return;
+      let el = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attrName, attrVal);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    setMeta('property', 'og:title', title);
+    setMeta('property', 'og:description', description);
+    setMeta('name', 'description', description);
+    if (shareImage) {
+      setMeta('property', 'og:image', shareImage);
+    }
+  }, [record]);
+
   if (!invitationId) {
     return <Navigate to="/" replace />;
   }
@@ -79,8 +118,6 @@ function InvitationByIdPage() {
       </div>
     );
   }
-
-  const record = recordQuery.data;
 
   if (!record) {
     return (

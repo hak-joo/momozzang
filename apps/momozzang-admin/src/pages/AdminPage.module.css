@@ -1,22 +1,20 @@
 .container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 24px 20px;
   font-family: var(--font-PyeongChang);
-  /* /apply 와 같은 페이지 배경(DoD 14 전반부). */
   background: var(--color-bg-100);
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* 경계는 툴바 Panel 이 그린다 — 종전의 진한 border-bottom 구분선은 제거했다(P1-5). */
 .header {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
-/* 브랜드 시그니처(SPEC F11 · DoD 19). 페이지 헤더 타이틀만 픽셀 폰트를 입고,
-   본문·폼·버튼은 PyeongChang 을 유지한다 — 어드민 크롬의 가독성이 우선이다. */
 .title {
   margin: 0;
   font-family: var(--font-DungGeunMo);
@@ -35,17 +33,88 @@
   min-width: 0;
 }
 
-/* T11: 툴바가 접히면(Panel.module.css) 입력칸이 한 행을 독점한다. 파일 끝은 T1 이 점유했다 — 계약 §5.3. */
 @media (max-width: 768px) {
   .slugInput {
     flex: 1 1 100%;
   }
 }
 
-.content {
+.mobileTabs {
+  display: none;
+}
+
+.body {
+  box-sizing: border-box;
+  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .body {
+    display: grid;
+    grid-template-columns: minmax(399px, 440px) 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobileTabs {
+    display: flex;
+    gap: 8px;
+    padding: 0 0 16px 0;
+    background: var(--color-bg-100);
+  }
+
+  .mobileTab {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--color-line-300);
+    border-radius: 8px;
+    background: var(--color-basic-white);
+    font-size: var(--font-size-14);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-neutral-500);
+    cursor: pointer;
+  }
+
+  .mobileTabActive {
+    background: var(--color-main-600);
+    border-color: var(--color-main-600);
+    color: var(--color-basic-white);
+  }
+
+  .body {
+    gap: 16px;
+  }
+
+  .previewPane {
+    justify-content: center;
+  }
+
+  .mobileHide.mobileHide {
+    display: none;
+  }
+
+  .mobileShow.mobileShow {
+    display: flex;
+  }
+}
+
+.previewPane {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.formPane {
+  box-sizing: border-box;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .loading {
@@ -54,36 +123,12 @@
   color: var(--color-neutral-600);
 }
 
-/* 섹션 제목은 Panel 의 `title` 슬롯이 담당한다(좌측 정렬 SSOT). */
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* 이미지 슬롯 라벨은 FileDropField 가 담당한다(F6). 여기 남은 `.toolbarLabel` 은 툴바의
-   슬러그 입력 라벨이다 — 툴바가 한 행이므로 아래 여백 없이 인라인으로 둔다. */
 .toolbarLabel {
   flex: none;
   font-size: var(--font-size-14);
-  /* DoD 17 전반부 — 흰 표면 대비 6.31:1 (종전 --color-neutral-450 은 2.67:1 로 AA 미달). */
   color: var(--color-neutral-700);
 }
 
-/* 표면(비율·배경·보더)은 ImageThumb 가 담당한다. 여기서는 간격만 준다. */
-.previewImage {
-  margin-bottom: 8px;
-}
-
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ── T1: 상단바 + 딥링크 확인 표시 ─────────────────────────────────────────
-   기존 규칙 사이에 끼워넣지 않고 파일 끝에 새 블록으로 붙인다. */
 .container > nav {
   margin-bottom: 24px;
 }
@@ -98,4 +143,27 @@
 .loadedSlug {
   font-family: var(--font-PyeongChang);
   color: var(--color-neutral-500);
+}
+
+.issueList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.banner {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--button-radius);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+
+.bannerError {
+  border: 1px solid var(--color-danger-150);
+  background: var(--color-danger-75);
+  color: var(--color-danger-700);
 }

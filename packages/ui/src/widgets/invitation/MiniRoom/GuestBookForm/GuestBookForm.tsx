@@ -43,7 +43,7 @@ function GuestBookFormContainer() {
     mutationFn: saveGuestBook,
   });
 
-  const { info } = useToast();
+  const { info, error: errorToast } = useToast();
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
@@ -90,14 +90,20 @@ function GuestBookFormContainer() {
 
       await attemptClose(true);
       info({ title: '방명록을 남겼습니다.' });
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error('[GuestBookForm] 방명록 저장 실패:', err);
+      errorToast({
+        title: '방명록을 남기지 못했어요.',
+        description: '잠시 후 다시 시도해 주세요.',
+      });
     } finally {
       setIsSubmitting(false);
     }
   }, [
     attemptClose,
     canSubmit,
+    errorToast,
+    info,
     invitationId,
     isMock,
     isSubmitting,

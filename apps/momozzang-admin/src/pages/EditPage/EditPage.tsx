@@ -13,6 +13,7 @@ import { ImageStep } from '../../widgets/ImageStep/ImageStep';
 import { useSearchParams } from 'react-router-dom';
 import { ErrorBoundary } from '../../widgets/ErrorBoundary/ErrorBoundary';
 import { useApplyForm } from '../../features/apply/useApplyForm';
+import { useUnsavedChangesBlocker } from '../../shared/hooks/useUnsavedChangesBlocker';
 import {
   validateInvitationBody,
   type ValidationIssue,
@@ -82,6 +83,7 @@ export function EditPage() {
   const gateMutation = useEditGateMutation();
   const saveMutation = useEditSaveMutation();
   const form = useApplyForm();
+  useUnsavedChangesBlocker(form.isDirty);
   const { loadInvitation, commitPendingUploads, clearCommittedPending } = form;
 
   /**

@@ -10,7 +10,12 @@ function capitalize(value: string) {
 }
 
 export function DdayBadge() {
-  const { weddingHallInfo } = useInvitation();
+  const { weddingHallInfo, customization } = useInvitation();
+
+  if (customization?.showDDay === false) {
+    return null;
+  }
+
   const remainingDays = dayjs(weddingHallInfo.date).diff(dayjs().format('YYYY-MM-DD'), 'day');
 
   const verticalPositions = ['top', 'bottom'] as const;

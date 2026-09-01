@@ -32,6 +32,8 @@ export function MiniRoomSkeleton() {
           alt="미니룸 배경"
           className={styles.stageImage}
           draggable={false}
+          loading="lazy"
+          decoding="async"
         />
         {DEFAULT_SPECIAL_MINI && (
           <img
@@ -44,6 +46,8 @@ export function MiniRoomSkeleton() {
               width: DEFAULT_SPECIAL_MINI.width ?? 92,
             }}
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
         )}
       </div>
